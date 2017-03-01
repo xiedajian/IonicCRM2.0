@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "highcharts": "registry:npm/highcharts#5.0.5+20170126192336"
+  }
+}
