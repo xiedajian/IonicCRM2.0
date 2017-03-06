@@ -1,0 +1,143 @@
+<ion-view class="grey_bg">
+    <ion-header-bar  class="white_head border_b" ng-include="'templates/mine/head.html'"></ion-header-bar>
+    <div  class="bar bar-subheader item-input-inset search_input">
+        <label class="item-input-wrapper track_log_input">
+            <i class="icon ion-ios-search placeholder-icon"></i>
+            <input type="search" placeholder="搜索姓名" class="s_input"  />
+        </label>
+        <button class="button button-clear track_choose" ng-class=" select ?  'active':''  " ng-click="select=!select" ><i class="icon"></i>筛选</button>
+    </div>
+    <!--悬浮5s-->
+    <div class="xf_text has-subheader hide">共搜索到会员 36 人</div>
+    <!--筛选-->
+    <div class="pop_panel FollowUp has-subheader" ng-if="select" >
+        <div class="white_bg">
+            <!--跟踪效果-->
+            <article>
+                <p class="menber_head">跟踪效果</p>
+                <ul class="firterOption">
+                    <li class="charge_cost" ><span class="active">已购买</span></li>
+                    <li class="charge_cost" ><span>未购买</span></li>
+                    <li class="charge_cost" ><span>待评估</span></li>
+                </ul>
+            </article>
+            <!--是否联系上-->
+            <article class="padding_b_010">
+                <p class="menber_head">是否联系上</p>
+                <ul class="firterOption">
+                    <li class="charge_cost" ><span class="active">未联系上</span></li>
+                    <li class="charge_cost" ><span>已联系上</span></li>
+                </ul>
+            </article>
+            <!--筛选清空-->
+            <div class="firter_Btn">
+                <ul class="flex_ul">
+                    <li ng-click="del_selected()">清空筛选</li>
+                    <li	ng-click="do_selected()">确定</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <ion-content class="has-subheader">
+        <!--具体会员日志-->
+        <div class="white_bg log_detail">
+            <!--跟踪行为-->
+            <div>
+                <h2 class="h2">
+                    <strong>张三丰</strong>
+                    <small>18612345678</small>
+                    <span class="fr">联系上</span>
+                </h2>
+                <ul class="track_log_content">
+                    <li class="li_4">免费电话，联系上</li>
+                    <li class="li_5">普通电话，未联系上</li>
+                    <!--音频-->
+                    <li class="li_6">
+                        <span class="audio_border" ng-click="audioplay1(customer)">
+                            <img  class="img icon_play" ng-src="img/play.png" src="img/play.png">
+                        </span>
+                        <span class="audio_duration">NaN:NaN"</span>
+                    </li>
+                    <li class="li_1">家里还有5罐奶粉，夏天纸尿裤用少了</li>
+                    <li class="li_2">吴丽将该会员的下次跟踪时间人工指定到09-28</li>
+                    <li class="li_3">跟踪后已购买
+                        <span class="fr people_buy view_less">查看购买</span>
+                    </li>
+                </ul>
+            </div>
+            <!--购买行为-->
+            <section class="log_detail_content hide" >
+                <h2 class="head ng-binding">消费时间：10-10 &nbsp;&nbsp;18:58&nbsp;&nbsp;总消费金额：￥50</h2>
+                <table class="logTrack_table">
+                    <thead>
+                    <tr>
+                        <th>商品</th>
+                        <th>数量</th>
+                        <th>金额</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="ng-binding">爱德哺标口自动PP奶瓶260ml</td>
+                        <td class="ng-binding">1</td>
+                        <td class="ng-binding">￥50</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <p class="text-right padding-right color_99">吴丽&nbsp;&nbsp;于09-14&nbsp;&nbsp;11:35周日&nbsp;&nbsp;跟踪&nbsp;&nbsp;</p>
+        </div>
+        <!--具体会员日志-->
+        <div class="white_bg log_detail">
+            <!--跟踪行为-->
+            <div>
+                <h2 class="h2">
+                    <strong>张三丰</strong>
+                    <small>18612345678</small>
+                    <span class="fr text_red">未联系上</span>
+                </h2>
+                <ul class="track_log_content">
+                    <li class="li_1">家里还有5罐奶粉，夏天纸尿裤用少了</li>
+                    <li class="li_2">吴丽将该会员的下次跟踪时间人工指定到09-28</li>
+                    <li class="li_3">跟踪后已购买
+                        <span class="fr people_buy view_more">查看购买</span>
+                    </li>
+                </ul>
+            </div>
+            <!--购买行为-->
+            <section class="log_detail_content" >
+                <h2 class="head ng-binding">消费时间：10-10 &nbsp;&nbsp;18:58&nbsp;&nbsp;总消费金额：￥50</h2>
+                <table class="logTrack_table">
+                    <thead>
+                    <tr>
+                        <th>商品</th>
+                        <th>数量</th>
+                        <th>金额</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                   <tr>
+                        <td class="ng-binding">爱德哺标口自动PP奶瓶260ml</td>
+                        <td class="ng-binding">1</td>
+                        <td class="ng-binding">￥50</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <p class="text-right padding-right color_99">吴丽&nbsp;&nbsp;于09-14&nbsp;&nbsp;11:35周日&nbsp;&nbsp;跟踪&nbsp;&nbsp;</p>
+        </div>
+    </ion-content>
+    <!--音频-->
+    <div class="bg_grey audio_pr_main"  style="">
+        <audio id="audio" preload="auto" src=""></audio>
+        <p class="text-center padding ng-binding"><span id="curr" >00:00"</span>/ NaN:NaN" <span class="audio_close" ng-click="audio_close()"><img src="img/audio_close.png" class="img1"></span></p>
+        <div class="audio_process_panel" ng-click="onDrag()">
+            <div class="audio_process" id="audio_process" style="width: 10.1911%;">
+            <span ng-click="audioplay2()" class="">
+                <img class="after audiPlayIcon" src="img/yellow_play.png">
+            </span>
+            </div>
+        </div>
+    </div>
+
+</ion-view>

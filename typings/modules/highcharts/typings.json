@@ -1,0 +1,10 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/Tapad/typed-highcharts/e4a771c4da9e6348105bcde14327b917750151a7/typings.json",
+    "raw": "registry:npm/highcharts#5.0.5+20170126192336",
+    "main": "highcharts.d.ts",
+    "version": "5.0.5",
+    "name": "highcharts"
+  }
+}

@@ -1,0 +1,96 @@
+
+
+<ion-header>
+
+  <ion-navbar hideBackButton="true">
+    <!--<ion-buttons left (click)="goToCustomerDetails()">
+      <button ion-button clear  ><ion-icon name="ios-arrow-back-outline"></ion-icon></button>
+    </ion-buttons>-->
+
+    <ion-searchbar [(ngModel)]="searchQuery" placeholder="搜索姓名/跟踪日志" [showCancelButton]="false" (keyup)="goSearch($event)" mode="ios"></ion-searchbar>
+    <ion-buttons end>
+      <button ion-button  clear color="light" (click)="onCancel()" >取消</button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<!--<ion-content padding>-->
+  <!--<button ion-button color="secondary" (click)="goToCustomerDetails()">-->
+    <!--Go to CustomerDetails-->
+  <!--</button>-->
+<!--</ion-content>-->
+
+  <ion-content class="has-header search_content">
+    <!--搜索到记录-->
+    <div>
+      <!--搜索到的会员-->
+      <div *ngIf="totalCustomer>0">
+        <p class="padding mb_0">共搜到会员 {{totalCustomer}} 名</p>
+        <div class="white_bg p_lr_10">
+          <!--具体搜索到的会员-->
+          <!--<div class="search_member border_b">
+            <h2 class="search_title"><span class="yellow">张三</span>丰</h2>
+            <p>2016-08-23 需跟踪，今日待跟踪</p>
+            <p>8天前跟踪过，跟踪后未购买</p>
+          </div>-->
+          <!--具体搜索到的会员-->
+          <div class=" search_member border_b" *ngFor="let customer of customers | slice:0:2">
+            <h2 class="search_title" (click)="gotoCustomerDetails(customer)" tappable><span [innerHTML]="customer.customerName|highlightPipe:searchQuery"></span></h2>
+            <p>{{customer|trackStatusTextPipe}}</p>
+            <p>{{customer|trackResultTextPipe}}</p>
+          </div>
+          <p *ngIf="(totalCustomer-2)>0" (click)="goSearchMore(1)" class="search_more" tappable>还有 {{totalCustomer-2}} 名，点击查看全部 <ion-icon name="ios-arrow-forward-outline" class="fr padding-right"></ion-icon>
+
+          </p>
+        </div>
+      </div>
+      <!--搜到日志-->
+      <div *ngIf="totalTrackLogs>0">
+        <p class="padding mb_0">共搜到日志 {{totalTrackLogs}} 篇</p>
+        <div class="white_bg p_lr_10">
+          <!--具体搜索到的日志-->
+          <!--<div class=" border_b p_tb_10">
+            <h2 class="search_title">郑秀英</h2>
+            <p>有买奶粉跟尿裤这个宝宝奶量挺大的，现在吃美赞有点可惜，奶粉才买没吃完，<span class="yellow">张三</span>对于这个相当满意，表示过两天会来买。</p>
+            <p class="text-right">2016-08-22</p>
+          </div>-->
+          <!--具体搜索到的日志-->
+          <div class=" border_b p_tb_10" *ngFor="let trackLog of trackLogs| slice:0:2">
+            <h2 class="search_title" (click)="gotoCustomerByLog(trackLog.customerId)" tappable>{{trackLog.customerName}}</h2>
+            <p><span [innerHTML]="trackLog.trackDetails.content|highlightPipe:searchQuery"></span></p>
+            <p class="text-right">{{searchService.getFormatDate(trackLog.trackDetails.trackDate)}}</p>
+          </div>
+          <p *ngIf="(totalTrackLogs-2)>0" (click)="goSearchMore(2)" class="search_more" tappable>还有 {{totalTrackLogs-2}} 篇，点击查看全部<ion-icon name="ios-arrow-forward-outline" class="fr padding-right"></ion-icon></p>
+        </div>
+      </div>
+
+    </div>
+
+    <!--暂无记录-->
+    <!---->
+    <div class="s_pic_center" *ngIf="searchNone">
+      <img src="img/search_no.png" class="img"/>
+      <p>努力搜索，暂无记录</p>
+    </div>
+
+    <div class="load_panel" *ngIf="searching">
+      <div>
+        <img src="img/loadding.png" class="loadding w_100"/>
+        <div class="load_text">努力加载中<i class="dot"></i></div>
+      </div>
+    </div>
+
+  </ion-content>
+<!--努力加载中-->
+<!--
+<ion-content  *ngIf="searching">
+<div class="load_panel">
+  <div>
+    <img src="img/loadding.png" class="loadding w_100"/>
+    <div class="load_text">努力加载中<i class="dot"></i></div>
+  </div>
+</div>
+</ion-content>
+-->

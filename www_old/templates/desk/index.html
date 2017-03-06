@@ -1,0 +1,314 @@
+<ion-view class="desk_panel grey_bg">
+  <!--搜索框-->
+  <ion-header-bar  class="item-input-inset">
+    <label class="item-input-wrapper">
+      <span class="input"><i class="icon ion-ios-search placeholder-icon"></i>搜索</span>
+    </label>
+  </ion-header-bar>
+  <!--网络不可用时-->
+  <p class="net_erro bar-header ">网络不可用，请检查您的网络设置！</p>
+
+  <!--跟踪选择-->
+  <div  class="bar-subheader bar">
+    <div class="w_100">
+      <!--跟踪会员-->
+    <ul class="flex_ul flex_center desk_sub">
+      <li class="active">今日待跟踪会员</li>
+      <li>全部跟踪会员</li>
+    </ul>
+      <!--品类品牌等筛选-->
+    <ul class="inline_block_ul desk_sub_t ">
+      <li  ng-class="sort ? 'active' : '' "  ng-click="sort=!sort">综合排序<span class="draw_sjx"></span></li>
+      <li  ng-class="category ? 'active' : '' "  ng-click="category=!category">品类排序<span class="draw_sjx"></span></li>
+      <li   ng-class="brand ? 'active' : '' "  ng-click="brand=!brand">品牌筛选<span class="draw_sjx"></span></li>
+      <li  ng-click="other=!other"><img  class="img" ng-src="{{other ? 'img/a_other.png' : 'img/rd_tr.png' }}"/></li>
+    </ul>
+      <!--悬浮5s-->
+      <div class="xf_text hide">共搜索到会员 36 人</div>
+      <!--其他筛选-->
+    <div class="scroll_x" ng-show="other">
+      <ul class="inline_block_ul other_select">
+        <li  ng-class="T_effect ? 'active' : '' "  ng-click="T_effect=!T_effect">跟踪效果<span class="draw_sjx"></span></li>
+        <li ng-class="T_situation ? 'active' : '' "  ng-click="T_situation=!T_situation">跟踪情况<span class="draw_sjx"></span></li>
+        <li ng-class="manage ? 'active' : '' "  ng-click="manage=!manage">管理方式<span class="draw_sjx"></span></li>
+        <li ng-class="member ? 'active' : '' "  ng-click="member=!member">会员 <span class="draw_sjx"></span></li>
+        <li ng-class="buy ? 'active' : '' "  ng-click="buy=!buy">购买 <span class="draw_sjx"></span></li>
+      </ul>
+    </div>
+    </div>
+
+
+  </div>
+  <!--其他筛选出现时，style="top:191px"-->
+  <ion-content ng-style="{top:(other)? '191px': '139px'}" class="has-tabs">
+    <!--具体会员-->
+    <div class="tracl_log_panel">
+      <h2 class="title padding-bottom">
+        <span class="menber_name" ng-click="member_details()">李岚清</span>
+        <span class="small_red_btn">核心会员</span>
+        <span class="small_red_btn">新</span>
+        <div class="tel_icon fr" ng-click="call()"><img ng-src="{{ Tel_input ? 'img/tel_icon.png' : 'img/non_tel4.png'}}"class="w_100"/></div>
+      </h2>
+      <p>7天前跟踪过，跟踪后未购买</p>
+      <p>家里还有5罐奶粉，夏天纸尿裤用少了</p>
+    </div>
+    <!--具体会员-->
+    <div class="tracl_log_panel">
+      <h2 class="title padding-bottom">
+        <span class="menber_name">李岚清</span>
+        <span class="small_yellow_btn">重要会员</span>
+        <div class="tel_icon fr"><img src="img/tel_icon.png" class="w_100"/></div>
+      </h2>
+      <p>尚未跟踪过</p>
+      <p>计划 2016-08-20 跟踪，已<span class="text_red">超期1天</span></p>
+    </div>
+
+  </ion-content>
+
+  <!--努力加载中-->
+  <ion-content class="has-subheader hide">
+      <div class="load_panel">
+         <div >
+           <img src="img/loadding.png" class="loadding w_100"/>
+           <div class="load_text">努力加载中<dot class="dot"></dot></div>
+         </div>
+      </div>
+  </ion-content>
+  <!--跟踪-->
+  <ion-content class="has-subheader hide">
+    <!--已跟踪完-->
+    <div class=" s_pic_center hide">
+       <img src="img/track_end.png" class="img"/>
+      <p>好开心！今天全部跟踪完成啦！</p>
+      <p>去全部跟踪会员中看看是否要提前跟踪~</p>
+    </div>
+    <!--无待跟踪记录-->
+    <div class=" s_pic_center">
+      <img src="img/no_trak.png" class="img"/>
+      <p>无待跟踪记录</p>
+      <p>去全部跟踪会员中看看是否要提前跟踪~</p>
+    </div>
+  </ion-content>
+</ion-view>
+
+<!--综合排序-->
+ <div class="desk_select" ng-if="sort">
+        <div class="white_bg">
+              <ion-list>
+                <!--<ion-item class="active">综合排序<input id="com_rank" type="radio" /><label for="com_rank"></label></ion-item>-->
+                <!--<ion-item>最近跟踪时间由近及远</ion-item>-->
+                <!--<ion-item>最近跟踪时间由远及近</ion-item>-->
+                <!--<ion-item>最近购买时间由近及远</ion-item>-->
+                <!--<ion-item>最近购买时间由远及近</ion-item>-->
+                <!--<ion-item>总消费额从高到低</ion-item>-->
+                <!--<ion-item>总消费额额从低到高</ion-item>-->
+                <ion-radio ng-model="choice" ng-value="1" checked="checked">综合排序</ion-radio>
+                <ion-radio ng-model="choice" ng-value="2">最近跟踪时间由近及远</ion-radio>
+                <ion-radio ng-model="choice" ng-value="3">最近跟踪时间由远及近</ion-radio>
+                <ion-radio ng-model="choice" ng-value="4">最近购买时间由近及远</ion-radio>
+                <ion-radio ng-model="choice" ng-value="5">最近购买时间由远及近</ion-radio>
+                <ion-radio ng-model="choice" ng-value="6">总消费额从高到低</ion-radio>
+                <ion-radio ng-model="choice" ng-value="7">总消费额额从低到高</ion-radio>
+              </ion-list>
+        </div>
+  </div>
+
+<!--品类排序-->
+<div class="desk_select" ng-if="category">
+  <div class="white_bg">
+  <p class="pl_select">购买过</p>
+  <article class="firterPanel">
+    <ul class="firterOption padding_b_010">
+      <li class="charge_cost" ><span class="active">奶粉</span></li>
+      <li class="charge_cost" ><span>纸尿裤</span></li>
+    </ul>
+  </article>
+  </div>
+</div>
+
+<!--品牌筛选-->
+<div class="desk_select" ng-if="brand">
+  <div class="white_bg">
+    <div class="grey_bg bs_head">
+      <ul class="flex_ul brand_select">
+        <li class="active">喜欢的品牌</li>
+        <li>上次买的品牌</li>
+      </ul>
+      <p class="p1">热销品牌</p>
+    </div>
+    <article class="firterPanel firter_executive"  >
+      <ul class="firterOption bg_white">
+        <li class="charge_cost"><span class="active">安尔乐</span></li>
+      </ul>
+      <!--执行人员-->
+      <ion-scroll  class="bg_white executive_content" delegate-handle="executive"  on-scroll="pos()">
+        <section >
+          <ul class="firterOption" >
+            <li class="firterLetter" id="C">C</li>
+            <li class="charge_cost"><span class="active">喜宝</span></li>
+            <li class="charge_cost"><span>趣味</span></li>
+            <li class="charge_cost"><span>趣味</span></li>
+            <li class="charge_cost"><span>趣味</span></li>
+          </ul>
+        </section>
+      </ion-scroll>
+
+      <!--执行人员排序-->
+      <article class="firter_executive">
+        <!--字母排序-->
+        <div class="right">
+          <a class="stars_icon"><img src="img/stars.png" class="w_100"/></a>
+          <a>a</a>
+        </div>
+        </section>
+        <!--筛选清空-->
+        <div class="firter_Btn">
+          <ul class="flex_ul">
+            <li ng-click="del_selected()">清空筛选</li>
+            <li	ng-click="do_selected()">确定</li>
+          </ul>
+        </div>
+      </article>
+      <!--滑动字母片-->
+      <article  class="slideLetter"  id="scrollLetter">
+        <!--{{scrollLetter}}-->
+
+      </article>
+    </article>
+
+
+  </div>
+</div>
+
+<!--跟踪效果-->
+<div class="other_p_select" ng-if="T_effect">
+  <div class="white_bg">
+    <article class="firterPanel">
+      <ul class="firterOption padding_b_010">
+        <li class="charge_cost" ><span class="active">全部</span></li>
+        <li class="charge_cost" ><span>已购买</span></li>
+        <li class="charge_cost" ><span>未购买</span></li>
+      </ul>
+    </article>
+  </div>
+</div>
+
+<!--跟踪情况-->
+<div class="other_p_select FollowUp" ng-show="T_situation">
+  <div class="white_bg">
+    <article class="">
+      <ul class="firterOption padding_b_010">
+        <li class="charge_cost" ><span class="active">全部</span></li>
+        <li class="charge_cost" ><span>已联系上</span></li>
+        <li class="charge_cost" ><span>未联系上</span></li>
+        <li class="charge_cost" ><span>超期</span></li>
+      </ul>
+    </article>
+  </div>
+</div>
+
+<!--管理方式-->
+<div class="other_p_select FollowUp" ng-if="manage">
+  <div class="white_bg">
+    <article class="manege_way">
+      <ul class="firterOption padding_b_010">
+        <li class="charge_cost" ><span class="active">全部</span></li>
+        <li class="charge_cost" ><span>系统智能管理跟踪时间</span></li>
+        <li class="charge_cost" ><span>人工管理</span></li>
+      </ul>
+    </article>
+  </div>
+</div>
+
+<!--会员-->
+<div class="other_p_select FollowUp" ng-if="member">
+  <div class="white_bg">
+    <!--最新加入的会员-->
+    <article>
+      <p class="menber_head">最新加入的会员</p>
+      <ul class="firterOption">
+        <li class="charge_cost" ><span class="active">是</span></li>
+        <li class="charge_cost" ><span>否</span></li>
+      </ul>
+    </article>
+    <!--新分配的会员-->
+    <article>
+      <p class="menber_head">新分配的会员</p>
+      <ul class="firterOption">
+        <li class="charge_cost" ><span class="active">是</span></li>
+        <li class="charge_cost" ><span>否</span></li>
+      </ul>
+    </article>
+    <!--新分配的会员-->
+    <article>
+      <p class="menber_head">会员类型</p>
+      <ul class="firterOption padding_b_010">
+        <li class="charge_cost" ><span class="active">核心会员</span></li>
+        <li class="charge_cost" ><span>重要会员</span></li>
+        <li class="charge_cost" ><span>沉默会员</span></li>
+        <li class="charge_cost" ><span>无效会员</span></li>
+      </ul>
+    </article>
+    <!--筛选清空-->
+    <div class="firter_Btn">
+      <ul class="flex_ul">
+        <li ng-click="del_selected()">清空筛选</li>
+        <li	ng-click="do_selected()">确定</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--购买-->
+<div class="other_p_select FollowUp" ng-show="buy">
+  <div class="white_bg">
+    <!--时间范围-->
+    <article >
+      <p class="menber_head">时间范围内有产生消费({{ timeTip}})</p>
+      <!--滑动-->
+      <div class="range_panel">
+        <div class="range_skip" id="range">
+          <div class="meaTip" id="tip">{{ timeTip}}</div>
+          <div class="meaBox time_range" id="time_range"></div>
+          <div class="mea_l" on-drag="onDrag($event,1)" on-touch="onTouch($event)" id="min"></div>
+        </div>
+      </div>
+    </article>
+    <!--购买次数-->
+    <article>
+      <p class="menber_head padding-bottom">购买次数( {{ (  (bn_left===0 && bn_right===20) || (bn_left===20 && bn_right===0) )? '不限':(bn_left  <  bn_right ? ( bn_left +' -- '+  bn_right) : ( bn_right +'  --  '+  bn_left ) )}}   )</p>
+      <!--滑动-->
+      <div class="range_panel">
+        <div class="range_skip" >
+          <div class="buyNum_left" id="bn_left">{{ bn_left}}</div>
+          <div class="buyNum_right" id="bn_right">{{ bn_right}}</div>
+          <div class="meaBox w_100" id="buy_range"  ></div>
+          <div class="mea_l" on-drag="onDrag($event,2)" on-touch="onTouch($event)"></div>
+          <div class="mea_r" on-drag="onDrag($event,3)" on-touch="onTouch($event)"></div>
+        </div>
+      </div>
+    </article>
+    <!--平均客单价-->
+    <article class="padding_b_010">
+      <p class="menber_head padding-bottom">平均客单价( {{ ( (p_left===0 &&  p_right ===2000) || (p_left===2000 &&  p_right ===0) )? '不限':( p_left  <  p_right ? ( p_left +' -- '+  p_right) : ( p_right +'  --  '+  p_left )  ) }} )</p>
+      <!--滑动-->
+      <div class="range_panel">
+        <div class="range_skip" >
+          <div class="buyNum_left" id="price_left">{{ p_left}}</div>
+          <div class="buyNum_right" id="price_right">{{ p_right}}</div>
+          <div class="meaBox w_100" id="price_range"  ></div>
+          <div class="mea_l" on-drag="onDrag($event,4)" on-touch="onTouch($event)"></div>
+          <div class="mea_r" on-drag="onDrag($event,5)" on-touch="onTouch($event)"></div>
+        </div>
+      </div>
+    </article>
+
+    <!--筛选清空-->
+    <div class="firter_Btn">
+      <ul class="flex_ul">
+        <li ng-click="del_selected()">清空筛选</li>
+        <li	ng-click="do_selected()">确定</li>
+      </ul>
+    </div>
+  </div>
+</div>

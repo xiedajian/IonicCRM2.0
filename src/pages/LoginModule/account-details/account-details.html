@@ -1,0 +1,63 @@
+<ion-header class="white_head">
+    <ion-navbar>
+
+        <ion-title>{{name}}</ion-title>
+
+        <ion-buttons end>
+            <button ion-button icon-only (click)="go_setting()" tappable>
+                <ion-icon name="settings" class="yellow_icon"></ion-icon>
+            </button>
+        </ion-buttons>
+
+    </ion-navbar>
+</ion-header>
+<ion-content >
+    <!--本月完成率-->
+    <div class="Completion_month">
+        <p class="Cmoth_head">本月完成率</p>
+        <div class="relative">
+            <div #container class="div-charts" style="height:200px;min-width: 102%"></div>
+            <div class="mineChart">
+                <div class="table_cell">差<img src="./img/jt.png" class="img1"/></div>
+                <div class="table_cell">良</div>
+                <div class="table_cell"><img src="./img/jt.png" class="img2"/>优</div>
+            </div>
+        </div>
+
+    </div>
+    <!--跟踪销售额-->
+    <div class="padding white_bg">
+        <h2 class="track_sale border_b">本月因跟踪后产生的销售额<span class="fr">{{saleAmount}}<small>元</small></span></h2>
+        <div>
+            <!--购买图标-->
+            <ul class="flex_ul people_buy_img">
+                <li *ngFor="let t of src"><img src='{{t}}'/></li>
+            </ul>
+            <!--购买人数-->
+            <p class="text-center"><span class="people_buy" (click)="tip()" tappable>有{{VipBuyCount}}人购买</span></p>
+        </div>
+    </div>
+    <!--跟踪成功率-->
+    <div class="white_bg track_detail">
+        <span class="people_buy" (click)="tip_track()" tappable>跟踪成功率</span>
+        <span class="fr">{{trackSuccessRate}}<small>%</small></span>
+    </div>
+    <!--跟踪日志-->
+    <div class="track_detail" (click)="go_trackLog()" tappable>跟踪日志<span class="fr">{{trackLogNum}}<small>条</small>
+           </span></div>
+    <!--消息推送-->
+    <div class="track_detail" (click)="gotoNews()" tappable>消息<span class="fr"><i class="redDot">&nbsp;</i>
+       </span></div>
+
+</ion-content>
+
+<!--网络不可用时-->
+<p class="net_erro bar-header" *ngIf="false">网络不可用，请检查您的网络设置！</p>
+<!--网络不可用-->
+<ion-content *ngIf="false">
+    <div class="pic_center">
+        <img src="./img/errorNet.png" class="img"/>
+        <p>抱歉！网络不可用...</p>
+    </div>
+</ion-content>
+

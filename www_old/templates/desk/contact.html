@@ -1,0 +1,91 @@
+<!--跟踪日志--是否联系-->
+
+<ion-view class="grey_bg">
+    <ion-header-bar  class="border_b_s" ng-include="'templates/desk/head.html'"></ion-header-bar>
+    <ion-content class="has-header padding">
+        <!--返回修改-->
+        <div class="text-center contact_title">
+            <span class="absolute" ng-click="goBack()">
+                <i class="icon ion-ios-arrow-left"></i>
+                返回修改
+            </span>
+            {{contactTitle}}
+        </div>
+        <!--联系方式-->
+        <div class="w_log">
+            <p class="title">请填写联系方式</p>
+            <div class="white_bg content">
+                <input type="text" placeholder="微信联系、QQ联系、短信联系等" class="w_100"/>
+            </div>
+        </div>
+        <!--跟踪日志--联系上-->
+        <div class="w_log m_t_10" ng-if="if_contact">
+            <p class="title">请填写跟踪日志</p>
+            <div class="white_bg content">
+                <textarea placeholder="请填写跟踪日志（4字以上）" class="w_100"></textarea>
+            </div>
+        </div>
+        <!--跟踪日志--未联系上-->
+        <div class="w_log m_t_10 " ng-if="!if_contact">
+            <p class="title">请选择未联系上的原因</p>
+            <div class="white_bg content">
+                <div class="w_100 un_contract_bg " ng-click="select_reason()">{{reason_ok}}<span class="item-note"><i class="icon ion-ios-arrow-down"></i></span></div>
+            </div>
+            <div class="white_bg content padding m_t_15">
+                <textarea placeholder="请填写跟踪日志（4字以上）" class="w_100"></textarea>
+            </div>
+        </div>
+        <!--跟踪时间-->
+        <ul class="track_time padding-top">
+            <li><input type="radio" id="track" ng-checked="true" class="hide"  name="track" ng-model="check"  ng-value="1" /><label class="select_track" for="track">系统智能管理跟踪时间</label></li>
+            <li><input type="radio" id="man_track"  class="hide"   name="track" ng-model="check" ng-value="2"/><label class="select_track" for="man_track">人工指定</label>
+                <!--<span class="fr" ng-click="datePicker.show()">-->
+                <span class="fr" ng-show="check==2" ng-click="n_track()">
+                    下次跟踪时间：<span class="yellow time_input" >{{pickedDate |date: 'yyyy-MM-dd'}}</span>
+                    <i class="icon ion-ios-arrow-right"></i>
+                </span>
+            </li>
+            <li ><input type="radio"  id="un_track" class="hide" name="track" ng-model="check" ng-value="3"/><label class="select_track" for="un_track">不再跟踪</label></li>
+        </ul>
+
+        <div class="setting_btn">
+            <div class="btn_block_yellow" ng-click="saveLog()">保存日志</div>
+        </div>
+    </ion-content>
+
+</ion-view>
+
+<!--未跟踪原因-->
+<div class="pop_panel" ng-if="pop_show" ng-class=" pop_show ? 'active' :'' ">
+    <div class="action-sheet-wrapper" ng-class=" pop_show ? ' action-sheet-up' :'' ">
+        <div class="U_contract_sheet">
+            <header><span ng-click="cancel()">取消</span><span class="fr yellow" ng-click="btn_ok()">完成</span></header>
+            <ul>
+                <li ng-class="index==1 ? 'active' : '' " ng-click="U_contact_reason(1)">停机</li>
+                <li ng-class="index==2 ? 'active' : '' " ng-click="U_contact_reason(2)">电话号码错误</li>
+                <li ng-class="index==3 ? 'active' : '' " ng-click="U_contact_reason(3)">空号</li>
+                <li ng-class="index==4 ? 'active' : '' " ng-click="U_contact_reason(4)">无人接听</li>
+                <li ng-class="index==5 ? 'active' : '' " ng-click="U_contact_reason(5)">占线</li>
+                <li ng-class="index==6 ? 'active' : '' " ng-click="U_contact_reason(6)">其他</li>
+
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<!--人工指定，下次跟踪时间-->
+<div class="pop_panel flex_ul flex_center " ng-show="next_track">
+
+    <div class="popup white_bg">
+        <div class="popup-head">
+            <h3 class="popup-title" >下次跟踪时间</h3>
+        </div>
+        <div class="popup-body">您正在对该会员人工指定他的跟踪时间，</br>请选择他的下次跟踪时间</div>
+        <div class="popup-buttons"  ng-click="close()">
+            <button  class="button  button-default"  >取消</button>
+            <input type="text" class="yellow time_input" ng-model="pickedDate" mobiscroll-date="datePickerSettings" mobiscroll-instance="datePicker" placeholder="2016-09-09" ng-show="false"/>
+            <button  class="button  button-positive" style="background-color:#F39801;" ng-click="datePicker.show()">确定</button>
+        </div>
+    </div>
+</div>
