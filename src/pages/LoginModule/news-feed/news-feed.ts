@@ -34,7 +34,7 @@ export class  NewsFeedComponent{
     return style;
   }
   ionViewDidLoad() {
-    console.log('ionViewDidLoad NewsFeedPage');
+    // console.log('ionViewDidLoad NewsFeedPage');
 
     this.newsFeedImg=true;
 

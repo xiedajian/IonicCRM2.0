@@ -19,6 +19,6 @@
             <div><img src="img/logo.png" class="img"/></div>
             <p class="padding-top">V {{versionNum}}</p>
         </div>
-        <div><span class="s_r_btn" (click)="checkUpdate()" tappable>检查更新</span></div>
+        <div><span class="s_r_btn" (click)="checkUpdate()" tappable  hideWhen="ios">检查更新</span></div>
     </div>
 </ion-content>

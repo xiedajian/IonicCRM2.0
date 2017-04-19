@@ -1,0 +1,10 @@
+
+
+
+<!--(keyup)="keyUp($event)"-->
+<input   [type]="type" [placeholder]="placeholder" class="text-input" [(ngModel)]="value" (blur)="blur($event)" (focus)="keyUp($event)" (keyup)="keyUp($event)"/>
+<button class="text-input-clear-icon clear-btn" type="button" (click)="clearInput($event)" >
+    <!--[hidden]="!clearHidden"-->
+    <span class="button-inner"></span>
+    <div class="button-effect"></div>
+</button>

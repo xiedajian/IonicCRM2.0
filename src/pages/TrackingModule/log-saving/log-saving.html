@@ -9,13 +9,15 @@
   <ion-navbar hideBackButton="true">
     <ion-title>{{customer.customerName}}跟踪日志</ion-title>
   </ion-navbar>
-
+    <!--网络不可用时-->
+    <p class="net_erro bar-header" *ngIf="!networkSer.isConnected">网络不可用，请检查您的网络设置！</p>
 </ion-header>
 
 <!--跟踪日志--是否联系-->
 
 <!--<ion-view class="grey_bg">-->
     <ion-content padding>
+
         <!--返回修改-->
         <div class="text-center contact_title">
             <span class="absolute" (click)="gotoBack()" tappable>
@@ -48,23 +50,24 @@
             <div class="white_bg content">
                 <div class="w_100 un_contract_bg " (click)="selectReason()" tappable>{{reason}}<!--<span class="fr"><ion-icon name="ios-arrow-down"></ion-icon></span>--></div>
             </div>
+            <!--*ngIf="TrackLog.notContactReason==6"-->
             <div class="white_bg content padding m_t_15" *ngIf="TrackLog.notContactReason==6">
-                <textarea placeholder="请填写原因（4字以上）" class="w_100" [(ngModel)]="TrackLog.otherNotContactReason"></textarea>
+                <textarea placeholder="请填写原因（4字以上）" class="w_100" [(ngModel)]="TrackLog.otherNotContactReason" (keyup)="keyUp($event)"></textarea>
             </div>
         </div>
         <!--跟踪时间-->
         <ul class="track_time padding-top">
-            <li><input type="radio" id="track"  class="hide"  name="track" checked/><label class="select_track" for="track" (click)="nextAction(1)" tappable>系统智能管理跟踪时间</label></li>
-            <li><input type="radio" id="man_track"  class="hide" name="track"/><label class="select_track" for="man_track"  (click)="nextAction(2)" tappable>人工指定</label>
+            <li><input type="radio" id="track"  class="hide"  name="track" checked (click)="nextAction(1)" tappable/><label class="select_track" for="track" >系统智能管理跟踪时间</label></li>
+            <li><input type="radio" id="man_track"  class="hide" name="track" (click)="nextAction(2)" tappable/><label class="select_track" for="man_track">人工指定</label>
                 <span class="fr datetime-ionic"  *ngIf="manTrackTime">
-                    <span class="head">下次跟踪时间：</span>
+                    <span class="head"></span>
                     <ion-datetime displayFormat="YYYY-MM-DD" pickerFormat="YYYY-MM-DD" [(ngModel)]="TrackLog.nextTrackDate" min="{{TrackLog.nextTrackDate}}"
                                   max="{{maxDate}}" cancelText="取消" doneText="完成" mode="ios">
                     </ion-datetime>
                     <!--<ion-icon name="ios-arrow-forward-outline"></ion-icon>-->
                 </span>
             </li>
-            <li ><input type="radio"  id="un_track" class="hide" name="track"/><label class="select_track" for="un_track" (click)="nextAction(3)" tappable>不再跟踪</label></li>
+            <li ><input type="radio"  id="un_track" class="hide" name="track" (click)="nextAction(3)" tappable/><label class="select_track" for="un_track" >不再跟踪</label></li>
         </ul>
         <div class="log_save_btn">
             <div class="btn_block_yellow" (click)="LogSave()" tappable>保存日志</div>
@@ -81,7 +84,7 @@
             <ul>
                 <li [ngClass]="contactType==3 ? 'active' : '' " (click)="contactType = 3" tappable>上门拜访</li>
                 <li [ngClass]="contactType==4 ? 'active' : '' " (click)="contactType = 4" tappable>QQ</li>
-                <li [ngClass]="contactType==5 ? 'active' : '' " (click)="contactType = 5" tappable>weixin微信</li>
+                <li [ngClass]="contactType==5 ? 'active' : '' " (click)="contactType = 5" tappable>微信</li>
                 <li [ngClass]="contactType==6 ? 'active' : '' " (click)="contactType = 6" tappable>SMS短信</li>
                 <li [ngClass]="contactType==10 ? 'active' : '' " (click)="contactType = 10" tappable>其它沟通渠道</li>
             </ul>
@@ -92,7 +95,8 @@
 
 <!--未跟踪原因-->
 <div class="pop_panel" *ngIf="notContactShow">
-    <div style="transform: translateY(0%);-webkit-transform: translate(0%);" class="bottom_pop">
+    <!--style="transform: translateY(0%);-webkit-transform: translate(0%);"-->
+    <div class="bottom_pop" id="reasonPop">
         <div class="U_contract_sheet">
             <header><span (click)="notContactShow=!notContactShow" tappable>取消</span><span class="fr yellow" (click)="setUnContactReason()" tappable>完成</span></header>
             <ul>

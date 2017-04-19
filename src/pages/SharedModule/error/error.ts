@@ -1,22 +1,26 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, NavParams} from 'ionic-angular';
 
 /*
-  Generated class for the Error page.
+ Generated class for the Error page.
 
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
+ See http://ionicframework.com/docs/v2/components/#navigation for more info on
+ Ionic pages and navigation.
+ */
 @Component({
-  selector: 'page-error',
-  templateUrl: 'error.html'
+    selector: 'page-error',
+    templateUrl: 'error.html'
 })
 export class ErrorPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+    constructor(public navCtrl: NavController, public navParams: NavParams) {
+    }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ErrorPage');
-  }
+    ionViewDidLoad() {
+        // console.log('ionViewDidLoad ErrorPage');
+    }
 
+    go_back() {
+        this.navCtrl.pop();
+    }
 }

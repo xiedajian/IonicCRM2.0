@@ -23,10 +23,10 @@ export  class  CallSer{
      * 获取通话配置，获取通话余量
      */
     getCallTypeConfig() {
-       this.interface_lists.getCallConf({orgId:AppConfig.getUserInfo().orgId}).then((returnData)=>{
+       this.interface_lists.getPersonalityConfig().then((returnData)=>{
             if(returnData.isSucceed){
                 //AppConfig.balanceMinute = returnData.data;
-                AppConfig.callingType  = returnData.data.Voice_Type;
+                AppConfig.callingType  = returnData.data.callingType;
             }else{
                 switch (returnData.code) {
                     case 400:
@@ -76,45 +76,64 @@ export  class  CallSer{
             })
         })
     }
-    uxinBindCall(customer){
+
+    //uxin解绑
+    UxinCallUnbind(){
+        console.log('解绑');
+        this.interface_lists.UxinCallUnbind({tel:AppConfig.getUserInfo().mobile}).then((returnData)=>{
+            if(returnData.isSucceed){
+                // this.popser.alert('解绑成功!');
+                console.log('解绑成功!');
+            }else {
+                // this.popser.alert('解绑失败!');
+                console.log("解绑失败");
+            }
+        },()=>{
+            // this.popser.alert('服务器连接失败,请稍后再试');
+            console.log('解绑服务器连接失败,请稍后再试');
+        });
+    }
+
+    //uxin绑定
+    uxinBindCall(customer,callback = ()=> {}){
         let bindData:any = {
-            "tel":AppConfig.getUserInfo().mobile,
             "orgId":AppConfig.getUserInfo().orgId,
+            "mobile":AppConfig.getUserInfo().mobile,
             "employeeId":AppConfig.getUserInfo().userId
         }
-        return new Promise((resolve,reject)=>{
             return this.interface_lists.UxinCallBind(bindData).then((returnData)=>{
-                if(returnData.IsSucceed){
-                    uxin.sdk.calling("您的客户:" + customer.name,customer.telphone, function (msg) {
-                        //弹出日志填写框
-                        //alert(msg);
+                // console.log(returnData);
+                // console.log(customer);
+                // console.log(uxin);
+                if(returnData.isSucceed){
+                    uxin.sdk.calling("您的客户:" + customer.customerName,customer.contactMobile, function (msg) {
+                    // uxin.sdk.calling("大见",'18558756920', function (msg) {
+/*                    //获取随机测试账号
+                    let cc=AppConfig.getTestCount();
+                    uxin.sdk.calling(cc.name,cc.number, function (msg) {*/
+                        // console.log('进入有信');
+                        // console.log(msg);
                         msg = JSON.parse(msg);
                         if(msg.event>3){
-                            this.interface_lists.UxinCallUnbind({tel:AppConfig.getUserInfo().mobile}).then((returnData)=>{
-                                if(returnData.IsSucceed){
-                                   this.popser.alert('解绑成功!');
-                                    resolve();
-                                }else {
-                                    this.popser.alert('解绑失败!');
-                                    reject("解绑失败");
-                                }
-                            },()=>{
-                                this.popser.alert('服务器连接失败,请稍后再试');
-                                reject("服务器连接失败,请稍后再试");
-                            });
+                            //解绑无法写在这里，在提交日志时解绑 （这里的回调函数无法使用ionic的函数或自定义的函数）
+                            // console.log('msg.event>3');
+                            // this.UxinCallUnbind();
+                        }
+                        if (callback != undefined && callback != null && typeof callback == 'function') {
+                            callback();
                         }
                     }, function (err) {
-                        //$scope.targetValue += err;
+                        // console.log('进入有信err');
+                        // console.log(err);
                         if(err.indexOf('RECORD_AUDIO')>0){ //说明权限没有打开
-                            this.popser.alert('客满分录音权限没有打开，请在系统设置中找到客满分应用，将录音权限打开！')
-                            reject("客满分录音权限没有打开，请在系统设置中找到客满分应用，将录音权限打开！");
+                            alert('客满分录音权限没有打开，请在系统设置中找到客满分应用，将录音权限打开！');
                         }
                     });
+                }else {
+                    this.popser.alert('免费电话手机号绑定失败，请稍后再试');
                 }
             }, ()=> {
                 this.popser.alert('服务器连接失败,请稍后再试');
-                reject("服务器连接失败,请稍后再试");
-            })
-        })
+            });
     }
 }

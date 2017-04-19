@@ -12,7 +12,8 @@ export enum TrackDateCalcType{
 }
 
 export enum CustomerStatus{
-    Assign = 0,
+    None = 0,
+    Assign,
     Track,
     UnTrack
 }

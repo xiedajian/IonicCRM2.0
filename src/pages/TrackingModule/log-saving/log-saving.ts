@@ -2,17 +2,16 @@ import { Component } from '@angular/core';
 import { NavController,NavParams } from 'ionic-angular';
 //import {TrackingComponent} from '../tracking/tracking';
 import { PopSer }     from '../../../providers/pop-ser';
+import {NetworkSer} from '../../../providers/network-ser';
 import {Customer} from "../../SharedModule/customer.model";
 //import {TrackingListComponent} from '../tracking-list/tracking-list';
 //import {CustomerDetailsComponent} from '../customer-details/customer-details';
 import {CustomerService} from '../../SharedModule/customer.service'
-import {CUSTOMER} from "../../SharedModule/customer.service";
-/*
-  Generated class for the LogSaving page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
+//import {CUSTOMER} from "../../SharedModule/customer.service";
+import {CRMService} from '../../SharedModule/crm.service';
+import {AppConfig} from "../../../app/app.config";
+import {LoginComponent}     from '../../LoginModule/login/login';
+import {ServiceMaintenancePage} from '../../SharedModule/service-maintenance/service-maintenance'
 @Component({
   selector: 'page-log-saving',
   templateUrl: 'log-saving.html',
@@ -60,23 +59,40 @@ export class LogSavingComponent {
 
 
     constructor(public navCtrl:NavController,
-                public navParams:NavParams, private popser:PopSer,public customerServcie:CustomerService) {
+                public navParams:NavParams,
+                private popser:PopSer,
+                public networkSer:NetworkSer,
+                public customerServcie:CustomerService,
+                public crmService:CRMService) {
+        this.TrackLog.orgId = AppConfig.userInfo.orgId;
         this.TrackLog.isContacted = navParams.get('isContacted');//是否联系上
         this.customer = navParams.get('customer');
         this.TrackLog.customerId = this.customer.customerId;
-        this.TrackLog.calleePhone=this.customer.contactMobile;
-        this.TrackLog.callerPhone=navParams.get('callerPhone');
+        this.TrackLog.calleePhone = this.customer.contactMobile;
         this.TrackLog.contactType = navParams.get('contactType');
+        if(this.TrackLog.contactType==1){
+            this.TrackLog.callerPhone = navParams.get('callerPhone');
+        }
         let now = new Date();
         this.TrackLog.nextTrackDate = this.getFormatDate(now);//下一次跟踪时间
         this.maxDate = this.getFormatDate(now.setFullYear(now.getFullYear() + 100));
 
-        console.log(this.TrackLog.nextTrackDate, this.maxDate);
+        // console.log(this.TrackLog.nextTrackDate, this.maxDate);
     }
 
     selectReason() {//选择未联系上原因的弹窗出现
         this.unContactReason = this.TrackLog.notContactReason;
         this.notContactShow = true;
+        setTimeout(function () {//横屏状态下，如果手机高度比弹窗高度小，则弹窗高度变小
+            let reasonHeight=AppConfig.getWindowHeight();
+            if(reasonHeight<286){
+                let x=document.getElementById("reasonPop");
+                x.style.maxHeight="240px";
+                x.style.overflow="auto";
+
+            }
+        }, 3);
+
     }
 
     selectContactType(){
@@ -156,7 +172,7 @@ export class LogSavingComponent {
     };
 
     //模拟数据
-    saveTrackLogByHttp(param:any):Promise<any> {
+    /*saveTrackLogByHttp(param:any):Promise<any> {
         let result = {
             isSucceed: true,
             data: {
@@ -171,12 +187,12 @@ export class LogSavingComponent {
         return new Promise<any>(resolve=>
             setTimeout(resolve, 500))
             .then(()=>this.saveTrackLogByHttp(param));
-    }
+    }*/
 
     //保存日志弹窗确定按钮
     LogSaveCallback() {
-        //this.crmService.saveTrackLog(this.TrackLog).then((result)=> {
-        this.saveTrackLogByHttpSlow(this.TrackLog).then((result)=> {
+        this.crmService.saveTrackLog(this.TrackLog).then((result)=> {
+        //this.saveTrackLogByHttpSlow(this.TrackLog).then((result)=> {
             if (result.isSucceed) {
                 this.customerServcie.removeUnSaveState();
                 let customerInfo = result.data.customerInfo;
@@ -187,13 +203,35 @@ export class LogSavingComponent {
                     index = this.navCtrl.length() - 3;
                 }
                 this.navCtrl.popTo(this.navCtrl.getByIndex(index), {customer: customerInfo});
+            }else {
+                switch (result.code) {
+                    case 600:   //600跳转到系统维护
+                        this.navCtrl.push(ServiceMaintenancePage);
+                        break;
+                    case 400:
+                        this.popser.alert('请求不合法（请求安全校验没有通过）');
+                        break;
+                    case 401:
+                        this.popser.alert('请求要求身份验证（TOKEN无效）');
+                        // this.navCtrl.push(LoginComponent);
+                        this.navCtrl.parent.parent.setRoot(LoginComponent);
+                        break;
+                    case 500:
+                        this.popser.alert('系统内部异常');
+                        break;
+                    default:
+                        this.popser.alert('数据获取失败，请重试');
+                        break;
+                }
             }
+        },()=>{
+            this.popser.alert('服务器连接失败,请稍后再试');
         });
     }
 
     LogSave() {
         //保存日志
-        console.log(this.TrackLog);
+        // console.log(this.TrackLog);
         if (this.TrackLog.contactType == 0) {
             this.popser.alert('请选择联系方式');
             return;
@@ -294,6 +332,7 @@ export class LogSavingComponent {
     }
 
     nextAction(nextAction:number) {//下次跟踪的动作
+
         if (this.TrackLog.nextAction == nextAction) {
             return;
         }
@@ -304,13 +343,21 @@ export class LogSavingComponent {
         else {
             this.manTrackTime = false;
         }
+
     }
+
+
+    keyUp(event){
+        AppConfig.RegExp(this.TrackLog.otherNotContactReason,event)
+    }
+
+
 
     ionViewDidLoad() {
         //console.log(this.navCtrl.first(),this.navCtrl.getViews(),this.navCtrl.length(),this.navCtrl.getByIndex(this.navCtrl.length()-3),this.navCtrl.getPrevious(this.navCtrl.getPrevious()));
         //this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length()-3));
-
     }
+
 
 
 }

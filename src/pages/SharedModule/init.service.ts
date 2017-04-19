@@ -112,9 +112,9 @@ export class InitService {
 
     //从服务端获取品牌信息
     setBrands(orgId:number) {
-        //return this.crmService.getBrands(orgId).then((result)=> {
-        return this.setBrandsSlow(orgId).then((result)=> {
-            console.log(result);
+        return this.crmService.getBrands(orgId).then((result)=> {
+        //return this.setBrandsSlow(orgId).then((result)=> {
+        //     console.log(result);
             if (result.isSucceed) {
                 this.brands = result.data;
             }

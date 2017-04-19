@@ -7,15 +7,14 @@ import {LoginComponent}from'../pages/LoginModule/login/login';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-
-declare function SHA1(msg:string);
 /*SHA1散列*/
-declare function hex_md5(msg:string);
+declare function SHA1(msg:string);
 /*MD5加密*/
-declare var CryptoJS;
+declare function hex_md5(msg:string);
 /*AES加密*/
-declare var RSAUtils;
+declare var CryptoJS;
 /*RSA加密*/
+declare var RSAUtils;
 
 /**
  * HTTP请求服务
@@ -45,12 +44,12 @@ export class HttpSer {
     /**
      * post方式请求
      * @param   url：string　 paramObj:{name:'大见',age:'23'}
-     * @returns Promise
+     * @returns Promise application/x-www-form-urlencoded
      */
-    post(url:string, body:any = {}) {
+    post(url:string, body:any = {}, contentType:string="application/x-www-form-urlencoded") {
         let timestamp = this.getTimestamp();
         let sign = this.getSign(body, timestamp);
-        let headers = this.getHeader(sign, timestamp);
+        let headers = this.getHeader(sign, timestamp, contentType);
         let options = new RequestOptions({headers: headers});
         return this.http.post(url, this.toBodyString(body), options)
             .toPromise()
@@ -74,8 +73,8 @@ export class HttpSer {
             userName: body.userName,
             password: password,
         }
-        console.log(url);
-        console.log(newbody);
+        // console.log(url);
+        // console.log(newbody);
         let sign = this.getSign(newbody, timestamp);
         let headers = this.getHeader(sign, timestamp);
         let options = new RequestOptions({headers: headers});
@@ -97,12 +96,13 @@ export class HttpSer {
         let timestamp = this.getTimestamp();
         let newbody:any={};
         let vi = this.getVi(timestamp);
+        // console.log(vi);
         let newPassword = this.AES_Encrypt(hex_md5(body.newPassword), vi);
         var arr = Object.keys(body);
-        console.log(body);
-        console.log(arr);
+        // console.log(body);
+        // console.log(arr);
         // console.log(body.length);
-        console.log(arr.length);
+        // console.log(arr.length);
         if(arr.length==2){
             newbody = {
                 userName: body.userName,
@@ -118,9 +118,9 @@ export class HttpSer {
             }
             console.log('修改密码');
         }
-        console.log(vi);
-        console.log(url);
-        console.log(newbody);
+        // console.log(vi);
+        // console.log(url);
+        // console.log(newbody);
         let sign = this.getSign(newbody, timestamp);
         let headers = this.getHeader(sign, timestamp);
         let options = new RequestOptions({headers: headers});
@@ -134,7 +134,7 @@ export class HttpSer {
      * 获取当前时间 减 2015年1月1日的 时间戳
      */
     private getTimestamp() {
-        let timestamp = (new Date().getTime()-1420070400).toString().substr(0, 10);
+        let timestamp = Math.floor(new Date().getTime() / 1000 - 1420070400).toString();
         return timestamp;
     }
 
@@ -143,13 +143,13 @@ export class HttpSer {
      * @param   sign  timestamp
      * @returns headers
      */
-    private getHeader(sign:string, timestamp:string) {
+    private getHeader(sign:string, timestamp:string, contentType:string="application/x-www-form-urlencoded") {
         let headers:any = new Headers();
-        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        headers.append('content-type', contentType);
         headers.append('token', AppConfig.getToken());
         headers.append('timestamp', timestamp);
         headers.append('platform', AppConfig.getPlatform());
-        headers.append('deviceid', AppConfig.getDeviceid());
+        headers.append('deviceId', AppConfig.getDeviceid());
         headers.append('sign', sign);
         headers.append('appName', AppConfig.getAppName());
         headers.append('appVersion', AppConfig.getAppVersion());
@@ -183,7 +183,7 @@ export class HttpSer {
         }
         ret.push(this.toSignPair('token', AppConfig.getToken()));
         ret.push(this.toSignPair('platform', AppConfig.getPlatform()));
-        ret.push(this.toSignPair('deviceid', AppConfig.getDeviceid()));
+        ret.push(this.toSignPair('deviceId', AppConfig.getDeviceid()));
         ret.push(this.toSignPair('appName', AppConfig.getAppName()));
         ret.push(this.toSignPair('appVersion', AppConfig.getAppVersion()));
         ret.sort();
@@ -197,13 +197,13 @@ export class HttpSer {
         let A3 = hex_md5(A2);
         let A4 = A3 + AppConfig.getuserName();
         let sign = hex_md5(A4);
-        // console.log('token' + '--' + AppConfig.getToken());
-        console.log(ret);
-        // console.log('A1' + '--' + A1);
-        // console.log('A2' + '--' + A2);
-        // console.log('A3' + '--' + A3);
-        // console.log('A4' + '--' + A4);
-        // console.log('A5' + '--' + sign);
+         //console.log('token' + '--' + AppConfig.getToken());
+         //console.log(ret);
+         // console.log('A1' + '--' + A1);
+         // console.log('A2' + '--' + A2);
+         // console.log('A3' + '--' + A3);
+         // console.log('A4' + '--' + A4);
+         // console.log('A5' + '--' + sign);
         return sign;
     }
 
@@ -310,8 +310,10 @@ export class HttpSer {
      * 注：需要秘钥（AES_key）和秘钥偏移量（iv）
      */
     public AES_Encrypt(word, iv) {
+        var key = CryptoJS.enc.Utf8.parse(AES_key);
+        var iv  = CryptoJS.enc.Utf8.parse(iv);
         var srcs = CryptoJS.enc.Utf8.parse(word);
-        var encrypted = CryptoJS.AES.encrypt(srcs, AES_key, {
+        var encrypted = CryptoJS.AES.encrypt(srcs, key, {
             iv: iv,
             mode: CryptoJS.mode.CBC,
             padding: CryptoJS.pad.Pkcs7

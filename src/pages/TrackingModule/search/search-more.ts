@@ -39,6 +39,7 @@ export class SearchMoreComponent {
                 public customerService:CustomerService,
                 public searchService:SearchService,
                 public renderer:Renderer) {
+        this.query.orgId = AppConfig.userInfo.orgId;
         this.query.keyType = navParams.get('keyType');
         this.searchQuery = navParams.get('searchQuery');
         this.query.key = this.searchQuery;
@@ -92,6 +93,11 @@ export class SearchMoreComponent {
                             this.searchNone = false;
                         }
                     }
+                    else {
+                        this.searching = false;
+                        this.searchNone = true;
+                        this.total = 0;
+                    }
                 });
             }
             else {
@@ -111,7 +117,7 @@ export class SearchMoreComponent {
         this.query.recordCount = this.total;
         this.searchService.getKeySearch(this.query).then(result=> {
             if (result.isSucceed) {
-                console.log(this.query,result);
+                // console.log(this.query,result);
                 if (this.query.keyType == 1) {
                     if (result.data.customers == null || result.data.customers.length <= 0) {
                         this.isEnd = true;
@@ -147,7 +153,7 @@ export class SearchMoreComponent {
                         /*for (let i = 0; i < result.data.logs.length; i++) {
                             this.trackLogs.push(result.data.logs[i]);
                         }*/
-                        this.trackLogs = this.trackLogs.concat(result.logs);
+                        this.trackLogs = this.trackLogs.concat(result.data.logs);
                     }
                     //this.total = result.data.totalLogs;
                 }
@@ -176,33 +182,33 @@ export class SearchMoreComponent {
     }
 
     gotoCustomerByLog(customerId:number) {
-        console.log(customerId);
-        this.customerService.getCustomer(customerId).then((result)=> {
+        // console.log(customerId);
+        this.customerService.getCustomer(this.query.orgId, customerId).then((result)=> {
             if (result.isSucceed) {
-                console.log(result.data);
-                if(result.data) {
+                // console.log(result.data);
+                if (result.data) {
                     this.gotoCustomerDetails(result.data);
                 }
             }
             else {
-                let error={
-                    function:'gotoCustomerByLog',
-                    userName:AppConfig.userName,
-                    logLevel:8,
-                    message:result.code,
-                    module:'TrackingModule',
-                    source:'search-more.ts'
+                let error = {
+                    function: 'gotoCustomerByLog',
+                    userName: AppConfig.userName,
+                    logLevel: 8,
+                    message: result.code,
+                    module: 'TrackingModule',
+                    source: 'search-more.ts'
                 };
                 console.log(error);
             }
-        },err=>{
-            let error={
-                function:'gotoCustomerByLog',
-                userName:AppConfig.userName,
-                logLevel:16,
-                message:err.toString(),
-                module:'TrackingModule',
-                source:'search-more.ts'
+        }, err=> {
+            let error = {
+                function: 'gotoCustomerByLog',
+                userName: AppConfig.userName,
+                logLevel: 16,
+                message: err.toString(),
+                module: 'TrackingModule',
+                source: 'search-more.ts'
             };
             console.log(error);
         });

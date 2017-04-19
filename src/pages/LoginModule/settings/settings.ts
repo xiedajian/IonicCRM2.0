@@ -4,7 +4,6 @@ import {Storage} from '@ionic/storage';
 import {VersionInfoPage} from '../version-info/version-info';
 import {ChangePasswordPage} from '../change-password/change-password';
 import {LoginComponent} from '../login/login';
-import {UpdateAppSer}     from '../../../providers/updateApp-ser';
 import {AppConfig} from '../../../app/app.config';
 import {InterfaceLists}  from '../../../providers/interface_list';
 
@@ -15,7 +14,7 @@ import {InterfaceLists}  from '../../../providers/interface_list';
 export class SettingsPage {
     hasNewApp:boolean = false;
 
-    constructor(public navCtrl:NavController, public updateApp:UpdateAppSer, public storage:Storage,public interface_lists:InterfaceLists) {
+    constructor(public navCtrl:NavController, public storage:Storage,public interface_lists:InterfaceLists) {
     }
 
     ionViewDidLoad() {
@@ -38,7 +37,10 @@ export class SettingsPage {
         AppConfig.userName = '';
         AppConfig.userInfo = {};
         this.storage.remove('userInfo');
-        this.navCtrl.push(LoginComponent);
+        // this.navCtrl.push(LoginComponent);
+        // this.navCtrl.setRoot(LoginComponent);
+        // this.navCtrl.setPages(LoginComponent);
+        this.navCtrl.parent.parent.setRoot(LoginComponent);
     }
 
     checkVersion() {

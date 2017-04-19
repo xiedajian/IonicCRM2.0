@@ -12,6 +12,8 @@
     </ion-navbar>
 </ion-header>
 <ion-content >
+    <!--网络不可用时-->
+    <p class="net_erro bar-header" *ngIf="!networkSer.isConnected">网络不可用，请检查您的网络设置！</p>
     <!--本月完成率-->
     <div class="Completion_month">
         <p class="Cmoth_head">本月完成率</p>
@@ -34,7 +36,7 @@
                 <li *ngFor="let t of src"><img src='{{t}}'/></li>
             </ul>
             <!--购买人数-->
-            <p class="text-center"><span class="people_buy" (click)="tip()" tappable>有{{VipBuyCount}}人购买</span></p>
+            <p class="text-center"><span class="people_buy" (click)="tip()" tappable>有{{VipBuyCount}}人次购买</span></p>
         </div>
     </div>
     <!--跟踪成功率-->
@@ -46,8 +48,8 @@
     <div class="track_detail" (click)="go_trackLog()" tappable>跟踪日志<span class="fr">{{trackLogNum}}<small>条</small>
            </span></div>
     <!--消息推送-->
-    <div class="track_detail" (click)="gotoNews()" tappable>消息<span class="fr"><i class="redDot">&nbsp;</i>
-       </span></div>
+    <!--<div class="track_detail" (click)="gotoNews()" tappable>消息<span class="fr"><i class="redDot">&nbsp;</i>-->
+       <!--</span></div>-->
 
 </ion-content>
 

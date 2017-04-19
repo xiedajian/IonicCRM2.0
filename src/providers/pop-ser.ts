@@ -18,12 +18,19 @@ export class PopSer {
     /**
      * alert弹窗---感叹号，一个按钮
      */
-    alert(content, callback = ()=> {}) {
+    alert(content, callback = ()=> {},noCenter?) {
+        let css:string;
+       if(noCenter===true){
+           css='no-center';
+       }
+       else{
+           css='';
+       }
         let alert = this.alertCtrl.create({
             title: '<div class="text-center"><div class="warm_tip text-center"><img src="img/warm.png" class="img"/></div></div>',
             message: '<div class="oT_content"><div class="p_tip">'+content+'</div></div>',
             enableBackdropDismiss:false,
-            //cssClass:'p_tip',
+            cssClass:css,
             buttons: [
                 {
                     text: "好的",
@@ -63,8 +70,9 @@ export class PopSer {
         });
         alert.present();
     }
+
     /**
-     * 自定义alert弹窗
+     * 自定义alert弹窗---图片凸出
      */
     alertDIY(obj,  ok_callback:any = ()=> {}) {
         let confirm_diy = this.alertCtrl.create({
@@ -168,14 +176,11 @@ export class PopSer {
                 this.load.dismiss();
             }, 10000);  
         }
-        this.load.onDidDismiss(() => {
-            console.log('Dismissed loading');
-        });
     }
     /**
      * 自定义加载
      */
-    loadingDIY(op,content:any='') {
+    loadingDIY(op,content:any='',css?:any) {
         if(op=='hide'){
             if(this.loadDIY){
                 this.loadDIY.dismiss();
@@ -184,19 +189,46 @@ export class PopSer {
             this.loadDIY=this.loadingCtrl.create({
                 spinner: 'hide',
                 // showBackdrop:false,
-                // cssClass:'',
+                cssClass:css||'',
                 // dismissOnPageChange:false,
                 content:content || 'Please wait...',
             });
             this.loadDIY.present();
-            setTimeout(() => {
-                this.loadDIY.dismiss();
-            }, 10000);
+            // setTimeout(() => {
+            //     this.loadDIY.dismiss();
+            // }, 10000);
         }
-        this.loadDIY.onDidDismiss(() => {
-            console.log('Dismissed loading');
-        });
+        // this.loadDIY.onDidDismiss(() => {
+        //     console.log('Dismissed loading');
+        // });
     }
+
+    /**
+     * 努力加载中页面
+     */
+    loadOn(op) {
+        if(op===true){
+            if(this.loadDIY){
+                this.loadDIY.dismiss();
+            }
+        }else {
+            this.loadDIY=this.loadingCtrl.create({
+                spinner: 'hide',
+                cssClass:"load_on",
+                content: `  <img src="./img/loading.gif" class="load-gif"/>
+                            <div class="load_text">努力加载中<i class="dot"></i></div> `
+            });
+            this.loadDIY.present();
+            /*setTimeout(() => {
+                this.loadDIY.dismiss();
+            }, 100);*/
+        }
+        // this.loadDIY.onDidDismiss(() => {
+        //     // console.log('Dismissed loading');
+        // });
+    }
+
+
 
 
 }

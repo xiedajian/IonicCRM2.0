@@ -3,9 +3,11 @@
     <ion-navbar>
         <ion-title>跟踪日志与效果</ion-title>
     </ion-navbar>
+    <p class="net_erro bar-header" *ngIf="!networkSer.isConnected">网络不可用，请检查您的网络设置！</p>
     <ion-toolbar>
         <!--<ion-searchbar placeholder="搜索姓名"  [showCancelButton]="shouldShowCancel" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>-->
-        <ion-searchbar placeholder="搜索姓名" (keyup)="goSearch($event)" [(ngModel)]="customerName" (ionCancel)="onCancel($event)"></ion-searchbar>
+        <ion-searchbar placeholder="搜索姓名" [(ngModel)]="customerName" (ionCancel)="onCancel($event)"  (ionInput)="filter($event)" (keyup)="goSearch($event)"></ion-searchbar>
+        <!--(ionInput)="upperCase($event)"  (keyup)="goSearch($event)"-->
         <ion-buttons end>
             <button ion-button class="track_choose " (click)="setFilter()" [ngClass]="select===true ? 'active' : ''">
                 <ion-icon></ion-icon>
@@ -14,7 +16,7 @@
         </ion-buttons>
     </ion-toolbar>
     <!--悬浮5s-->
-    <div class="xf_text" *ngIf="logTotal_show">共搜索到日志 {{logTotal}} 篇</div>
+    <div class="xf_text" *ngIf="logTotal_show" [ngClass]="logTotal_show  ? 'active' : '' ">共搜索到日志 {{logTotal}} 篇</div>
     <!--筛选-->
     <div class="FollowUp" *ngIf="select">
         <div class="white_bg">
@@ -25,28 +27,6 @@
                 </ul>
             </article>
             <!--跟踪效果-->
-            <!--<article>-->
-                <!--<p class="menber_head">跟踪效果</p>-->
-                <!--<ul class="firterOption">-->
-                    <!--<li class="charge_cost" (click)="set_trackResult(3)"><span-->
-                            <!--class="{{trackResult==3 ? 'active':''}}">已购买</span></li>-->
-                    <!--<li class="charge_cost" (click)="set_trackResult(4)"><span-->
-                            <!--class="{{trackResult==4 ? 'active':''}}">未购买</span></li>-->
-                    <!--<li class="charge_cost" (click)="set_trackResult(2)"><span-->
-                            <!--class="{{trackResult==2 ? 'active':''}}">待评估</span></li>-->
-                <!--</ul>-->
-            <!--</article>-->
-            <!--是否联系上-->
-            <!--<article class="padding_b_010">-->
-                <!--<p class="menber_head">是否联系上</p>-->
-                <!--<ul class="firterOption">-->
-                    <!--<li class="charge_cost" (click)="set_trackResult(1)"><span-->
-                            <!--class="{{trackResult==1 ? 'active':''}}">未联系上</span></li>-->
-                    <!--<li class="charge_cost" (click)="set_trackResult('2,3,4')"><span-->
-                            <!--class="{{(trackResult>1 || trackResult=='2,3,4')? 'active':''}}">已联系上</span></li>-->
-                <!--</ul>-->
-            <!--</article>-->
-            <!--假设-->
             <article>
                 <p class="menber_head">跟踪效果</p>
                 <ul class="firterOption">
@@ -57,12 +37,13 @@
                     <li class="charge_cost" (click)="set_trackResult(2)" [ngClass]="trackResult==2 ? 'active':''" tappable>待评估</li>
                 </ul>
             </article>
+            <!--是否联系上-->
             <article class="padding_b_010">
                 <p class="menber_head">是否联系上</p>
                 <ul class="firterOption">
-                    <li class="charge_cost_1" (click)="set_trackResult(1)" [ngClass]="trackResult==1 ? 'active':'' " tappable>
+                    <li class="charge_cost" (click)="set_trackResult(1)" [ngClass]="trackResult==1 ? 'active':'' " tappable>
                            未联系上</li>
-                    <li class="charge_cost_1" (click)="set_trackResult('2,3,4')"  [ngClass]="(trackResult>1 || trackResult=='2,3,4')? 'active':''" tappable>已联系上
+                    <li class="charge_cost" (click)="set_trackResult('2,3,4')"  [ngClass]="(trackResult>1 || trackResult=='2,3,4')? 'active':''" tappable>已联系上
                      </li>
                 </ul>
             </article>
@@ -86,9 +67,9 @@
     <ion-refresher (ionRefresh)="doRefresh($event)">
         <ion-refresher-content
                 pullingIcon="arrow-dropdown"
-                pullingText="加载数据"
+                pullingText="下拉刷新"
                 refreshingSpinner="circles"
-                refreshingText="加载中..."></ion-refresher-content>
+                refreshingText="下拉刷新"></ion-refresher-content>
     </ion-refresher>
 
     <div class="white_bg log_detail" *ngFor="let log of logList">
@@ -102,7 +83,9 @@
                     {{log.trackDetail.contactType | contactTypePipe}}
                     ，{{log.trackResult>1 ? '联系上':'未联系上'}}
                 </li>
-
+                <li class="li_1" *ngIf="log.trackDetail.content">{{log.trackDetail.content}}</li>
+                <li class="li_1" *ngIf="log.trackDetail.otherNotContactReason">{{log.trackDetail.otherNotContactReason}}</li>
+                <li class="li_1" *ngIf="log.trackDetail.notContactReason<6 && log.trackDetail.notContactReason>0">{{log.trackDetail.notContactReason|notContactReasonPipe }}</li>
                 <!--音频-->
                 <li class="li_6" *ngIf="log.trackDetail.voiceRecordUrl">
                         <span class="audio_border" (click)="audioplay1(log)" tappable>
@@ -110,16 +93,16 @@
                         </span>
                     <span class="audio_duration">{{log.trackDetail.voiceRecordSize | numtotimePipe }}</span>
                 </li>
-                <li class="li_1">备注{{log.remark}}</li>
-                <li class="li_2">操作日志</li>
-                <li class="li_3">跟踪后已购买（未购买）
+                <li class="li_2"  *ngIf="log.remark">{{log.remark}}</li>
+                <li class="li_3" *ngIf="log.trackResult>1">跟踪后{{log.trackResult | trackResultPipe}}
                     <span class="fr people_buy"  [ngClass]="log.showDetail ? 'view_less' :'view_more'" (click)="toggleDetail(log)" *ngIf="log.orders" tappable>查看购买</span>
                 </li>
             </ul>
         </div>
         <!--购买行为-->
         <section class="log_detail_content" *ngIf="log.showDetail">
-            <h2 class="head ng-binding">消费时间：{{log.consumeDate}};总消费金额：￥{{log.saleAmount}}</h2>
+            <div *ngFor="let order of log.orders" class="dashBorder">
+            <h2 class="head ng-binding">消费时间：{{order.consumeDate  | dataSubstringPipe}};总消费金额：￥{{order.saleAmount}}</h2>
             <table class="logTrack_table">
                 <thead>
                 <tr>
@@ -129,21 +112,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let list of log.orders[0].goods">
+                <tr *ngFor="let list of order.goods">
                     <td class="ng-binding">{{list.goodsName}}</td>
                     <td class="ng-binding">{{list.quantity}}</td>
                     <td class="ng-binding">￥{{list.saleAmount}}</td>
                 </tr>
                 </tbody>
             </table>
+            </div>
         </section>
         <p class="text-right padding-right color_99">
-            {{log.employeeName}}&nbsp;&nbsp;于{{log.trackDate}}&nbsp;&nbsp;跟踪&nbsp;&nbsp;</p>
+            {{log.employeeName}}&nbsp;&nbsp;于{{log.trackDetail.trackDate  | dataSubstringPipe}}&nbsp;&nbsp;跟踪&nbsp;&nbsp;</p>
     </div>
     <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="has_more">
         <ion-infinite-scroll-content
                 loadingSpinner="bubbles"
-                loadingText="Loading more data..."></ion-infinite-scroll-content>
+                loadingText="加载更多"></ion-infinite-scroll-content>
     </ion-infinite-scroll>
     <div class="bottomNoMore" *ngIf="!has_more">没有更多数据了</div>
 </ion-content>

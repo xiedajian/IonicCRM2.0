@@ -20,47 +20,27 @@ export class InterfaceLists {
      */
     AppVersionCheck(data) {
         let url = APP_SERVE_URL + '/System/AppVersion/Check';
+        return this.httpser.get(url, data);
+    }
+
+    /**
+     *  4.2 设备信息注册
+     * @param   data:{cordovaVersion:1}
+     * @returns Promise
+     */
+    deviceRegister(data) {
+        let url =  APP_SERVE_URL + '/System/Device/Register';
         return this.httpser.post(url, data);
     }
 
     /**
-     *  4.6 登录
-     * @param   data:{userName:'大见',password:'123456'}
-     * @returns Promise
-     */
-    login(data) {
-        let url = APP_SERVE_URL + '/System/Security/Login';
-        return this.httpser.login(url, data);
-    }
-
-    /**
-     * 5.1.3 获取常规配置信息
+     * 4.2 获取常规配置信息
      * @param   data:{}
      * @returns Promise
      */
     getConfig() {
         let url = APP_SERVE_URL + '/system/config/get';
         return this.httpser.get(url, {});
-    }
-
-    /**
-     * 4.2 获取导购个性配置信息
-     * @param   data:{}
-     * @returns Promise
-     */
-    getPersonalityConfig() {
-        let url = APP_SERVE_URL + '/crm/config/profile';
-        return this.httpser.get(url, {});
-    }
-
-    /**
-     *  4.5 授权信息
-     * @param   data:{orgId:28,productId:'KMF'}
-     * @returns Promise
-     */
-    licenses(data) {
-        let url = APP_SERVE_URL + '/System/License/Licenses';
-        return this.httpser.get(url, data);
     }
 
     /**
@@ -74,23 +54,33 @@ export class InterfaceLists {
     }
 
     /**
-     * 5.2.13 查询剩余分钟数
-     * @param   data:{orgId:28}
+     *  4.5 授权信息
+     * @param   data:{orgId:28,productId:'KMF'}
      * @returns Promise
      */
-    communicateminute(data) {
-        let url = APP_SERVE_URL + '/crm/customer/communicateminute';
-        return this.httpser.post(url, data);
+    licenses(data) {
+        let url = APP_SERVE_URL + '/System/License/Licenses';
+        return this.httpser.get(url, data);
     }
 
     /**
-     *  导购工作台接口
-     * @param   data:{}
+     *  4.6 登录
+     * @param   data:{userName:'大见',password:'123456'}
      * @returns Promise
      */
-    workspace() {
-        let url = APP_SERVE_URL + '/crm/seller/workspace';
-        return this.httpser.post(url, {});
+    login(data) {
+        let url = APP_SERVE_URL + '/System/Security/Login';
+        return this.httpser.login(url, data);
+    }
+
+    /**
+     *  4.7 修改密码
+     * @param   data:{userName:'大见',password:'123456',newPassword:'654321'}
+     * @returns Promise
+     */
+    updatePasswd(data) {
+        let url = APP_SERVE_URL + '/System/Security/ModifyPassword';
+        return this.httpser.setNewPassword(url, data);
     }
 
     /**
@@ -101,6 +91,16 @@ export class InterfaceLists {
     sendCode(data) {
         let url = APP_SERVE_URL + '/System/Sms/SendCode';
         return this.httpser.post(url, data);
+    }
+
+    /**
+     *  4.9 重置密码
+     * @param   data:{userName:'大见',newPassword:'123456'}
+     * @returns Promise
+     */
+    resetPasswd(data) {
+        let url = APP_SERVE_URL + '/System/Security/ResetPasswd';
+        return this.httpser.setNewPassword(url, data);
     }
 
     /**
@@ -124,35 +124,33 @@ export class InterfaceLists {
     }
 
     /**
-     *  4.9 重置密码
-     * @param   data:{userName:'大见',newPassword:'123456'}
+     *  5.1.1导购工作台接口
+     * @param   data:{}
      * @returns Promise
      */
-    resetPasswd(data) {
-        let url = APP_SERVE_URL + '/System/Security/ResetPasswd';
-        return this.httpser.setNewPassword(url, data);
+    workspace() {
+        let url = APP_SERVE_URL + '/crm/seller/workspace';
+        return this.httpser.get(url, {});
     }
-
-    /**
-     *  4.7 修改密码
-     * @param   data:{userName:'大见',password:'123456',newPassword:'654321'}
-     * @returns Promise
-     */
-    updatePasswd(data) {
-        let url = APP_SERVE_URL + '/System/Security/ModifyPassword';
-        return this.httpser.setNewPassword(url, data);
-    }
-
     /**
      *  5.1.2    导购跟踪效率
      * @param   data:{intdate:20170106}
      * @returns Promise
      */
     overview(data) {
-        let url = APP_SERVE_URL + '/crm/seller/overview';
-        return this.httpser.post(url, data);
+        let url = APP_SERVE_URL + '/crm/seller/Overview';
+        return this.httpser.get(url, data);
     }
 
+    /**
+     * 5.1.3 获取导购个性配置信息
+     * @param   data:{}
+     * @returns Promise
+     */
+    getPersonalityConfig() {
+        let url = APP_SERVE_URL + '/crm/config/profile';
+        return this.httpser.get(url, {});
+    }
 
     /**
      * 5.2.4    会员画像接口
@@ -161,9 +159,8 @@ export class InterfaceLists {
      */
     portrait(data) {
         let url = APP_SERVE_URL + '/crm/customer/portrait';
-        return this.httpser.post(url, data);
+        return this.httpser.get(url, data);
     }
-
 
     /**
      * 5.2.5    关闭会员跟踪接口
@@ -202,7 +199,7 @@ export class InterfaceLists {
      */
     CalcNextTrackDate(data) {
         let url = APP_SERVE_URL + '/crm/customer/CalcNextTrackDate';
-        return this.httpser.post(url, data);
+        return this.httpser.get(url, data);
     }
 
     /**
@@ -212,7 +209,7 @@ export class InterfaceLists {
      */
     consumeStructure(data) {
         let url = APP_SERVE_URL + '/crm/customer/consumestructure';
-        return this.httpser.post(url, data);
+        return this.httpser.get(url, data);
     }
 
 
@@ -223,7 +220,7 @@ export class InterfaceLists {
      */
     consumeOrder(data) {
         let url = APP_SERVE_URL + '/crm/customer/Orders';
-        return this.httpser.post(url, data);
+        return this.httpser.get(url, data);
     }
 
     /**
@@ -233,7 +230,7 @@ export class InterfaceLists {
      */
     tracklogs(data) {
         let url = APP_SERVE_URL + '/crm/customer/tracklogs';
-        return this.httpser.post(url, data);
+        return this.httpser.get(url, data);
     }
 
     /**
@@ -243,48 +240,40 @@ export class InterfaceLists {
      */
     operatlogs(data) {
         let url = APP_SERVE_URL + '/crm/customer/operatlogs';
-        return this.httpser.post(url, data);
+        return this.httpser.get(url, data);
     }
 
     /**
-     * 5.2.13  获取通话类型配置
-     * @param data:{orgId:28}
+     * 5.2.13 查询剩余分钟数
+     * @param   data:{orgId:28}
      * @returns Promise
      */
-     getCallConf(data){
-        let url = APP_SERVE_URL + '/YtxApp/YtxApi/GetVoiceConfig';
+    communicateminute(data) {
+        let url = APP_SERVE_URL + '/crm/customer/communicateminute';
+        return this.httpser.get(url, data);
+    }
+
+
+    /**
+     * 5.3.1  绑定有信
+     * @param data:{orgId:28,mobile:"18073118015",employeeId:1512}
+     * @returns Promise
+     */
+    UxinCallBind(data){
+        let url = APP_SERVE_URL + '/uxin/account/Bind';
         return this.httpser.post(url,data);
     }
 
     /**
-     * 5.2.14  绑定有信
-     * @param data:{tel:"18073118015",orgId:28,employeeId:1512}
-     * @returns Promise
-     */
-    UxinCallBind(data){
-        let url = 'http://hybapi.ipvp.cn/v1/YtxApp/YtxApi/GetBind';
-        return this.httpser.get(url,data);
-    }
-
-    /**
-     * 5.2.15  解绑有信
+     * 5.3.2  解绑有信
      * @param data:{tel:"18073118015"}
      * @returns Promise
      */
     UxinCallUnbind(data){
-        let url = 'http://hybapi.ipvp.cn/v1/YtxApp/YtxApi/Unbind';
-        return this.httpser.get(url,data);
+        let url = APP_SERVE_URL + '/uxin/account/UnBind';
+        return this.httpser.post(url,data);
     }
 
-    /**
-     * 5.2.16   获取剩余分钟数
-     * @param data:{tel:"18073118015"}
-     * @returns Promise
-     */
-    getRemainTimes(){
-        let url = APP_SERVE_URL + '/crm/config/profile';
-        return this.httpser.post(url);
-    }
 
 
 

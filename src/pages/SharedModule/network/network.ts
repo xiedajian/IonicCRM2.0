@@ -24,11 +24,11 @@ export class NetworkComponent implements OnInit,OnDestroy,DoCheck,AfterContentIn
 
     ngOnInit(){
         //this.checkNetwork();
-        console.log("ngOnInit");
+        // console.log("ngOnInit");
     }
 
     ngOnDestroy() {
-        console.log("ngOnDestroy");
+        // console.log("ngOnDestroy");
         clearInterval(this.networkInt);
     }
 
@@ -41,7 +41,7 @@ export class NetworkComponent implements OnInit,OnDestroy,DoCheck,AfterContentIn
     }
 
     ngAfterContentInit(){
-        console.log("ngAfterContentInit");
+        // console.log("ngAfterContentInit");
     }
 
     ngAfterContentChecked(){
@@ -49,7 +49,7 @@ export class NetworkComponent implements OnInit,OnDestroy,DoCheck,AfterContentIn
     }
 
     ngAfterViewInit(){
-        console.log("ngAfterViewInit");
+        // console.log("ngAfterViewInit");
     }
 
     ngAfterViewChecked(){
@@ -59,25 +59,25 @@ export class NetworkComponent implements OnInit,OnDestroy,DoCheck,AfterContentIn
     //检查网络状态
     checkNetwork() {
         this.networkInt = setInterval(() => {
-            console.log("checkNetwork");
+            // console.log("checkNetwork");
             this.network = false;
         }, 3000);
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad');
+        // console.log('ionViewDidLoad');
     }
 
     ionViewDidEnter(){
-        console.log('ionViewDidEnter');
+        // console.log('ionViewDidEnter');
     }
 
     ionViewDidLeave(){
-        console.log('ionViewDidLeave');
+        // console.log('ionViewDidLeave');
     }
 
     test(){
-        console.log('aa');
+        // console.log('aa');
     }
 
 }

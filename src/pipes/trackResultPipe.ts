@@ -8,7 +8,7 @@ import {Injectable, Pipe, PipeTransform} from '@angular/core';
 @Injectable()
 export class TrackResultPipe implements PipeTransform {
     //跟踪结果数字转换
-    transform(trackResult:number):string {
+    transform(trackResult:any):any {
         let trackResultText:string='';
       switch(trackResult){
           case 0 : trackResultText="未跟踪";break;

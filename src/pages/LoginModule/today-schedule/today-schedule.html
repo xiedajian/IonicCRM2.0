@@ -1,20 +1,32 @@
-<ion-content>
+<!--<ion-content>-->
     <ion-content class="manege_panel">
         <div class="manege_head">
             <p>{{userName}}，您好。</p>
             <p>以下是您今日计划表：</p>
         </div>
         <ul class="manege_content">
-            <li class="manege_cont_icon1" (click)="goToTrackingList()" tappable>今日待跟踪的会员<span class="fr">{{todayNum}}人</span>
+            <li class="manege_cont_icon1">今日待跟踪的会员<span class="fr">{{todayNum}}人</span>
             </li>
-            <li class="manege_cont_icon2" (click)="goToTrackingList()" tappable>明日可能需要跟踪的会员<span
+            <li  (click)="pickUP()" tappable>
+                <div class="manege_cont_icon3">超期待跟踪会员<span class="fr">{{overdueTracks}}人</span></div>
+                <p class="Overdue_Explain" tappable *ngIf="show">您可以每天跟踪若干名超期会员，循序渐进直至全部跟踪完成。超期会员会有明显红色标注，并陈列在今日待跟踪列表的尾部，您也可以在跟踪情况
+                     筛选项中搜索超期会员来进行筛选
+                </p>
+            </li>
+            <li class="manege_cont_icon2" >明日任务预计<span
                     class="fr">{{morningNum}}人</span></li>
         </ul>
+        <section>
+            <ul class="jt_panel">
+                <li><img src="img/jt.png"/></li>
+                <li><img src="img/jt.png"/></li>
+                <li><img src="img/jt.png"/></li>
+            </ul>
+
+        </section>
     </ion-content>
-    <ul class="jt_panel">
-        <li><img src="img/jt.png"/></li>
-        <li><img src="img/jt.png"/></li>
-        <li><img src="img/jt.png"/></li>
-    </ul>
-    <div class="btn_block_yellow footer" (click)="goToTrackingList()" tappable>好的，马上开始跟踪</div>
-</ion-content>
+    <ion-footer>
+        <div class="btn_block_yellow footer" (click)="goToTrackingList()" tappable>好的，马上开始跟踪</div>
+    </ion-footer>
+
+<!--</ion-content>-->

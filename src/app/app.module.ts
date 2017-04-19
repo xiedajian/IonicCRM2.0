@@ -3,7 +3,7 @@ import { Storage } from '@ionic/storage';
 import {IonicApp, IonicModule, IonicErrorHandler} from 'ionic-angular';
 import {MyApp} from './app.component';
 import {TabsPage} from '../pages/tabs/tabs';
-
+// import { IonJPushModule } from 'ionic2-jpush';
 //service
 import {HttpSer} from '../providers/http-ser';
 import {PopSer} from '../providers/pop-ser';
@@ -26,9 +26,15 @@ import {TrackStatusTextPipe,TrackResultTextPipe,TrackDateCalcTypePipe,CustomerSt
 import {NumToTimePipe} from '../pipes/numtotimePipe';
 import {TrackResultPipe} from '../pipes/trackResultPipe';
 import {ContactTypePipe} from '../pipes/contactTypePipe';
+import {DataSubstringPipe} from '../pipes/dataSubstringPipe';
+import {notContactReasonPipe} from '../pipes/notContactReasonPipe';
+
 
 //derective
 import {HighlightDirective} from '../pages/SharedModule/highlight.directive';
+
+// Component
+import {ClearInputComponent} from '../components/clear-input/clear-input';
 
 //页面出错
 import {ErrorPage} from '../pages/SharedModule/error/error';
@@ -40,7 +46,6 @@ import {BeginGuideComponent} from '../pages/LoginModule/begin-guide/begin-guide'
 import {ChangePasswordPage} from '../pages/LoginModule/change-password/change-password';
 import {FindPasswordComponent} from '../pages/LoginModule/find-password/find-password';
 import {LoginComponent} from '../pages/LoginModule/login/login';
-import {SettingPasswordComponent} from '../pages/LoginModule/setting-password/setting-password';
 import {SettingsPage} from '../pages/LoginModule/settings/settings';
 import {TodayScheduleComponent} from '../pages/LoginModule/today-schedule/today-schedule';
 import {VersionInfoPage} from '../pages/LoginModule/version-info/version-info';
@@ -69,7 +74,6 @@ import {NetworkComponent} from '../pages/SharedModule/network/network';
         ChangePasswordPage,
         FindPasswordComponent,
         LoginComponent,
-        SettingPasswordComponent,
         SettingsPage,
         TodayScheduleComponent,
         VersionInfoPage,
@@ -103,10 +107,17 @@ import {NetworkComponent} from '../pages/SharedModule/network/network';
         CustomerStatusTextPipe,
         NumToTimePipe,
         TrackResultPipe,
-        ContactTypePipe
+        ContactTypePipe,
+        DataSubstringPipe,
+        notContactReasonPipe,
+
+        //清除组件
+        ClearInputComponent
     ],
     imports: [
+        // IonJPushModule,
         IonicModule.forRoot(MyApp,{
+            // tabsHideOnSubPages: true,
             //backButtonText: '返回',
             backButtonIcon:'arrow-back',
             iconMode: 'ios',
@@ -130,7 +141,6 @@ import {NetworkComponent} from '../pages/SharedModule/network/network';
         ChangePasswordPage,
         FindPasswordComponent,
         LoginComponent,
-        SettingPasswordComponent,
         SettingsPage,
         TodayScheduleComponent,
         VersionInfoPage,
@@ -147,7 +157,11 @@ import {NetworkComponent} from '../pages/SharedModule/network/network';
 
         //页面出错模块
         ErrorPage,
-        ServiceMaintenancePage
+        ServiceMaintenancePage,
+
+        // 清除组件
+        ClearInputComponent
+
     ],
     providers: [/*{provide: ErrorHandler, useClass: IonicErrorHandler},*/PopSer,HttpSer,CallSer,Storage,FileSer,NetworkSer,UpdateAppSer,AppInitSer,InterfaceLists,CustomerService,CRMService,DateService,CallNumberService]
 })

@@ -63,7 +63,7 @@ export class FileSer {
        return File.readAsText(this.fs, 'ipvpKMF/IpvpErrLogs.txt').then((res:string)=>{
             console.log('读取成功');
            let arr:any=[];
-           if(res){
+           if(res && res!=''){
                let str:string='['+''+res.substring(0,res.length-1)+']';
                arr=JSON.parse(str);
            }

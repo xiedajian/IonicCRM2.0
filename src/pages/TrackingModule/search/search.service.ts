@@ -5,7 +5,7 @@ import {AppConfig} from'../../../app/app.config';
 //import {TrackResult,CustomerStatus} from "../../SharedModule/enum";
 import {CRMService} from '../../SharedModule/crm.service';
 import {DateService} from '../../SharedModule/date.service';
-import {CUSTOMERS} from '../../SharedModule/customer.service';
+//import {CUSTOMERS} from '../../SharedModule/customer.service';
 import {LOGS} from '../../SharedModule/track-log.service';
 
 
@@ -19,14 +19,14 @@ export class SearchService {
     //
     getKeySearch(query:any) {
         query.orgId = AppConfig.userInfo.orgId;
-        //return this.crmService.getKeySearch(query);
+        return this.crmService.getKeySearch(query);
         //模拟数据
-        return this.getKeySearchSlow(query);
+        //return this.getKeySearchSlow(query);
     }
 
 
     //模拟数据
-    getKeySearchSlow(param:any):Promise<any> {
+    /*getKeySearchSlow(param:any):Promise<any> {
         return new Promise<any>(resolve=>
             setTimeout(resolve, 500))
             .then(()=>{
@@ -41,11 +41,11 @@ export class SearchService {
                 };
                 return Promise.resolve(result);
             });
-    }
+    }*/
 
 
     getFormatDate(date:any) {
-        return DateService.getFormatDate(new Date(date));
+        return DateService.getFormatDate(date);
     }
 
 

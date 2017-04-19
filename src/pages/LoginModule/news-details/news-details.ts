@@ -16,7 +16,7 @@ export class NewsDetailsComponent {
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad NewsDetailsPage');
+    // console.log('ionViewDidLoad NewsDetailsPage');
   }
 
 }

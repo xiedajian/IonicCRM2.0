@@ -8,11 +8,13 @@ import {TrackLog} from '../../SharedModule/track-log.model';
 import {CustomerService} from '../../SharedModule/customer.service';
 import {SearchService} from './search.service';
 import {AppConfig} from'../../../app/app.config';
-
+import {LoginComponent}     from '../../LoginModule/login/login';
+import {ServiceMaintenancePage} from '../../SharedModule/service-maintenance/service-maintenance';
+import {PopSer}     from '../../../providers/pop-ser';
 @Component({
     selector: 'page-search',
     templateUrl: 'search.html',
-    providers:[CustomerService,SearchService]
+    providers:[SearchService]
 })
 export class SearchComponent {
 
@@ -35,19 +37,28 @@ export class SearchComponent {
     constructor(public navCtrl:NavController,
                 public customerService:CustomerService,
                 public searchService:SearchService,
-                public renderer:Renderer) {
+                public renderer:Renderer,
+                public popser: PopSer) {
+        this.query.orgId = AppConfig.userInfo.orgId;
     }
 
+    filter(e){
+        this.searchQuery = this.searchQuery.replace(/[^\a-zA-Z0-9\u4E00-\u9FA5]/g, "");
+        e.target.value=this.searchQuery;//显示文本替换掉
+        // console.log(e)
+
+    }
 
     goSearch(event) {
-        //console.log(event);
-        event.target.value = event.target.value.replace(/[^\a-zA-Z0-9\u4E00-\u9FA5]+$/g, '');
-        this.searchQuery = event.target.value;
+        // console.log(event);
+        // event.target.value = event.target.value.replace(/[^\a-zA-Z0-9\u4E00-\u9FA5]+$/g, '');
+        // this.searchQuery = event.target.value;
         if (event.keyCode == 13) {
             if (event.target.value.trim() != '') {
                 this.searching = true;
                 this.query.key = event.target.value.trim();
                 this.searchService.getKeySearch(this.query).then(result=> {
+                    // console.log("getKeySearch",result);
                     if (result.isSucceed) {
                         this.customers = result.data.customers;
                         this.totalCustomer = result.data.totalCustomers;
@@ -59,6 +70,31 @@ export class SearchComponent {
                         }
                         else {
                             this.searchNone = false;
+                        }
+                    }
+                    else {
+                        this.searching = false;
+                        this.searchNone = true;
+                        this.totalCustomer = 0;
+                        this.totalTrackLogs = 0;
+                        switch (result.code) {
+                            case 600:   //600跳转到系统维护
+                                this.navCtrl.push(ServiceMaintenancePage);
+                                break;
+                            case 400:
+                                this.popser.alert('请求不合法（请求安全校验没有通过）');
+                                break;
+                            case 401:
+                                this.popser.alert('请求要求身份验证（TOKEN无效）');
+                                // this.navCtrl.push(LoginComponent);
+                                this.navCtrl.parent.parent.setRoot(LoginComponent);
+                                break;
+                            case 500:
+                                this.popser.alert('系统内部异常');
+                                break;
+                            default:
+                                this.popser.alert('数据获取失败，请重试');
+                                break;
                         }
                     }
                 });
@@ -85,10 +121,10 @@ export class SearchComponent {
     }
 
     gotoCustomerByLog(customerId:number) {
-        console.log(customerId);
-        this.customerService.getCustomer(customerId).then((result)=> {
+        // console.log(customerId);
+        this.customerService.getCustomer(this.query.orgId,customerId).then((result)=> {
             if (result.isSucceed) {
-                console.log(result.data);
+                // console.log(result.data);
                 if(result.data) {
                     this.gotoCustomerDetails(result.data);
                 }
@@ -120,7 +156,7 @@ export class SearchComponent {
 
     //keyType:1，会员  2，日志  0，全部
     goSearchMore(keyType:number) {
-        console.log(keyType);
+        // console.log(keyType);
         if (keyType == 1) {
             this.navCtrl.push(SearchMoreComponent, {
                 keyType: keyType,

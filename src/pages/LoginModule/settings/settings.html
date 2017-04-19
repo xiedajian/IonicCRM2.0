@@ -7,7 +7,7 @@
 </ion-header>
 <ion-content class="has-header">
     <ion-list class="list_g_b" no-lines >
-        <button ion-item (click)="go_version()" mode="ios">版本信息<span class="fr yellow" *ngIf="hasNewApp">检测到新版本</span></button>
+        <button ion-item (click)="go_version()" mode="ios">版本信息<span class="fr yellow" *ngIf="hasNewApp"  hideWhen="ios">检测到新版本</span></button>
         <button ion-item (click)="md_pwd()" mode="ios">修改密码</button>
     </ion-list>
 

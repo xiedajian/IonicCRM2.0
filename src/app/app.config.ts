@@ -1,19 +1,32 @@
 /**
  * 请求地址头
  */
-export const APP_SERVE_URL:string = 'http://192.168.1.88/v1';
+// 测试环境
+// export const APP_SERVE_URL:string = 'http://192.168.1.88/v1';
+// export const APP_SERVE_URL:string = 'http://kmf.dev.ipvp.cn/v1';
+// 生产环境
+// export const APP_SERVE_URL:string = 'http://kmf.stage.ipvp.cn/v1';
+export const APP_SERVE_URL:string = 'http://kmfapi.ipvp.cn/v1';
+//AES加密key
 export const AES_key:string =")O[NB]6,YF}+efcaj{+oESb9d8>Z'e9M";
 /**
  * App配置信息
  */
 export class AppConfig {
     static PCmodel:boolean = false;        //PC端调试模式
-    static Appmodel:number=2;             //1首次启动  2.今日首次启动 3普通模式启动
+    static Appmodel:number=3;             //1首次启动  2.今日首次启动 3普通模式启动
+    //设备信息
+    static deviceId:string = '';          //设备id
+    static deviceCordova:string = '';          //设备上运行的Cordova版本
+    static deviceModel:string = '';           //设备型号或产品的名称
+    static devicePlatform:string = '';          //操作系统名称
+    static devicePlatformVersion:string = '';          //操作系统版本
+    static deviceManufacturer:string = '';          //设备的制造商
+    static deviceSerial:string = '';          //设备硬件序列号
     //APP信息
-    static platform:string = '';          //android  ios
-    static deviceid:string = '';          //设备id
+    static platform:string = '';          // android  ios
     static appName:string = 'CRM_KmfApp';           //CRM_KmfApp
-    static appVersion:string = '0.0.1';        //版本号 0.0.1
+    static appVersion:string = '2.0.0';        //版本号 2.0.0
     //常规配置
     static userProtocol:string = '';      //用户协议
     //导购用户信息
@@ -27,6 +40,10 @@ export class AppConfig {
     static showCustomerPhone:boolean=false;   //是否显示会员电话号码（导购可见）
     //授权信息
     static expireDate:any = '2018.01.01';           //APP到期日期
+    //极光推送
+    static jPushRegistrationId:string='';            //极光的注册id;
+    static jPushAlias:string='';                //极光的别名;
+    static jPushTags:string='';                //极光的标签;
 
 
     //获取设备高度
@@ -111,7 +128,7 @@ export class AppConfig {
 
     //获取设备id
     public static getDeviceid():string {
-        return this.deviceid || '';
+        return this.deviceId || '';
     }
 
     //获取App名称
@@ -147,9 +164,65 @@ export class AppConfig {
     }
 
     //去字符串两侧空格
-    public trim(str) {
+    public static trim(str) {
         return str.replace(/(^s*)|(s*$)/g, "");
     }
+
+    public static getTestCount(){
+        let x=Math.floor((Math.random()*4));
+        let cc:any={
+            name:'测试号:谢大见',
+            number:'18558756920',
+        };
+        if(x===0){
+            cc={
+                name:'测试号0:赵',
+                number:'15306907390',
+            }
+        }else if (x==1){
+            cc={
+                name:'测试号1:林',
+                number:'13459202232',
+            }
+        }else if (x==2){
+            cc={
+                name:'测试号2:袁',
+                number:'18221612515',
+            }
+        }else if (x==3){
+            cc={
+                name:'测试号3:詹',
+                number:'18250347781',
+            }
+        }else if (x==4){
+            cc={
+                name:'测试号4:阳阳',
+                number:'15060067536',
+            }
+        }
+        return cc;
+    }
+
+    //正则，不能输入表情
+    public static RegExp(str,event) {
+        let regex=/[^\a-zA-Z0-9\u4E00-\u9FA5]/g;
+        if(regex.test(str)){
+            str = str.replace(regex, "");
+            event.target.value=str;//显示文本替换掉
+           return false;
+        }
+    }
+
+    // 正则，不能输入表情和中文
+    public static RegExpCn(str) {
+        let regex=/[^\a-zA-Z0-9\|\$\(\)\*\+\.\[\]\?\\\/\^\{\}\-~`!@#%&_=,<>;:'"]/g;
+        if(regex.test(str)){
+            // str = str.replace(regex, "");
+            // event.target.value=str;//显示文本替换掉
+            return true;
+        }
+    }
+
 
 }
 

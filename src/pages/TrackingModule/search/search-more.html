@@ -28,7 +28,7 @@
       <!--搜索到的会员-->
       <div *ngIf="query.keyType==1 && total>0">
         <p class="padding mb_0">共搜到会员 {{total}} 名</p>
-        <div class="white_bg padding">
+        <div class="white_bg">
           <!--具体搜索到的会员-->
           <!--<div class="search_member border_b">
             <h2 class="search_title"><span class="yellow">张三</span>丰</h2>
@@ -36,8 +36,8 @@
             <p>8天前跟踪过，跟踪后未购买</p>
           </div>-->
           <!--具体搜索到的会员-->
-          <div class=" search_member border_b" *ngFor="let customer of customers">
-            <h2 class="search_title" (click)="gotoCustomerDetails(customer)" tappable><span [innerHTML]="customer.customerName|highlightPipe:searchQuery"></span></h2>
+          <div class=" search_member border_b" *ngFor="let customer of customers" (click)="gotoCustomerDetails(customer)" tappable>
+            <h2 class="search_title"><span [innerHTML]="customer.customerName|highlightPipe:searchQuery"></span></h2>
             <p>{{customer|trackStatusTextPipe}}</p>
             <p>{{customer|trackResultTextPipe}}</p>
           </div>
@@ -48,24 +48,22 @@
         <p class="padding mb_0">共搜到日志 {{total}} 篇</p>
         <div class="white_bg padding">
           <!--具体搜索到的日志-->
-          <div class=" border_b p_tb_10" *ngFor="let trackLog of trackLogs">
-            <h2 class="search_title" (click)="gotoCustomerByLog(trackLog.customerId)" tappable>{{trackLog.customerName}}</h2>
-            <p><span [innerHTML]="trackLog.trackDetails.content|highlightPipe:searchQuery"></span></p>
-            <p class="text-right">{{searchService.getFormatDate(trackLog.trackDetails.trackDate)}}</p>
+          <div class=" border_b p_tb_10" *ngFor="let trackLog of trackLogs" (click)="gotoCustomerByLog(trackLog.customerId)" tappable>
+            <h2 class="search_title">{{trackLog.customerName}}</h2>
+            <p><span [innerHTML]="trackLog.trackDetail.content|highlightPipe:searchQuery"></span></p>
+            <p class="text-right">{{searchService.getFormatDate(trackLog.trackDetail.trackDate)}}</p>
           </div>
         </div>
       </div>
 
     </div>
 
-    <p class="bottomNoMore" *ngIf="isEnd">已经没有更多内容了</p>
+    <p class="bottomNoMore" *ngIf="total>0 && isEnd">已经没有更多内容了</p>
     <ion-infinite-scroll
             *ngIf="!isEnd"
             (ionInfinite)="loadMoreList($event)"
-            threshold="1%">
-      <ion-infinite-scroll-content
-              loadingSpinner="bubbles"
-              loadingText="Loading more data..."></ion-infinite-scroll-content>
+            threshold="5%">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
     </ion-infinite-scroll>
 
     <!--暂无记录-->

@@ -65,9 +65,15 @@ export class AppInitSer {
                 return this.setExpireDate();
             });
 
-            let promise4:any=this.storage.get('lastTrackDate').then((val)=> {
-                this.customerService.lastTrackDate = val;
-            });
+            try{
+                this.storage.get('lastTrackDate').then((val)=> {
+                    if(val){
+                        this.customerService.lastTrackDate = val;
+                    }
+                });
+            }catch (e){
+                console.log(e);
+            }
 
             /*        //上传错误日志
              this.fileSer.readErrLogs().then((arr)=>{
@@ -85,7 +91,7 @@ export class AppInitSer {
              }
              });*/
 
-            return Promise.all([promise2, promise3, promise4]).then(()=> {
+            return Promise.all([promise2, promise3]).then(()=> {
                 //alert('okall');
                 Promise.resolve();
             }, (err)=> {
@@ -98,7 +104,13 @@ export class AppInitSer {
 
     //设置 设备id
     setDeviceid() {
-        AppConfig.deviceid = Device.uuid || '';
+        AppConfig.deviceId = Device.uuid ;
+        AppConfig.deviceCordova = Device.cordova;          //设备上运行的Cordova版本
+        AppConfig.deviceModel = Device.model;           //设备型号或产品的名称
+        AppConfig.devicePlatform= Device.platform;          //操作系统名称
+        AppConfig.devicePlatformVersion = Device.version;          //操作系统版本
+        AppConfig.deviceManufacturer= Device.manufacturer;          //设备的制造商
+        AppConfig.deviceSerial = Device.serial;          //设备硬件序列号
     }
 
     //设置 平台
@@ -121,14 +133,11 @@ export class AppInitSer {
     setPCmodel() {
         AppConfig.Appmodel = 3;
         AppConfig.platform = 'android';
-        AppConfig.deviceid = '';
         AppConfig.appVersion = '0.0.1';
-        AppConfig.userProtocol = '这是用户协议';
         AppConfig.callingType = 3;
         AppConfig.inited = true;
         AppConfig.balanceMinute = 200;
         AppConfig.showCustomerPhone = true;
-        AppConfig.expireDate = '2018-01-01';
     }
 
     //设置 常规配置 （无需登录）
@@ -142,11 +151,13 @@ export class AppInitSer {
                         resolve();
                     }else {
                         //alert(333);
-                        reject('常规配置信息获取失败，请重新登录');  //失败
+                        resolve();
+                        // reject('常规配置信息获取失败，请重新登录');  //失败
                     }
                 },()=>{
+                    resolve();
                     //alert(33);
-                    reject('常规配置信息获取失败，请重新登录');  //失败
+                    // reject('常规配置信息获取失败，请重新登录');  //失败
                 });
         });
     }
@@ -210,7 +221,7 @@ export class AppInitSer {
                         } else {
                             //alert(55);
                             AppConfig.token='';
-                            reject('用户配置信息获取失败，请重新登录');  //失败
+                            reject('获取用户配置信息需要重新登录');  //失败
                         }
                     }, ()=> {
                         //alert(55);
@@ -232,14 +243,13 @@ export class AppInitSer {
                 return this.interface_lists.licenses({orgId: AppConfig.userInfo.orgId, productId: 'KMF'}).then(
                     (returnData)=> {
                         if (returnData.isSucceed && returnData.data[0]) {
-                            //AppConfig.expireDate = returnData.data[0].expire;
+                            AppConfig.expireDate = returnData.data[0].expire;
                             //alert(6);
                             resolve();
                         } else {
-                            resolve();
                             //alert(66);
-                            // AppConfig.token='';
-                            // reject('用户授权信息获取失败，请重新登录');  //失败
+                            AppConfig.token='';
+                            reject('获取用户授权信息需要重新登录');  //失败
                         }
 
                     }, ()=> {

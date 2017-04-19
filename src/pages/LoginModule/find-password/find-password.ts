@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import {InterfaceLists}  from '../../../providers/interface_list';
-import {SettingPasswordComponent} from '../setting-password/setting-password';
 import {PopSer}     from '../../../providers/pop-ser';
-
+import {NetworkSer} from '../../../providers/network-ser';
+import {AppConfig} from '../../../app/app.config';
 /*
  Generated class for the FindPassword page.
 
@@ -22,15 +22,11 @@ export class FindPasswordComponent {
     newPassword1:string = '';
     newPassword2:string = '';
 
-    constructor(public navCtrl:NavController,public interface_lists:InterfaceLists, public popser:PopSer) {
+    constructor(public navCtrl:NavController,public networkSer:NetworkSer,public interface_lists:InterfaceLists, public popser:PopSer) {
     }
 
     goToLogin() {
         this.navCtrl.pop();
-    }
-
-    goToSettingPassword() {
-        this.navCtrl.push(SettingPasswordComponent);
     }
 
     ionViewDidLoad() {
@@ -49,7 +45,8 @@ export class FindPasswordComponent {
     check_mobile() {
         var myreg = /^\s*(1\d{10})\s*$/;
         if (!myreg.test(this.trim(this.mobile))) {
-            this.popser.alert('您输入的手机号不正确，请重新输入');
+            // this.popser.alert('手机号输入不正确，<br/>请重新输入');
+            this.popser.alert('手机号输入不正确');
             return;
         }
         this.go_next();
@@ -95,8 +92,31 @@ export class FindPasswordComponent {
             if (returnData.isSucceed) {
                 this.start_Time();
             }else {
-                this.popser.alert('验证码发送失败，请稍后再试');
                 this.reSendTime = 0;
+                switch (returnData.code) {
+                    case 600:   //600跳转到系统维护
+                        // this.navCtrl.push(ServiceMaintenancePage);
+                        this.popser.alert('系统维护中。。。');
+                        break;
+                    case 400:
+                        this.popser.alert('请求不合法（请求安全校验没有通过）');
+                        break;
+                    case 500:
+                        this.popser.alert('系统内部异常');
+                        break;
+                    case 110:
+                        this.popser.alert('抱歉您的账号未开通，请联系您的管理员');
+                        break;
+                    case 111:
+                        this.popser.alert('验证码发送受限（1分钟之内只能发送1条）');
+                        break;
+                    case 112:
+                        this.popser.alert('验证码发送受限（30分钟之内只能发送3条）');
+                        break;
+                    default:
+                        this.popser.alert('验证码发送失败，请稍后再试');
+                        break;
+                }
             }
         },()=>{
             this.popser.alert('服务器连接失败，请稍后再试');
@@ -104,18 +124,21 @@ export class FindPasswordComponent {
         });
     }
 
-
     setNewPassword() {
         if (this.newPassword1 == '' || this.newPassword2 == '') {
             this.popser.alert('新密码不能为空！');
+            return;
+        }
+        if (this.newPassword1 != this.newPassword2) {
+            this.popser.alert('两次新密码必须一致！');
             return;
         }
         if (this.newPassword1.length < 6 || this.newPassword2.length < 6) {
             this.popser.alert('新密码不能少于6位！');
             return;
         }
-        if (this.newPassword1 != this.newPassword2) {
-            this.popser.alert('两次新密码必须一致！');
+        if(AppConfig.RegExpCn(this.newPassword1)){
+            this.popser.alert('不能输入中文或表情哦~');
             return;
         }
         //重置

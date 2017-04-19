@@ -7,30 +7,29 @@ import {DateService} from '../SharedModule/date.service';
 
 //返回跟踪状态文本提示
 @Pipe({name:'trackStatusTextPipe',pure: false})
-export class TrackStatusTextPipe implements PipeTransform{
+export class TrackStatusTextPipe implements PipeTransform {
     transform(customer:Customer) {
         if (customer.status == CustomerStatus.UnTrack) {
             return "不可跟踪";
         }
         if (customer.status == CustomerStatus.Track) {
-            let nextTrackDate = new Date(customer.nextTrackDate);
-            let date = DateService.getDateDiff(nextTrackDate);
+            let date = DateService.getDateDiff(customer.nextTrackDate);
             if (date < 0) {
                 if (customer.trackResult == TrackResult.Assess) {
                     return "下次跟踪时间：待定";
                 }
                 else {
-                    return "下次跟踪时间：" + DateService.getFormatDate(nextTrackDate) + "，" + (0 - date) + "天后需跟踪";
+                    return "下次跟踪时间：" + DateService.getFormatDate(customer.nextTrackDate) + "，" + (0 - date) + "天后需跟踪";
                 }
             }
             if (date == 0) {
                 return "今日待跟踪";
             }
             if (date > 0) {
-                if (DateService.getDateDiff(new Date(customer.lastTrackDate)) == 0) {
-                    return DateService.getFormatDate(nextTrackDate) + " 需跟踪,今日已跟踪";
+                if (DateService.getDateDiff(customer.lastTrackDate) == 0) {
+                    return DateService.getFormatDate(customer.nextTrackDate) + " 需跟踪,今日已跟踪";
                 }
-                return DateService.getFormatDate(nextTrackDate) + " 需跟踪,已超期" + date + "天";
+                return DateService.getFormatDate(customer.nextTrackDate) + " 需跟踪,已超期" + date + "天";
             }
         }
     }
@@ -59,8 +58,7 @@ export class TrackResultTextPipe implements PipeTransform{
                 resultText = "未购买";
                 break;
         }
-        let lastTrackDate = new Date(customer.lastTrackDate);
-        let date = DateService.getDateDiff(lastTrackDate);
+        let date = DateService.getDateDiff(customer.lastTrackDate);
         return (date > 0 ? date + '天前跟踪过，' : '') + "跟踪后" + resultText;
     }
 }

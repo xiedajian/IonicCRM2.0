@@ -1,343 +1,434 @@
-
 <!--<page-tracking-list class="desk_panel grey_bg">-->
-  <!--搜索框-->
-  <ion-header class="deskHead">
+<!--搜索框-->
+<ion-header class="deskHead">
     <ion-navbar class="item-input-inset" (click)="search()">
-      <label class="item-input-wrapper">
-        <span class="input"><i class="icon ion-ios-search placeholder-icon"></i>&nbsp;&nbsp;搜索</span>
-      </label>
+        <label class="item-input-wrapper">
+            <span class="input"><i class="icon ion-ios-search placeholder-icon"></i>&nbsp;&nbsp;搜索</span>
+        </label>
     </ion-navbar>
 
     <ion-toolbar>
-      <article  >
-          <!--跟踪选择-->
-          <section class="white_bg">
-            <!--*ngIf="!networkSer.isConnected"-->
-            <p class="net_erro bar-header" *ngIf="!networkSer.isConnected">网络不可用，请检查您的网络设置！</p>
-            <!--跟踪会员-->
-            <ul class="flex_ul flex_center desk_sub" >
-              <li [ngClass]="filterList.dataType == 0 ? 'active' : ''" (click)="switchTrackList(0)">今日待跟踪会员</li>
-              <li [ngClass]="filterList.dataType == 1 ? 'active' : ''" (click)="switchTrackList(1)">全部跟踪会员</li>
-            </ul>
-            <!--品类品牌等筛选-->
-            <ul class="inline_block_ul desk_sub_t ">
-              <!--<li  [ngClass]="(selectFilter=='sort' && sort) ? 'active' : '' "  (click)="onSelectFilter('sort')">{{sortName}}<span class="draw_sjx"></span></li>-->
-              <li (click)="onSelectFilter('sort')"><span [ngClass]="(filterList.orderBy==0 && !sort) ? '' : 'active'">{{sortName}}</span>
-                <!--单个三角形-->
-                <i *ngIf="sort || (!sort && filterList.orderBy==0)" [ngClass]="sort ? 'active' : ''"><span class="draw_sjx"></span></i>
-                <!--两个三角形-->
-                <i *ngIf="!sort && filterList.orderBy!=0" class="png_sjx" ><img [hidden]="filterList.orderBy > 0" src="img/sort1.png" /><img [hidden]="filterList.orderBy < 0" src="img/sort2.png"/></i>
-              </li>
-              <li (click)="onSelectFilter('category')"><span [ngClass]="(filterList.classNo=='' && !category) ? '' : 'active'">品类</span>
-                <i [ngClass]="category ? 'active' : ''"><span  class="draw_sjx"></span></i>
-              </li>
-              <li (click)="onSelectFilter('brand')"><span [ngClass]="(filterList.brandNo=='' && !brand) ? '' : 'active'">品牌</span>
-                <i [ngClass]="brand ? 'active' : ''"><span class="draw_sjx"></span></i>
-              </li>
-              <li (click)="onSelectFilter('other')"><img  class="img" src="{{other ? './img/a_other.png' : './img/rd_tr.png' }}"/></li>
-            </ul>
-            <!--其他筛选-->
-            <div class="scroll_x" [hidden]="!other">
-              <ul class="inline_block_ul other_select">
-                <li (click)="onSelectFilter('effect')"><span [ngClass]="(filterList.lastBuyed==0 && !effect) ? '' : 'active' ">跟踪效果</span>
-                  <i [ngClass]="effect ? 'active' : ''"><span class="draw_sjx"></span></i>
-                </li>
-                <li (click)="onSelectFilter('situation')"><span [ngClass]="(filterList.lastContact==0 && filterList.trackStatus==0 && !situation) ? '' : 'active'">跟踪情况</span>
-                  <i [ngClass]="situation ? 'active' : ''"><span class="draw_sjx"></span></i>
-                </li>
-                <li (click)="onSelectFilter('manage')"><span [ngClass]="(filterList.dateCalcType==0 && !manage) ? '' : 'active'">管理方式</span>
-                  <i [ngClass]="manage ? 'active' : ''"><span class="draw_sjx"></span></i>
-                </li>
-                <li (click)="onSelectFilter('member')"><span [ngClass]="(filterList.isNew==0 && filterList.isNewAssign==0 && filterList.customerLevel==0 && !member) ? '' : 'active'">会员</span>
-                  <i [ngClass]="member ? 'active' : ''"><span class="draw_sjx"></span></i>
-                </li>
-                <li (click)="onSelectFilter('buy')"><span [ngClass]="(filterList.lastBuyDate==0 && filterList.minPCT==0 && filterList.maxPCT==2000 && filterList.minBuyCount==0 && filterList.maxBuyCount==20 && !buy) ? '' : 'active'">购买</span>
-                  <i [ngClass]="buy ? 'active' : ''"><span class="draw_sjx"></span></i>
-                </li>
-              </ul>
-            </div>
-          </section>
-          <!--跟踪选择子选择项-->
+        <article>
+            <!--跟踪选择-->
+            <section class="white_bg">
+                <!--*ngIf="!networkSer.isConnected"-->
+                <p class="net_erro bar-header" *ngIf="!networkSer.isConnected">网络不可用，请检查您的网络设置！</p>
+                <!--跟踪会员-->
+                <ul class="flex_ul flex_center desk_sub">
+                    <li [ngClass]="filterList.dataType == 0 ? 'active' : ''" (click)="switchTrackList(0)" tappable>
+                        今日待跟踪会员
+                    </li>
+                    <li [ngClass]="filterList.dataType == 1 ? 'active' : ''" (click)="switchTrackList(1)" tappable>
+                        全部分配会员
+                    </li>
+                </ul>
+                <!--避免两个相点的遮罩-->
+                <div class="avoid-pop">&nbsp;</div>
+                <!--品类品牌等筛选-->
+                <ul class="inline_block_ul desk_sub_t ">
+                    <!--<li  [ngClass]="(selectFilter=='sort' && sort) ? 'active' : '' "  (click)="onSelectFilter('sort')">{{sortName}}<span class="draw_sjx"></span></li>-->
+                    <li (click)="onSelectFilter('sort')" tappable><span
+                            [ngClass]="(filterList.orderBy==0 && !sort) ? '' : 'active'">{{sortName}}</span>
+                        <!--单个三角形-->
+                        <i *ngIf="sort || (!sort && filterList.orderBy==0)" [ngClass]="sort ? 'active' : ''"><span
+                                class="draw_sjx"></span></i>
+                        <!--两个三角形-->
+                        <i *ngIf="!sort && filterList.orderBy!=0" class="png_sjx"><img [hidden]="filterList.orderBy > 0"
+                                                                                       src="img/sort1.png"/><img
+                                [hidden]="filterList.orderBy < 0" src="img/sort2.png"/></i>
+                    </li>
+                    <li (click)="onSelectFilter('category')" tappable><span
+                            [ngClass]="(filterList.classNo=='' && !category) ? '' : 'active'">品类</span>
+                        <i [ngClass]="(!category) ? ((filterList.classNo=='') ? '': 'yellow') :'active'"><span
+                                class="draw_sjx"></span></i>
+                    </li>
+                    <li (click)="onSelectFilter('brand')" tappable><span
+                            [ngClass]="(filterList.brandNo=='' && !brand) ? '' : 'active'">品牌</span>
+                        <i [ngClass]="(!brand) ? ((filterList.brandNo=='') ? '': 'yellow') :'active'"><span
+                                class="draw_sjx"></span></i>
+                    </li>
+                    <li (click)="onSelectFilter('other')" tappable>
+                        <!--src="{{other ? './img/a_other.png' : './img/rd_tr.png' }}"-->
+                        <img class="img"
+                             src="{{(!other) ? ((filterList.lastBuyed==0 &&filterList.lastContact==0 && filterList.dateCalcType==0 && filterList.isNew==0 && filterList.isNewAssign==0 && filterList.customerLevel==0 && filterList.lastBuyDate==0 && filterList.minPCT==0 && filterList.maxPCT==2000 && filterList.minBuyCount==0 && filterList.maxBuyCount==20  ) ? './img/rd_tr.png': './img/otherIcon.png') : './img/a_other.png' }}"/>
+                    </li>
+                </ul>
+                <!--其他筛选-->
+                <div class="scroll_x" [hidden]="!other">
+                    <ul class="inline_block_ul other_select">
+                        <li (click)="onSelectFilter('effect')" tappable><span
+                                [ngClass]="(filterList.lastBuyed==0 && !effect) ? '' : 'active' ">跟踪效果</span>
+                            <i [ngClass]="(!effect) ? ((filterList.lastBuyed==0) ? '': 'yellow') :'active'"><span
+                                    class="draw_sjx"></span></i>
+                        </li>
+                        <li (click)="onSelectFilter('situation')" tappable><span
+                                [ngClass]="(filterList.lastContact==0 && filterList.trackStatus==0 && !situation) ? '' : 'active'">跟踪情况</span>
+                            <i [ngClass]="(!situation) ? ((filterList.lastContact==0) ? '': 'yellow') :'active'"><span
+                                    class="draw_sjx"></span></i>
+                        </li>
+                        <li (click)="onSelectFilter('manage')" tappable><span
+                                [ngClass]="(filterList.dateCalcType==0 && !manage) ? '' : 'active'">管理方式</span>
+                            <i [ngClass]="(!manage) ? ((filterList.dateCalcType==0) ? '': 'yellow') :'active'"><span
+                                    class="draw_sjx"></span></i>
+                        </li>
+                        <li (click)="onSelectFilter('member')" tappable><span
+                                [ngClass]="(filterList.isNew==0 && filterList.isNewAssign==0 && filterList.customerLevel==0 && !member) ? '' : 'active'">会员</span>
+                            <i [ngClass]="(!member) ? ((filterList.isNew==0 && filterList.isNewAssign==0 && filterList.customerLevel==0 ) ? '': 'yellow') :'active'"><span
+                                    class="draw_sjx"></span></i>
+                        </li>
+                        <li (click)="onSelectFilter('buy')" tappable><span
+                                [ngClass]="(filterList.lastBuyDate==0 && filterList.minPCT==0 && filterList.maxPCT==2000 && filterList.minBuyCount==0 && filterList.maxBuyCount==20 && !buy) ? '' : 'active'">购买</span>
+                            <i [ngClass]="(!buy) ? ((filterList.lastBuyDate==0 && filterList.minPCT==0 && filterList.maxPCT==2000 && filterList.minBuyCount==0 && filterList.maxBuyCount==20) ? '': 'yellow') :'active'"><span
+                                    class="draw_sjx"></span></i>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <!--跟踪选择子选择项-->
 
-          </article>
+        </article>
     </ion-toolbar>
     <!--悬浮5s-->
-    <div class="xf_text" *ngIf="customerService.searchTip && networkSer.isConnected">共搜索到会员{{customerService.total}}人</div>
+    <div class="xf_text" *ngIf="customerService.searchTip && networkSer.isConnected" [ngClass]="customerService.searchTip && networkSer.isConnected  ? 'active' : '' ">共搜索到会员{{customerService.total}}人
+    </div>
 
     <section>
-      <!--综合排序-->
-      <div class="desk_select" *ngIf="selectFilter=='sort' && sort">
-        <div class="white_bg">
-          <ion-list radio-group [ngModel]="this.filterList.orderBy">
-            <ion-item>
-              <ion-label>综合排序</ion-label>
-              <ion-radio value=0 checked (click)="onSort(0)"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>最近跟踪时间由近及远</ion-label>
-              <ion-radio value=1 (click)="onSort(1)"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>最近跟踪时间由远及近</ion-label>
-              <ion-radio value=-1 (click)="onSort(-1)"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>最近购买时间由近及远</ion-label>
-              <ion-radio value=2 (click)="onSort(2)"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>最近购买时间由远及近</ion-label>
-              <ion-radio value=-2 (click)="onSort(-2)"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>总消费额从高到低</ion-label>
-              <ion-radio value=3 (click)="onSort(3)"></ion-radio>
-            </ion-item>
-            <ion-item>
-              <ion-label>总消费额从低到高</ion-label>
-              <ion-radio value=-3 (click)="onSort('-3')"></ion-radio>
-            </ion-item>
-          </ion-list>
+        <!--综合排序-->
+        <div class="desk_select" *ngIf="selectFilter=='sort' && sort">
+            <div class="white_bg">
+                <ion-list radio-group [ngModel]="this.filterList.orderBy">
+                    <ion-item>
+                        <ion-label>综合排序</ion-label>
+                        <ion-radio value=0 checked (click)="onSort(0)" tappable></ion-radio>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>最近跟踪时间由近及远</ion-label>
+                        <ion-radio value=1 (click)="onSort(1)" tappable></ion-radio>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>最近跟踪时间由远及近</ion-label>
+                        <ion-radio value=-1 (click)="onSort(-1)" tappable></ion-radio>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>最近购买时间由近及远</ion-label>
+                        <ion-radio value=2 (click)="onSort(2)" tappable></ion-radio>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>最近购买时间由远及近</ion-label>
+                        <ion-radio value=-2 (click)="onSort(-2)" tappable></ion-radio>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>总消费额从高到低</ion-label>
+                        <ion-radio value=3 (click)="onSort(3)" tappable></ion-radio>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>总消费额从低到高</ion-label>
+                        <ion-radio value=-3 (click)="onSort('-3')" tappable></ion-radio>
+                    </ion-item>
+                </ion-list>
+            </div>
         </div>
-      </div>
-      <!--品类筛选-->
-      <div class="desk_select" *ngIf="selectFilter=='category' && category">
-        <div class="white_bg">
-          <p class="pl_select">购买过</p>
-          <article class="firterPanel">
-            <ul class="firterOption padding_b_010">
-              <li class="charge_cost" (click)="setClassNo(classNo.value)" *ngFor="let classNo of classNoList"
-                [ngClass]="classNo.value==selectClassNo ? 'active' : ''">{{classNo.name}}
-              </li>
-              <!--<li class="charge_cost" value="" ><span class="active">全部</span></li>
-              <li class="charge_cost" value="100000" ><span>奶粉</span></li>
-              <li class="charge_cost" value="200000" ><span>纸尿裤</span></li>
-              <li class="charge_cost" value="990000" ><span>其它</span></li>-->
-            </ul>
-          </article>
+        <!--品类筛选-->
+        <div class="desk_select" *ngIf="selectFilter=='category' && category">
+            <div class="white_bg">
+                <p class="pl_select">购买过</p>
+                <article class="firterPanel">
+                    <ul class="firterOption padding_b_010">
+                        <li class="charge_cost" (click)="setClassNo(classNo.value)" *ngFor="let classNo of classNoList"
+                            tappable
+                            [ngClass]="classNo.value==selectClassNo ? 'active' : ''">{{classNo.name}}
+                        </li>
+                        <!--<li class="charge_cost" value="" ><span class="active">全部</span></li>
+                        <li class="charge_cost" value="100000" ><span>奶粉</span></li>
+                        <li class="charge_cost" value="200000" ><span>纸尿裤</span></li>
+                        <li class="charge_cost" value="990000" ><span>其它</span></li>-->
+                    </ul>
+                </article>
+            </div>
         </div>
-      </div>
-      <!--品牌筛选-->
-      <div class="desk_select" [hidden]="!(selectFilter=='brand' && brand)">
-        <div class="white_bg">
-          <div class="grey_bg bs_head">
-            <!--<ul class="flex_ul brand_select">-->
-            <!--<li [ngClass]="filterList.brandType==1?'active':''" (click)="filterList.brandType=1">喜欢的品牌</li>-->
-            <!--<li [ngClass]="filterList.brandType==2?'active':''" (click)="filterList.brandType=2">上次买的品牌</li>-->
-            <!--</ul>-->
-            <p class="p1">会员购买热度</p>
-            <ul class="firterOption bg_white">
-              <li class="charge_cost" (click)="filterList.brandType=1"  [ngClass]="filterList.brandType==1?'active':''">购买过2次以上</li>
-              <li class="charge_cost" (click)="filterList.brandType=2"  [ngClass]="filterList.brandType==2?'active':''">上次购买过</li>
-            </ul>
-            <p class="p1">{{selectLetter}}<!--热销品牌--></p>
-          </div>
-          <article class="firterPanel firter_executive" >
-
-            <!--品牌名称-->
-            <ion-content class="bg_white executive_content" [style.height.px]="brandHeight()" #brandContent>
-              <!--<section >-->
-              <!--热销品牌-->
-              <ul class="firterOption bg_white" id="hotBrand">
-                <li class="charge_cost" (click)="hotbrand.checked=!hotbrand.checked" *ngFor="let hotbrand of allBrandList|hotBrandPipe" [ngClass]="hotbrand.checked ? 'active' : ''">{{hotbrand.name}}</li>
-              </ul>
-              <!--按字母排序-->
-              <ul class="firterOption" id="brand_f">
-                <li [ngClass]="allBrand.type=='letter'?'firterLetter':'charge_cost_inner'"  *ngFor="let allBrand of allBrandList" >
-                  <span class=""  id="{{allBrand.name}}" *ngIf="allBrand.type=='letter'">{{allBrand.name}}</span>
-                  <span [ngClass]="allBrand.checked ? 'active' : ''" *ngIf="allBrand.type=='name'"  (click)="allBrand.checked=!allBrand.checked" >{{allBrand.name}}</span>
-                </li>
-              </ul>
-              <!--</section>-->
-            </ion-content>
-
-            <!--品牌排序-->
-            <article class="firter_executive">
-              <!--字母排序-->
-              <section>
-                <div class="right">
-                  <a class="stars_icon" (click)="goLetter('*',-1)">
-                    <img src="./img/stars.png" class="w_100" [hidden]="selectLetter!='热销品牌'"/><img src="./img/start0.png" class="w_100" [hidden]="selectLetter=='热销品牌'"/>
-                  </a>
-                  <a class="{{x.letter==selectLetter ? 'active': ''}}" *ngFor="let x of pyList|slice:1;let i=index" (click)="goLetter(x.letter,i)">{{x.letter}}</a>
+        <!--品牌筛选-->
+        <div class="desk_select" [hidden]="!(selectFilter=='brand' && brand)">
+            <div class="white_bg">
+                <div class="grey_bg bs_head">
+                    <p class="p1">会员购买热度</p>
+                    <ul class="firterOption bg_white">
+                        <li class="charge_cost" (click)="selectBrandType=1" [ngClass]="selectBrandType==1?'active':''"
+                            tappable>购买过2次以上
+                        </li>
+                        <li class="charge_cost" (click)="selectBrandType=2" [ngClass]="selectBrandType==2?'active':''"
+                            tappable>上次购买过
+                        </li>
+                    </ul>
+                    <p class="p1">{{selectLetter}}<!--热销品牌--></p>
                 </div>
-              </section>
-              <!--筛选清空-->
-              <div class="firter_Btn">
-                <ul class="flex_ul">
-                  <li (click)="clearBrand()">清空筛选</li>
-                  <li	(click)="doBrand()">确定</li>
-                </ul>
-              </div>
-            </article>
-            <!--滑动字母片-->
-            <article  class="slideLetter"  id="scrollLetter">
-              <!--{{scrollLetter}}-->
+                <article class="firterPanel firter_executive">
 
-            </article>
-          </article>
+                    <!--品牌名称-->
+                    <ion-content class="bg_white executive_content" [style.height.px]="brandHeight()" #brandContent>
+                        <!--<section >-->
+                        <!--热销品牌-->
+                        <ul class="firterOption bg_white" id="hotBrand">
+                            <li class="charge_cost" (click)="hotbrand.checked=!hotbrand.checked"
+                                *ngFor="let hotbrand of allBrandList|hotBrandPipe"
+                                [ngClass]="hotbrand.checked ? 'active' : ''" tappable>{{hotbrand.name}}
+                            </li>
+                        </ul>
+                        <!--按字母排序-->
+                        <ul class="firterOption" id="brand_f">
+                            <li [ngClass]="allBrand.type=='letter'?'firterLetter':'charge_cost_inner'"
+                                *ngFor="let allBrand of allBrandList">
+                                <span class="" id="{{allBrand.name}}"
+                                      *ngIf="allBrand.type=='letter'">{{allBrand.name}}</span>
+                                <span [ngClass]="allBrand.checked ? 'active' : ''" *ngIf="allBrand.type=='name'"
+                                      (click)="allBrand.checked=!allBrand.checked" tappable>{{allBrand.name}}</span>
+                            </li>
+                        </ul>
+                        <!--</section>-->
+                    </ion-content>
+
+                    <!--品牌排序-->
+                    <article class="firter_executive">
+                        <!--字母排序-->
+                        <section>
+                            <div class="right" [style.maxHeight.px]="brandHeight()" >
+                                <a class="stars_icon" (click)="goLetter('*',-1)" tappable>
+                                    <img src="./img/stars.png" class="w_100" [hidden]="selectLetter!='热销品牌'"/><img
+                                        src="./img/start0.png" class="w_100" [hidden]="selectLetter=='热销品牌'"/>
+                                </a>
+                                <a class="{{x.letter==selectLetter ? 'active': ''}}"
+                                   *ngFor="let x of pyList|slice:1;let i=index" (click)="goLetter(x.letter,i)">{{x.letter}}</a>
+                            </div>
+                        </section>
+                        <!--筛选清空-->
+                        <div class="firter_Btn">
+                            <ul class="flex_ul">
+                                <li (click)="clearBrand()" tappable>清空筛选</li>
+                                <li (click)="doBrand()" tappable>确定</li>
+                            </ul>
+                        </div>
+                    </article>
+                    <!--滑动字母片-->
+                    <article class="slideLetter" id="scrollLetter">
+                        <!--{{scrollLetter}}-->
+
+                    </article>
+                </article>
 
 
-        </div>
-      </div>
-      <!--跟踪效果-->
-      <div class="other_p_select" *ngIf="selectFilter=='effect' && effect">
-        <div class="white_bg">
-          <article class="firterPanel">
-            <ul class="firterOption padding_b_010">
-              <li class="charge_cost" (click)="setEffect(0)" [ngClass]="filterList.lastBuyed==0?'active':''">全部</li>
-              <li class="charge_cost" (click)="setEffect(1)" [ngClass]="filterList.lastBuyed==1?'active':''">已购买</li>
-              <li class="charge_cost" (click)="setEffect(2)" [ngClass]="filterList.lastBuyed==2?'active':''">未购买</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-
-      <!--跟踪情况-->
-      <div class="other_p_select FollowUp" *ngIf="selectFilter=='situation' && situation">
-        <div class="white_bg">
-          <article class="">
-            <ul class="firterOption padding_b_010">
-              <li class="charge_cost" (click)="setSituation(0,0)" [ngClass]="(filterList.lastContact==0 && filterList.trackStatus==0)?'active':''">全部</li>
-              <li class="charge_cost" (click)="setSituation(1,0)" [ngClass]="(filterList.lastContact==1 && filterList.trackStatus==0)?'active':''">已联系上</li>
-              <li class="charge_cost" (click)="setSituation(2,0)" [ngClass]="(filterList.lastContact==2 && filterList.trackStatus==0)?'active':''">未联系上</li>
-              <li class="charge_cost" (click)="setSituation(0,1)" [ngClass]="(filterList.lastContact==0 && filterList.trackStatus==1)?'active':''">超期</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-
-      <!--管理方式-->
-      <div class="other_p_select FollowUp" *ngIf="selectFilter=='manage' && manage">
-        <div class="white_bg">
-          <article class="manege_way">
-            <ul class="firterOption padding_b_010">
-              <li class="charge_cost" (click)="setManage(0)" [ngClass]="filterList.dateCalcType==0?'active':''">全部</li>
-              <li class="charge_cost" (click)="setManage(1)" [ngClass]="filterList.dateCalcType==1?'active':''">系统智能管理跟踪时间</li>
-              <li class="charge_cost" (click)="setManage(2)" [ngClass]="filterList.dateCalcType==2?'active':''">人工管理</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-
-      <!--会员-->
-      <div class="other_p_select FollowUp" *ngIf="selectFilter=='member' && member">
-        <div class="white_bg">
-          <!--最新加入的会员-->
-          <article>
-            <p class="menber_head">最新加入的会员</p>
-            <ul class="firterOption">
-              <li class="charge_cost" (click)="setNew(1)" [ngClass]="isNew==1?'active':''">是</li>
-              <li class="charge_cost" (click)="setNew(2)" [ngClass]="isNew==2?'active':''">否</li>
-            </ul>
-          </article>
-          <!--新分配的会员-->
-          <article>
-            <p class="menber_head">新分配的会员</p>
-            <ul class="firterOption">
-              <li class="charge_cost" (click)="setNewAssign(1)" [ngClass]="isNewAssign==1?'active':''">是</li>
-              <li class="charge_cost" (click)="setNewAssign(2)" [ngClass]="isNewAssign==2?'active':''">否</li>
-            </ul>
-          </article>
-          <!--新分配的会员-->
-          <article>
-            <p class="menber_head">会员类型</p>
-            <ul class="firterOption padding_b_010">
-              <li class="charge_cost" (click)="setCustomerLevel(1)" [ngClass]="customerLevel==1?'active':''">需优先跟踪</li>
-              <li class="charge_cost" (click)="setCustomerLevel(2)" [ngClass]="customerLevel==2?'active':''">维持日常跟踪</li>
-              <li class="charge_cost" (click)="setCustomerLevel(3)" [ngClass]="customerLevel==3?'active':''">可选择性跟踪</li>
-              <li class="charge_cost" (click)="setCustomerLevel(4)" [ngClass]="customerLevel==4?'active':''">不建议跟踪</li>
-            </ul>
-          </article>
-          <!--筛选清空-->
-          <div class="firter_Btn">
-            <ul class="flex_ul">
-              <li (click)="clearMember()">清空筛选</li>
-              <li	(click)="doMember()">确定</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!--购买-->
-      <div class="other_p_select FollowUp" *ngIf="selectFilter=='buy' && buy">
-        <div class="white_bg">
-          <!--时间范围-->
-          <article >
-            <p class="menber_head">时间范围内有产生消费({{timeTip}})</p>
-            <!--滑动-->
-            <div class="range_panel">
-              <ion-range [(ngModel)]="time" min="0" max="6" step="1" (ionChange)="setTimeTip(time)" mode="md" pin="true" #myTime></ion-range>
             </div>
-
-          </article>
-          <!--购买次数-->
-          <article>
-            <p class="menber_head padding-bottom">购买次数( {{(minBuyCount==0 && maxBuyCount==20)?'不限':minBuyCount+' -- '+maxBuyCount}} )</p>
-            <div class="range_panel">
-              <ion-range dualKnobs="true" [(ngModel)]="buyCount" min="1" max="20" step="1"  mode="md" pin="true" (ionChange)="setBuyCount(buyCount)"></ion-range>
-            </div>
-          </article>
-          <!--平均客单价-->
-          <article class="padding_b_010">
-            <p class="menber_head padding-bottom">平均客单价( {{(minPCT==0 && maxPCT==2000)?'不限':minPCT+' -- '+maxPCT}} )</p>
-            <!--滑动-->
-            <div class="range_panel">
-              <ion-range dualKnobs="true" [(ngModel)]="PCT" min="1" max="2000" step="1"  mode="md" pin="true" (ionChange)="setPCT(PCT)"></ion-range>
-            </div>
-            <!--<div class="range_panel">-->
-            <!--<div class="range_skip" >-->
-            <!--<div class="buyNum_left" id="price_left">{{ p_left}}</div>-->
-            <!--<div class="buyNum_right" id="price_right">{{ p_right}}</div>-->
-            <!--<div class="meaBox w_100" id="price_range"  ></div>-->
-            <!--<div class="mea_l" on-drag="onDrag($event,4)" on-touch="onTouch($event)"></div>-->
-            <!--<div class="mea_r" on-drag="onDrag($event,5)" on-touch="onTouch($event)"></div>-->
-            <!--</div>-->
-            <!--</div>-->
-          </article>
-
-          <!--筛选清空-->
-          <div class="firter_Btn">
-            <ul class="flex_ul">
-              <li (click)="clearBuy()">清空筛选</li>
-              <li	(click)="doBuy()">确定</li>
-            </ul>
-          </div>
         </div>
-      </div>
+        <!--跟踪效果-->
+        <div class="other_p_select" *ngIf="selectFilter=='effect' && effect">
+            <div class="white_bg">
+                <article class="firterPanel">
+                    <ul class="firterOption padding_b_010">
+                        <li class="charge_cost" (click)="setEffect(0)" [ngClass]="filterList.lastBuyed==0?'active':''"
+                            tappable>全部
+                        </li>
+                        <li class="charge_cost" (click)="setEffect(1)" [ngClass]="filterList.lastBuyed==1?'active':''"
+                            tappable>已购买
+                        </li>
+                        <li class="charge_cost" (click)="setEffect(2)" [ngClass]="filterList.lastBuyed==2?'active':''"
+                            tappable>未购买
+                        </li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+
+        <!--跟踪情况-->
+        <div class="other_p_select FollowUp" *ngIf="selectFilter=='situation' && situation">
+            <div class="white_bg">
+                <article class="">
+                    <ul class="firterOption padding_b_010">
+                        <li class="charge_cost" (click)="setSituation(0,0)"
+                            [ngClass]="(filterList.lastContact==0 && filterList.trackStatus==0)?'active':''" tappable>全部
+                        </li>
+                        <li class="charge_cost" (click)="setSituation(1,0)"
+                            [ngClass]="(filterList.lastContact==1 && filterList.trackStatus==0)?'active':''" tappable>
+                            已联系上
+                        </li>
+                        <li class="charge_cost" (click)="setSituation(2,0)"
+                            [ngClass]="(filterList.lastContact==2 && filterList.trackStatus==0)?'active':''" tappable>
+                            未联系上
+                        </li>
+                        <li class="charge_cost" (click)="setSituation(0,1)"
+                            [ngClass]="(filterList.lastContact==0 && filterList.trackStatus==1)?'active':''" tappable>超期
+                        </li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+
+        <!--管理方式-->
+        <div class="other_p_select FollowUp" *ngIf="selectFilter=='manage' && manage">
+            <div class="white_bg">
+                <article class="manege_way">
+                    <ul class="firterOption padding_b_010">
+                        <li class="charge_cost" (click)="setManage(0)"
+                            [ngClass]="filterList.dateCalcType==0?'active':''" tappable>全部
+                        </li>
+                        <li class="charge_cost" (click)="setManage(1)"
+                            [ngClass]="filterList.dateCalcType==1?'active':''" tappable>系统智能管理跟踪时间
+                        </li>
+                        <li class="charge_cost" (click)="setManage(2)"
+                            [ngClass]="filterList.dateCalcType==2?'active':''" tappable>人工管理
+                        </li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+
+        <!--会员-->
+        <div class="other_p_select FollowUp" *ngIf="selectFilter=='member' && member">
+            <div class="white_bg">
+                <!--最新加入的会员-->
+                <article>
+                    <p class="menber_head">最新加入的会员</p>
+                    <ul class="firterOption">
+                        <li class="charge_cost" (click)="setNew(1)" [ngClass]="isNew==1?'active':''" tappable>是</li>
+                        <li class="charge_cost" (click)="setNew(2)" [ngClass]="isNew==2?'active':''" tappable>否</li>
+                    </ul>
+                </article>
+                <!--新分配的会员-->
+                <article>
+                    <p class="menber_head">新分配的会员</p>
+                    <ul class="firterOption">
+                        <li class="charge_cost" (click)="setNewAssign(1)" [ngClass]="isNewAssign==1?'active':''"
+                            tappable>是
+                        </li>
+                        <li class="charge_cost" (click)="setNewAssign(2)" [ngClass]="isNewAssign==2?'active':''"
+                            tappable>否
+                        </li>
+                    </ul>
+                </article>
+                <!--新分配的会员-->
+                <article>
+                    <p class="menber_head">会员类型</p>
+                    <ul class="firterOption padding_b_010">
+                        <li class="charge_cost" (click)="setCustomerLevel(1)" [ngClass]="customerLevel==1?'active':''"
+                            tappable>需优先跟踪
+                        </li>
+                        <li class="charge_cost" (click)="setCustomerLevel(2)" [ngClass]="customerLevel==2?'active':''"
+                            tappable>维持日常跟踪
+                        </li>
+                        <li class="charge_cost" (click)="setCustomerLevel(3)" [ngClass]="customerLevel==3?'active':''"
+                            tappable>可选择性跟踪
+                        </li>
+                        <li class="charge_cost" (click)="setCustomerLevel(4)" [ngClass]="customerLevel==4?'active':''"
+                            tappable>不建议跟踪
+                        </li>
+                    </ul>
+                </article>
+                <!--筛选清空-->
+                <div class="firter_Btn">
+                    <ul class="flex_ul">
+                        <li (click)="clearMember()" tappable>清空筛选</li>
+                        <li (click)="doMember()" tappable>确定</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!--购买-->
+        <div class="other_p_select FollowUp" *ngIf="selectFilter=='buy' && buy">
+            <div class="white_bg">
+                <!--时间范围-->
+                <article>
+                    <p class="menber_head">时间范围内有产生消费({{timeTip}})</p>
+                    <!--滑动-->
+                    <div class="range_panel" id="rangeTime">
+                        <!--(ionChange)="setTimeTip(time)"-->
+                        <ion-range [(ngModel)]="time" min="0" max="6" step="1" (ionChange)="setTimeTip(time)" mode="md"
+                                   pin="true"></ion-range>
+                    </div>
+
+                </article>
+                <!--购买次数-->
+                <article>
+                    <p class="menber_head padding-bottom">购买次数( {{(minBuyCount==0 && maxBuyCount==20)?'不限':minBuyCount+'
+                        -- '+maxBuyCount}} )</p>
+                    <div class="range_panel">
+                        <ion-range dualKnobs="true" [(ngModel)]="buyCount" min="0" max="20" step="1" mode="md"
+                                   pin="true" (ionChange)="setBuyCount(buyCount)"></ion-range>
+                    </div>
+                </article>
+                <!--平均客单价-->
+                <article class="padding_b_010">
+                    <p class="menber_head padding-bottom">平均客单价( {{(minPCT==0 && maxPCT==2000)?'不限':minPCT+' --
+                        '+maxPCT}} )</p>
+                    <!--滑动-->
+                    <div class="range_panel">
+                        <ion-range dualKnobs="true" [(ngModel)]="PCT" min="0" max="2000" step="100" mode="md" pin="true"
+                                   (ionChange)="setPCT(PCT)"></ion-range>
+                    </div>
+                    <!--<div class="range_panel">-->
+                    <!--<div class="range_skip" >-->
+                    <!--<div class="buyNum_left" id="price_left">{{ p_left}}</div>-->
+                    <!--<div class="buyNum_right" id="price_right">{{ p_right}}</div>-->
+                    <!--<div class="meaBox w_100" id="price_range"  ></div>-->
+                    <!--<div class="mea_l" on-drag="onDrag($event,4)" on-touch="onTouch($event)"></div>-->
+                    <!--<div class="mea_r" on-drag="onDrag($event,5)" on-touch="onTouch($event)"></div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </article>
+
+                <!--筛选清空-->
+                <div class="firter_Btn">
+                    <ul class="flex_ul">
+                        <li (click)="clearBuy()" tappable>清空筛选</li>
+                        <li (click)="doBuy()" tappable>确定</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </section>
 
-  </ion-header>
-  <!--网络不可用时-->
+    <!--努力加载中-->
+    <!--[hidden]="customerService.isLoad"-->
+    <!--<div class="load_panel" *ngIf="!customerService.isLoad">-->
+    <!--<div>-->
+    <!--<img src="./img/loadding.png" class="loadding w_100"/>-->
+    <!--<div class="load_text">努力加载中<i class="dot"></i></div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+</ion-header>
+<!--网络不可用时-->
 
 <!--遮罩层-->
-<div class="pop_panel" *ngIf="sort || category || brand ||other && (situation || effect ||manage ||member || buy)"></div>
+<div class="pop_panel"
+     *ngIf="sort || category || brand ||other && (situation || effect ||manage ||member || buy)"></div>
 
-  <!--<page-network></page-network>-->
-  <!--其他筛选出现时，style="top:191px"-->
+<!--<page-network></page-network>-->
+<!--其他筛选出现时，style="top:191px"-->
 <!--[hidden]="!isLoad"-->
-  <ion-content  class="has-tabs" #mainContent><!--[ngStyle]="{top:(other)? '188px': '136px'}"-->
+<ion-content class="has-tabs" #mainContent><!--[ngStyle]="{top:(other)? '188px': '136px'}"-->
 
-    <ion-refresher (ionRefresh)="refreshList($event)">
-      <ion-refresher-content pullingIcon="arrow-dropdown"
-                             pullingText="下拉刷新"
-                             refreshingSpinner="circles"></ion-refresher-content>
+    <ion-refresher (ionRefresh)="refreshList($event)" (ionStart)="start()" (ionPull)="pull()">
+        <ion-refresher-content pullingIcon="arrow-dropdown"
+                               pullingText="下拉刷新"
+                               refreshingSpinner="circles"
+                               refreshingText="下拉刷新"></ion-refresher-content>
     </ion-refresher>
 
     <!--具体会员-->
-    <div class="tracl_log_panel" *ngFor="let customer of customerService.customers">
-      <h2 class="title padding-bottom">
-        <span class="menber_name" (click)="gotoCustomerDetails(customer)">{{customer.customerName}}</span>
-        <span [ngClass]="customer.customerLevel|customerLevelClassPipe">{{customer.customerLevel|customerLevelTextPipe}}</span>
-        <span class="small_red_btn" *ngIf="customer.isNew">新</span>
-        <div class="menber_tel" *ngIf="showCustomerPhone">{{customer.contactMobile}}</div>
-        <div class="tel_icon fr" (click)="call(customer)">
-          <img src="{{ customer.contactMobile ? './img/tel_icon.png' : './img/non_tel4.png'}}" class="w_100" *ngIf="customerService.imgCallShow(customer.status)"/>
-        </div>
-      </h2>
-      <p>{{getLastTrackResultText(customer)}}</p>
-      <p *ngIf="customer.lastTrackLog">{{customer.lastTrackLog}}</p>
-      <p *ngIf="getNextTrackText(customer)">{{getNextTrackText(customer)}}</p>
+    <div class="tracl_log_panel" *ngFor="let customer of customerService.customers"
+         (click)="gotoCustomerDetails(customer)" tappable>
+        <h2 class="title padding-bottom">
+            <span class="menber_name">{{customer.customerName}}</span>
+            <span [ngClass]="customer.customerLevel|customerLevelClassPipe">{{customer.customerLevel|customerLevelTextPipe}}</span>
+            <span class="small_red_btn" *ngIf="customer.isNew">新</span>
+            <div class="menber_tel" *ngIf="showCustomerPhone">{{customer.contactMobile}}</div>
+            <div class="fr" (click)="call(customer)" tappable>
+                <div class="" [ngClass]="customer.contactMobile ? 'tel_icon' : 'non_tel_icon'"
+                     *ngIf="customerService.imgCallShow(customer.status)"></div>
+                <!--<img src="{{ customer.contactMobile ? './img/tel_icon.png' : './img/non_tel4.png'}}" class="w_100" *ngIf="customerService.imgCallShow(customer.status)"/>-->
+            </div>
+        </h2>
+        <p>{{getLastTrackResultText(customer)}}</p>
+        <p *ngIf="customer.lastTrackLog">{{customer.lastTrackLog}}</p>
+        <p *ngIf="getNextTrackText(customer)">{{getNextTrackText(customer)}}</p>
     </div>
 
     <!--具体会员-->
@@ -346,45 +437,47 @@
             *ngIf="!customerService.isEnd"
             (ionInfinite)="loadMoreList($event)"
             threshold="5%">
-      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
     </ion-infinite-scroll>
 
-  </ion-content>
+</ion-content>
 
-  <!--努力加载中-->
+<!--努力加载中-->
 <!--[hidden]="customerService.isLoad"-->
-  <ion-content [hidden]="customerService.isLoad">
-    <div class="load_panel" [hidden]="customerService.isLoad">
-      <div>
-        <img src="./img/loadding.png" class="loadding w_100"/>
-        <div class="load_text">努力加载中<i class="dot"></i></div>
-      </div>
-    </div>
-  </ion-content>
+<!--<ion-content>-->
+<!--&lt;!&ndash;努力加载中&ndash;&gt;-->
+<!--<div class="load_panel" [hidden]="customerService.isLoad">-->
+<!--<div>-->
+<!--<img src="./img/loadding.png" class="loadding w_100"/>-->
+<!--<div class="load_text">努力加载中<i class="dot"></i></div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</ion-content>-->
 <!--网络不可用-->
 <ion-content [hidden]="customerService.customers && customerService.customers.length>0 || networkSer.isConnected">
-  <div class="pic_center">
-    <img src="./img/errorNet.png" class="img"/>
-    <p>抱歉！网络不可用...</p>
-  </div>
+    <div class="pic_center">
+        <img src="./img/errorNet.png" class="img"/>
+        <p>抱歉！网络不可用...</p>
+    </div>
 </ion-content>
-  <!--跟踪-->
+<!--跟踪-->
 <!--[hidden]="!isLoad || todayCustomers.length"-->
-  <ion-content  [hidden]="!customerService.isLoad || customerService.todayCustomers.length>0 || filterList.dataType==1 || !networkSer.isConnected" >
+<ion-content
+        [hidden]="!customerService.isLoad || customerService.todayCustomers.length>0 || filterList.dataType==1 || !networkSer.isConnected">
     <!--已跟踪完-->
     <div class=" s_pic_center" *ngIf="customerService.isTodayTracked()">
-      <img src="./img/track_end.png" class="img"/>
-      <p>好开心！今天全部跟踪完成啦！</p>
-      <p (click)="switchTrackList(1)">去全部跟踪会员中看看是否要提前跟踪~</p>
+        <img src="./img/track_end.png" class="img"/>
+        <p>好开心！今天全部跟踪完成啦！</p>
+        <p (click)="switchTrackList(1)" tappable>去全部分配会员中看看是否要提前跟踪~</p>
     </div>
     <!--无待跟踪记录-->
     <!---->
     <div class="s_pic_center" *ngIf="!customerService.isTodayTracked()">
-      <img src="./img/no_trak.png" class="img"/>
-      <p>无待跟踪记录</p>
-      <p (click)="switchTrackList(1)">去全部跟踪会员中看看是否要提前跟踪~</p>
+        <img src="./img/no_trak.png" class="img"/>
+        <p>无待跟踪记录</p>
+        <p (click)="switchTrackList(1)" tappable>去全部分配会员中看看是否要提前跟踪~</p>
     </div>
-  </ion-content>
+</ion-content>
 
 
 

@@ -8,15 +8,16 @@ import {AppConfig} from "../../../app/app.config";
 
 import {SettingsPage}     from '../settings/settings';
 import {LoginComponent}     from '../login/login';
+import {ServiceMaintenancePage} from '../../SharedModule/service-maintenance/service-maintenance'
 import {TrackingLogComponent}     from '../../TrackingModule/tracking-log/tracking-log';
 import {NewsFeedComponent} from '../news-feed/news-feed';
-
+import {NetworkSer} from '../../../providers/network-ser';
 declare var echarts;
 import * as Highcharts from 'highcharts' ;
 
 @Component({
     selector: 'page-account-details',
-    templateUrl: 'account-details.html',
+    templateUrl: 'account-details.html'
 })
 export class AccountDetailsComponent {
     @ViewChild('container') container:ElementRef;
@@ -32,21 +33,21 @@ export class AccountDetailsComponent {
     src:any = [];//图片数组
     eachPicNum:number=10;//每个图片代表的人数
 
-    constructor(public navCtrl:NavController, public modalCtrl:ModalController,public interface_lists:InterfaceLists, private popser:PopSer,public config:Config) {
+    constructor(public navCtrl:NavController, public modalCtrl:ModalController,public interface_lists:InterfaceLists,public networkSer:NetworkSer, private popser:PopSer,public config:Config) {
         // console.log(config.get('pageTransition'));
     }
 
     //页面加载完毕触发。该事件发生在页面被创建成 DOM 的时候，且仅仅执行一次。如果页面被缓存（Ionic默认是缓存的）就不会再次触发该事件。该事件中可以放置初始化页面的一些事件。
     ionViewDidLoad(){
-        this.hchart(this.completionRate);//里面的数值为服务器闯过来的值
-        this.name=AppConfig.getUserInfo().name;
-        this.getdata();
+
     }
     // 即将进入一个页面变成当前激活页面的时候执行的事件。
     ionViewWillEnter(){}
     // 进入了一个页面且变成了当前的激活页面，该事件不管是第一次进入还是缓存后进入都将执行。
     ionViewDidEnter() {
-
+        this.hchart(this.completionRate);//里面的数值为服务器闯过来的值
+        this.name=AppConfig.getUserInfo().name;
+        this.getdata();
     }
     // 将要离开了该页面之后变成了不是当前激活页面的时候执行的事件。
     ionViewWillLeave(){}
@@ -91,7 +92,8 @@ export class AccountDetailsComponent {
             switch(true){
                 case Hchart.charData[x]=== point:
                     Hchart.charData[x]= Hchart.pointSet;
-                    Hchart.charData=x;
+                    Hchart.position=x;//是指定position变
+                    // console.log(Hchart.charData);
                     //change(x);
                     break;
                 case  Hchart.charData[x]< point &&  Hchart.charData[x+1] >point :
@@ -111,7 +113,7 @@ export class AccountDetailsComponent {
         let opts: any = {
             chart: {
                 renderTo: this.container.nativeElement,//图表在html的位置
-                margin:[-30,0,0,-6],
+                margin:[-30,0,0,-6],//掩藏掉坐标轴
                 spacing:[0, 0, 0, 0],
                 backgroundColor: "#F5F5F5"
             },
@@ -119,7 +121,7 @@ export class AccountDetailsComponent {
                 enabled:false // 禁用版权信息
             },
             tooltip: {
-                //enabled:false
+                enabled:false
             },
             title:{
                 text:null
@@ -132,6 +134,7 @@ export class AccountDetailsComponent {
                 visible: true//坐标轴不见
             },
             yAxis: {
+                tickInterval: 50,//坐标轴刻度间隔
                 gridLineWidth: 0,//刻度线的宽度为即不可见
                 visible: true
             },
@@ -166,35 +169,40 @@ export class AccountDetailsComponent {
 
     getdata(){
         let dd=AppConfig.getLocalTime2();
-        console.log(dd);
-        this.interface_lists.overview({intdate:dd}).then((returnData)=>{
+        // console.log(dd);
+        this.interface_lists.overview({intdate:dd.substr(0,6)}).then((returnData)=>{
+            // console.log(returnData);
             if (returnData.isSucceed) {
                 if (returnData.data) {
+                    // console.dir(returnData);
                     this.completionRate = returnData.data.completionRate; //跟踪完成率
                     this.saleAmount = returnData.data.saleAmount; //跟踪后产生的销售额
                     this.VipBuyCount = returnData.data.totalBuyer; //购买人数
                     this.trackSuccessRate = returnData.data.trackSuccedRate;//成功率
                     this.trackLogNum = returnData.data.totalTracklog;//日志数量
                     this.getbuyPeople();
-                    this.hchart(this.completionRate);//里面的数值为服务器闯过来的值
+                    // this.hchart(this.completionRate);//里面的数值为服务器闯过来的值
+                    this.hchart(50);//里面的数值为服务器闯过来的值
+
                 }
             }else {
                 switch (returnData.code) {
+                    case 600:   //600跳转到系统维护
+                    this.navCtrl.push(ServiceMaintenancePage);
+                    break;
                     case 400:
                         this.popser.alert('请求不合法（请求安全校验没有通过）');
                         break;
                     case 401:
                         this.popser.alert('请求要求身份验证（TOKEN无效）');
-                        //this.navCtrl.push(LoginComponent);
-                        break;
-                    case 405:
-                        this.popser.alert('请求被拒绝');
+                        // this.navCtrl.push(LoginComponent);
+                        this.navCtrl.parent.parent.setRoot(LoginComponent);
                         break;
                     case 500:
                         this.popser.alert('系统内部异常');
                         break;
                     default:
-                        this.popser.alert('修改失败，请重试');
+                        this.popser.alert('数据获取失败，请重试');
                         break;
                 }
             }
@@ -248,7 +256,8 @@ export class AccountDetailsComponent {
     //跟踪完成率提示框
     tip_track() {
         let t = new Date().toLocaleDateString();
-        this.popser.alert('跟踪后7天内有产生购买，即为跟踪成功。<br/>这里的跟踪成功率是自启用到' + t + '的所以跟踪成功的统计');
+        // this.popser.alert('<div class="text-justify">跟踪后7天内有产生购买，即为跟踪成功。<br/>这里的跟踪成功率是自启用到' + t + '的所有跟踪成功的统计</div>');
+        this.popser.alert('<div class="text-justify">跟踪后7天内有产生购买，即为跟踪成功。<br/>这里的跟踪成功率是累计跟踪成功率</div>');
     }
 
 
