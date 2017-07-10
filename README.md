@@ -21,7 +21,8 @@ ipvp客满分2.0开发于2016年12月，  基于ionic2 ,现已升级为ionic3.4
 
 ![](https://github.com/xiedajian/ipvpKmfApp2.0/resources/icon.png)   
 ![](https://github.com/xiedajian/ipvpKmfApp2.0/raw/master/resources/icon.png)
-
+[![baidu]](http://baidu.com)  
+[baidu]:http://www.baidu.com/img/bdlogo.gif "百度Logo"  
 
 
  应用宝下载链接    
