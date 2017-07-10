@@ -19,8 +19,8 @@ ipvp客满分2.0开发于2016年12月，  基于ionic2 ,现已升级为ionic3.4
 7.ionic3懒加载   
 8.codepush热更新（安卓，ios都可以，ios在审核的时候通过接口暂时屏蔽更新）
 
-![image](https://github.com/xiedajian/ipvpKmfApp2.0/resources/icon.png)   
-![image](https://github.com/xiedajian/ipvpKmfApp2.0/raw/master/resources/icon.png)
+![](https://github.com/xiedajian/ipvpKmfApp2.0/resources/icon.png)   
+![](https://github.com/xiedajian/ipvpKmfApp2.0/raw/master/resources/icon.png)
 
 
 
