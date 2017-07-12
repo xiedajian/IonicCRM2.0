@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {AppVersion} from 'ionic-native';
-import {Device} from 'ionic-native';
+import {AppVersion} from '@ionic-native/app-version';
+import {Device} from '@ionic-native/device';
 import {Platform} from 'ionic-angular';
 import {PopSer} from './pop-ser';
-import {FileSer} from './file-ser';
+// import {FileSer} from './file-ser';
 import {Storage} from '@ionic/storage';
 import {AppConfig} from '../app/app.config';
 import {InterfaceLists} from '../providers/interface_list';
-import {CustomerService} from '../pages/SharedModule/customer.service'
+// import {CustomerService} from '../pages/SharedModule/customer.service';
 
 /**
  * App初始化服务
@@ -15,9 +15,12 @@ import {CustomerService} from '../pages/SharedModule/customer.service'
 @Injectable()
 export class AppInitSer {
     constructor(public popser:PopSer, public interface_lists:InterfaceLists,
+                public appVersion:AppVersion,
+                public device:Device,
                 public storage:Storage,
                 public platform:Platform,
-                public customerService:CustomerService/*,public fileSer:FileSer*/) {
+                // public customerService:CustomerService/*,public fileSer:FileSer*/
+    ) {
     }
 
     appInit() {
@@ -28,7 +31,7 @@ export class AppInitSer {
 
         //确定此次app启动的模式  //1首次启动  2.今日首次启动 3普通模式启动
         return new Promise((resolve, reject)=> {
-            AppVersion.getVersionNumber().then((val:string)=> {
+            this.appVersion.getVersionNumber().then((val:string)=> {
                 if (val) AppConfig.appVersion = val;
                 let dd:any = (new Date()).toLocaleDateString();//今天日期
                 this.storage.get('appFirst').then((val)=> {
@@ -65,15 +68,15 @@ export class AppInitSer {
                 return this.setExpireDate();
             });
 
-            try{
-                this.storage.get('lastTrackDate').then((val)=> {
-                    if(val){
-                        this.customerService.lastTrackDate = val;
-                    }
-                });
-            }catch (e){
-                console.log(e);
-            }
+            // try{
+            //     this.storage.get('lastTrackDate').then((val)=> {
+            //         if(val){
+            //             this.customerService.lastTrackDate = val;
+            //         }
+            //     });
+            // }catch (e){
+            //     console.log(e);
+            // }
 
             /*        //上传错误日志
              this.fileSer.readErrLogs().then((arr)=>{
@@ -104,13 +107,13 @@ export class AppInitSer {
 
     //设置 设备id
     setDeviceid() {
-        AppConfig.deviceId = Device.uuid ;
-        AppConfig.deviceCordova = Device.cordova;          //设备上运行的Cordova版本
-        AppConfig.deviceModel = Device.model;           //设备型号或产品的名称
-        AppConfig.devicePlatform= Device.platform;          //操作系统名称
-        AppConfig.devicePlatformVersion = Device.version;          //操作系统版本
-        AppConfig.deviceManufacturer= Device.manufacturer;          //设备的制造商
-        AppConfig.deviceSerial = Device.serial;          //设备硬件序列号
+        AppConfig.deviceId = this.device.uuid ;
+        AppConfig.deviceCordova = this.device.cordova;          //设备上运行的Cordova版本
+        AppConfig.deviceModel = this.device.model;           //设备型号或产品的名称
+        AppConfig.devicePlatform= this.device.platform;          //操作系统名称
+        AppConfig.devicePlatformVersion = this.device.version;          //操作系统版本
+        AppConfig.deviceManufacturer= this.device.manufacturer;          //设备的制造商
+        AppConfig.deviceSerial = this.device.serial;          //设备硬件序列号
     }
 
     //设置 平台
@@ -164,7 +167,7 @@ export class AppInitSer {
 
     setAppVersion() {
         return new Promise((resolve, reject)=> {
-            AppVersion.getVersionNumber().then((val:string)=> {
+            this.appVersion.getVersionNumber().then((val:string)=> {
                 if (val) {
                     AppConfig.appVersion = val;
                 } else {

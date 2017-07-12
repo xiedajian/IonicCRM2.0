@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {PopSer} from './pop-ser';
-import { File } from 'ionic-native';
+import {File} from '@ionic-native/file';
 
 declare var cordova;
 /**
@@ -8,9 +8,10 @@ declare var cordova;
  */
 @Injectable()
 export class FileSer {
-    fs = cordova.file.dataDirectory;
+    // fs = cordova.file.dataDirectory;
+    fs = cordova.file.externalDataDirectory;
 
-    constructor(public popser:PopSer) {}
+    constructor(public popser:PopSer,public file: File) {}
 
 
     /**
@@ -29,28 +30,28 @@ export class FileSer {
      */
     _writeErrLogs(content){
         //检查文件夹是否存在
-        File.checkDir(this.fs, 'ipvpKMF').then((bool)=>{
+        this.file.checkDir(this.fs, 'ipvpKMF').then((bool)=>{
             console.log('文件夹存在');
         },()=>{
             console.log('文件夹不存在');
-            return File.createDir(this.fs, 'ipvpKMF', true).then(()=>{ console.log('文件夹新建成功')});
+            return this.file.createDir(this.fs, 'ipvpKMF', true).then(()=>{ console.log('文件夹新建成功')});
         }).then(()=>{
             //检查文件是否存在
-            return File.checkFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt');
+            return this.file.checkFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt');
         }).then(()=>{
             //文件存在   写入
             console.log('文件存在');
-            File.writeFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', content, {replace:true,append:true}).then(()=>{ console.log('文件写入成功')});
+            this.file.writeFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', content, {replace:true,append:true}).then(()=>{ console.log('文件写入成功')});
         },()=>{
             console.log('文件不存在');
-            File.createFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', true).then((success)=> {
+            this.file.createFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', true).then((success)=> {
                 console.log('文件新建成功');
-                File.writeFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', content, {replace:true,append:true}).then(()=>{ console.log('文件写入成功')});
+                this.file.writeFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', content, {replace:true,append:true}).then(()=>{ console.log('文件写入成功')});
             },  (error)=> {
                 console.log('文件新建失败，再次尝试新建');
-                File.createFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', true).then((success)=> {
+                this.file.createFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', true).then((success)=> {
                     console.log('文件新建成功');
-                    File.writeFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', content, {replace:true,append:true}).then(()=>{ console.log('文件写入成功')});
+                    this.file.writeFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', content, {replace:true,append:true}).then(()=>{ console.log('文件写入成功')});
                 });
             });
         });
@@ -60,7 +61,7 @@ export class FileSer {
      * @returns     数组 【{}，{}，{}】
      */
     readErrLogs(){
-       return File.readAsText(this.fs, 'ipvpKMF/IpvpErrLogs.txt').then((res:string)=>{
+       return this.file.readAsText(this.fs, 'ipvpKMF/IpvpErrLogs.txt').then((res:string)=>{
             console.log('读取成功');
            let arr:any=[];
            if(res && res!=''){
@@ -80,7 +81,7 @@ export class FileSer {
      */
     createDir(){
         // File.createDir(path, dirName, replace)
-        File.createDir(this.fs, 'ipvpKMF', true).then((success)=> {
+        this.file.createDir(this.fs, 'ipvpKMF', true).then((success)=> {
             // success
             alert('ok!');
         },  (error)=> {
@@ -93,7 +94,7 @@ export class FileSer {
      */
     checkDir(){
         // File.checkDir(path, dir)
-        File.checkDir(this.fs, 'ipvpKMF').then((success)=> {
+        this.file.checkDir(this.fs, 'ipvpKMF').then((success)=> {
             // success
             alert('ok');
             console.log(success);
@@ -108,7 +109,7 @@ export class FileSer {
      */
     createFile(){
         // File.createFile(path, fileName, replace)
-        File.createDir(this.fs, 'ipvpKMF', true).then((success)=> {
+        this.file.createDir(this.fs, 'ipvpKMF', true).then((success)=> {
             // success
             alert('ok!');
             console.log(success);
@@ -123,7 +124,7 @@ export class FileSer {
      */
     checkFile(){
         // File.checkFile(path, file)
-        File.checkFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt').then((success)=> {
+        this.file.checkFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt').then((success)=> {
             // success
             alert('ok');
             console.log(success);
@@ -138,7 +139,7 @@ export class FileSer {
      */
     writeFile(content){
         // File.writeFile(path, fileName, text, options)
-        File.createFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', true).then((success)=> {
+        this.file.createFile(this.fs, 'ipvpKMF/IpvpErrLogs.txt', true).then((success)=> {
             // success
             alert('ok!');
         },  (error)=> {
@@ -152,7 +153,7 @@ export class FileSer {
      */
     writeExistingFile(content){
         // File.writeExistingFile(path, file, data)
-        File.writeExistingFile(this.fs,'ipvpKMF/IpvpErrLogs.txt',content).then((success)=> {
+        this.file.writeExistingFile(this.fs,'ipvpKMF/IpvpErrLogs.txt',content).then((success)=> {
             // success
             alert(success);
         },  (error)=> {
@@ -166,7 +167,7 @@ export class FileSer {
      */
     readAsText(){
         // File.readAsText(path, file);
-        File.readAsText(this.fs,'ipvpKMF/IpvpErrLogs.txt').then((success)=> {
+        this.file.readAsText(this.fs,'ipvpKMF/IpvpErrLogs.txt').then((success)=> {
             // success
             alert(success);
         },  (error)=> {
@@ -179,7 +180,7 @@ export class FileSer {
      */
     removeFile(){
         // File.removeFile(path, fileName)
-        File.removeFile(this.fs,'ipvpKMF/IpvpErrLogs.txt').then((success)=> {
+        this.file.removeFile(this.fs,'ipvpKMF/IpvpErrLogs.txt').then((success)=> {
             // success
             // alert('ok');
         },  (error)=> {

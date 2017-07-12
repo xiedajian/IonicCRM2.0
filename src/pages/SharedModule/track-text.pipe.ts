@@ -26,7 +26,7 @@ export class TrackStatusTextPipe implements PipeTransform {
                 return "今日待跟踪";
             }
             if (date > 0) {
-                if (DateService.getDateDiff(customer.lastTrackDate) == 0) {
+                if (customer.lastTrackDate && DateService.getDateDiff(customer.lastTrackDate) == 0) {
                     return DateService.getFormatDate(customer.nextTrackDate) + " 需跟踪,今日已跟踪";
                 }
                 return DateService.getFormatDate(customer.nextTrackDate) + " 需跟踪,已超期" + date + "天";

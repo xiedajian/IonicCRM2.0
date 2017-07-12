@@ -1,16 +1,21 @@
 import {Injectable} from '@angular/core';
-import {Transfer, FileOpener} from "ionic-native";
+import {FileOpener} from '@ionic-native/file-opener';
+import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
+import { File } from '@ionic-native/file';
 import { LoadingController } from 'ionic-angular';
 import {AppConfig} from '../app/app.config';
 import {InterfaceLists} from './interface_list';
 import {PopSer} from './pop-ser';
-
+declare var cordova;
 /**
  * App更新升级服务
  */
 @Injectable()
 export class UpdateAppSer {
     constructor(
+                private transfer: Transfer,
+                private file: File,
+                public fileOpener:FileOpener,
                 public popser:PopSer,
                 public loadingCtrl: LoadingController,
                 public interface_lists:InterfaceLists) {
@@ -76,19 +81,40 @@ export class UpdateAppSer {
             //     // window.open('itms-apps://itunes.apple.com/us/app/拼单网-客满分/id1138683564?l=zh&ls=1&mt=8');
             //     console.log('知道了');
             // });
-            this.popser.update({
-                appVersionNumber: returnData.data.versionCode,
-                content: returnData.data.releaseTips,
-                okText:'我知道了'
-            });
+            //强制更新
+            if(returnData.data.forceUpgrade){
+                this.popser.update_forceUpgrade({
+                    appVersionNumber: returnData.data.versionCode,
+                    content: returnData.data.releaseTips,
+                    okText:'请前往AppStore更新,旧版本将不再提供技术支持'
+                }, ()=> {
+                    this.popser.loadingDIY('show','请前往AppStore更新app，旧版本不再提供技术支持');
+                });
+            } else {
+                this.popser.update({
+                    appVersionNumber: returnData.data.versionCode,
+                    content: returnData.data.releaseTips,
+                    okText:'我知道了'
+                });
+            }
         } else if (platform=='android') {
-            this.popser.update({
-                appVersionNumber: returnData.data.versionCode,
-                content: returnData.data.releaseTips,
-            }, ()=> {
-            }, ()=> {
-                this.upgradeApp(returnData.data.upgradeUrl);
-            });
+            //强制更新
+            if(returnData.data.forceUpgrade){
+                this.popser.update_forceUpgrade({
+                    appVersionNumber: returnData.data.versionCode,
+                    content: returnData.data.releaseTips
+                }, ()=> {
+                    this.upgradeApp(returnData.data.upgradeUrl,returnData.data.versionCode);
+                });
+            }else {
+                this.popser.update({
+                    appVersionNumber: returnData.data.versionCode,
+                    content: returnData.data.releaseTips,
+                }, ()=> {
+                }, ()=> {
+                    this.upgradeApp(returnData.data.upgradeUrl,returnData.data.versionCode);
+                });
+            }
         } else {
             console.log("I'm an 未知 device!");
             // let obj:any = {
@@ -111,25 +137,25 @@ export class UpdateAppSer {
     /**
      * 下载与打开
      */
-    upgradeApp(url) {
-        const fileTransfer = new Transfer();
-
+    upgradeApp(url,versionCode) {
+        const fileTransfer: TransferObject = this.transfer.create();
         let uploading = this.loadingCtrl.create({
             content: "正在下载...",
             dismissOnPageChange: false
         });
         uploading.present();
         
-        var targetPath = "/sdcard/Download/kmf2.0-upd.apk"; //APP下载存放的路径，可以使用cordova file插件进行相关配置
+        // var targetPath = "/sdcard/Download/kmf2.0-upd.apk"; //APP下载存放的路径，可以使用cordova file插件进行相关配置
+        var targetPath = cordova.file.externalDataDirectory +"/kmf"+versionCode+"-upd.apk"; //APP下载存放的路径，可以使用cordova file插件进行相关配置
         // var options = {};
 
         fileTransfer.download(url, targetPath).then(
             (entry) => {
                 uploading.dismiss();
-                FileOpener.open(targetPath, 'application/vnd.android.package-archive').then();
+                this.fileOpener.open(targetPath, 'application/vnd.android.package-archive').then();
             }, (error) => {
                 uploading.dismiss();
-                this.popser.alert('下载失败');
+                this.popser.alert('下载失败,请重试或到应用市场下载最新版本');
             }
         );
 

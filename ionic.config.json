@@ -1,6 +1,5 @@
 {
-  "name": "kmf2.0",
+  "name": "upupup",
   "app_id": "",
-  "typescript": true,
-  "v2": true
+  "type": "ionic-angular"
 }

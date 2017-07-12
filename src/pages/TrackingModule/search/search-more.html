@@ -17,69 +17,69 @@
 
 
 <!--<ion-content padding>-->
-  <!--<button ion-button color="secondary" (click)="goToCustomerDetails()">-->
-    <!--Go to CustomerDetails-->
-  <!--</button>-->
+<!--<button ion-button color="secondary" (click)="goToCustomerDetails()">-->
+<!--Go to CustomerDetails-->
+<!--</button>-->
 <!--</ion-content>-->
 
-  <ion-content class="has-header search_content">
-    <!--搜索到记录-->
-    <div>
-      <!--搜索到的会员-->
-      <div *ngIf="query.keyType==1 && total>0">
-        <p class="padding mb_0">共搜到会员 {{total}} 名</p>
-        <div class="white_bg">
-          <!--具体搜索到的会员-->
-          <!--<div class="search_member border_b">
-            <h2 class="search_title"><span class="yellow">张三</span>丰</h2>
-            <p>2016-08-23 需跟踪，今日待跟踪</p>
-            <p>8天前跟踪过，跟踪后未购买</p>
-          </div>-->
-          <!--具体搜索到的会员-->
-          <div class=" search_member border_b" *ngFor="let customer of customers" (click)="gotoCustomerDetails(customer)" tappable>
-            <h2 class="search_title"><span [innerHTML]="customer.customerName|highlightPipe:searchQuery"></span></h2>
-            <p>{{customer|trackStatusTextPipe}}</p>
-            <p>{{customer|trackResultTextPipe}}</p>
-          </div>
+<ion-content class="has-header search_content">
+  <!--搜索到记录-->
+  <div>
+    <!--搜索到的会员-->
+    <div *ngIf="query.keyType==1 && total>0">
+      <p class="padding mb_0">共搜到会员 {{total}} 名</p>
+      <div class="white_bg">
+        <!--具体搜索到的会员-->
+        <!--<div class="search_member border_b">
+          <h2 class="search_title"><span class="yellow">张三</span>丰</h2>
+          <p>2016-08-23 需跟踪，今日待跟踪</p>
+          <p>8天前跟踪过，跟踪后未购买</p>
+        </div>-->
+        <!--具体搜索到的会员-->
+        <div class=" search_member border_b" *ngFor="let customer of customers" (click)="gotoCustomerDetails(customer)" tappable>
+          <h2 class="search_title"><span [innerHTML]="customer.customerName|highlightPipe:searchQuery"></span></h2>
+          <p>{{customer|trackStatusTextPipe}}</p>
+          <p>{{customer|trackResultTextPipe}}</p>
         </div>
       </div>
-      <!--搜到日志-->
-      <div *ngIf="query.keyType==2 && total>0">
-        <p class="padding mb_0">共搜到日志 {{total}} 篇</p>
-        <div class="white_bg padding">
-          <!--具体搜索到的日志-->
-          <div class=" border_b p_tb_10" *ngFor="let trackLog of trackLogs" (click)="gotoCustomerByLog(trackLog.customerId)" tappable>
-            <h2 class="search_title">{{trackLog.customerName}}</h2>
-            <p><span [innerHTML]="trackLog.trackDetail.content|highlightPipe:searchQuery"></span></p>
-            <p class="text-right">{{searchService.getFormatDate(trackLog.trackDetail.trackDate)}}</p>
-          </div>
+    </div>
+    <!--搜到日志-->
+    <div *ngIf="query.keyType==2 && total>0">
+      <p class="padding mb_0">共搜到日志 {{total}} 篇</p>
+      <div class="white_bg padding">
+        <!--具体搜索到的日志-->
+        <div class=" border_b p_tb_10" *ngFor="let trackLog of trackLogs" (click)="gotoCustomerByLog(trackLog.customerId)" tappable>
+          <h2 class="search_title">{{trackLog.customerName}}</h2>
+          <p><span [innerHTML]="trackLog.trackDetail.content|highlightPipe:searchQuery"></span></p>
+          <p class="text-right">{{searchService.getFormatDate(trackLog.trackDetail.trackDate)}}</p>
         </div>
       </div>
-
     </div>
 
-    <p class="bottomNoMore" *ngIf="total>0 && isEnd">已经没有更多内容了</p>
-    <ion-infinite-scroll
-            *ngIf="!isEnd"
-            (ionInfinite)="loadMoreList($event)"
-            threshold="5%">
-      <ion-infinite-scroll-content></ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+  </div>
 
-    <!--暂无记录-->
-    <div class="s_pic_center" *ngIf="searchNone">
-      <img src="img/search_no.png" class="img"/>
-      <p>努力搜索，暂无记录</p>
-    </div>
+  <p class="bottomNoMore" *ngIf="total>0 && isEnd">已经没有更多内容了</p>
+  <ion-infinite-scroll
+          *ngIf="!isEnd"
+          (ionInfinite)="loadMoreList($event)"
+          threshold="5%">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <!--暂无记录-->
+  <div class="s_pic_center" *ngIf="searchNone">
+    <img src="assets/img/search_no.png" class="img"/>
+    <p>努力搜索，暂无记录</p>
+  </div>
 
 
-  </ion-content>
+</ion-content>
 
 <!--努力加载中-->
 <ion-content *ngIf="searching">
   <div class="load_panel"  >
     <div>
-      <img src="img/loadding.png" class="loadding w_100"/>
+      <img src="assets/img/loadding.png" class="loadding w_100"/>
       <div class="load_text">努力加载中<i class="dot"></i></div>
     </div>
   </div>

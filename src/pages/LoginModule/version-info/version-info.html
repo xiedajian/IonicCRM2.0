@@ -6,19 +6,19 @@
 -->
 <ion-header class="white_head">
 
-    <ion-navbar>
-        <ion-title>版本信息</ion-title>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title>版本信息</ion-title>
+  </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-    <div class="text-center">
-        <div class="version_content">
-            <div><img src="img/logo.png" class="img"/></div>
-            <p class="padding-top">V {{versionNum}}</p>
-        </div>
-        <div><span class="s_r_btn" (click)="checkUpdate()" tappable  hideWhen="ios">检查更新</span></div>
+  <div class="text-center">
+    <div class="version_content">
+      <div><img src="assets/img/logo.png" class="img"/></div>
+      <p class="padding-top">V {{versionNum}}</p>
     </div>
+    <div><span class="s_r_btn" (click)="checkUpdate()" tappable  hideWhen="ios">检查更新</span></div>
+  </div>
 </ion-content>

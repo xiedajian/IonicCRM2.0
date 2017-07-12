@@ -1,77 +1,82 @@
-import { Component,OnInit,OnDestroy,AfterViewInit,AfterViewChecked,ViewChild,ChangeDetectorRef/*, Renderer, ElementRef*/} from '@angular/core';
-import { NavController,ActionSheetController,ModalController ,Content } from 'ionic-angular';
-import {CallNumber} from 'ionic-native';
-//import {FormsModule} from '@angular/forms';
-
-import {SearchComponent} from '../search/search';
-import {CustomerDetailsComponent} from '../customer-details/customer-details';
-import {TrackingComponent} from '../tracking/tracking';
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    AfterViewInit,
+    AfterViewChecked,
+    ViewChild,
+    ChangeDetectorRef/*, Renderer, ElementRef*/
+} from '@angular/core';
+import {IonicPage, NavController, NavParams, ActionSheetController, ModalController, Content} from 'ionic-angular';
+import {CallNumber} from '@ionic-native/call-number';
 
 import {CustomerService} from '../../SharedModule/customer.service'
 import {Customer} from '../../SharedModule/customer.model';
 import {PopSer} from '../../../providers/pop-ser';
-
 import {CallSer} from '../../../providers/call-ser';
-//import {HttpSer} from '../../../providers/http-ser';
 
-//import {CustomerLevelTextPipe} from '../../SharedModule/customer-level.pipe';
-import {TrackResult,CustomerStatus} from "../../SharedModule/enum";
+import {TrackResult, CustomerStatus} from "../../SharedModule/enum";
 import {InitService} from '../../SharedModule/init.service';
-//import {CRMService} from '../../SharedModule/crm.service';
-//import {Brands} from '../../SharedModule/crm.model'
 import {DateService} from '../../SharedModule/date.service'
 import {AppConfig} from'../../../app/app.config';
-
-import {AccountDetailsComponent} from '../../LoginModule/account-details/account-details';
 import {NetworkSer} from '../../../providers/network-ser';
 import {Events} from 'ionic-angular';
-
+/**
+ * Generated class for the TrackingListPage page.
+ *
+ * See http://ionicframework.com/docs/components/#navigation for more info
+ * on Ionic pages and navigation.
+ */
+@IonicPage()
 @Component({
     selector: 'page-tracking-list',
     templateUrl: 'tracking-list.html',
     providers: [InitService]
 })
-export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,AfterViewChecked {
+export class TrackingListPage implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
 
-    constructor(public navCtrl:NavController,
-                public customerService:CustomerService,
-                public popSer:PopSer,public events:Events,
-                public actionSheetCtrl:ActionSheetController,
-                public modalCtrl:ModalController,
-                public initService:InitService,
+    constructor(public navCtrl: NavController,
+                public customerService: CustomerService,
+                public popSer: PopSer, public events: Events,
+                public actionSheetCtrl: ActionSheetController,
+                public modalCtrl: ModalController,
+                public initService: InitService,
+                public callNumber: CallNumber,
                 public changeDetectorRef: ChangeDetectorRef,
-                public networkSer:NetworkSer,
-                public callSer:CallSer) {
-        //networkSer.test();
+                public networkSer: NetworkSer,
+                public callSer: CallSer,
+                public navParams: NavParams) {
         this.events.subscribe('netError', () => {
             this.deskHead.ForFunction();
         })
     }
 
-
     //排序选项是否展开
-    sort:boolean = false;
+    sort: boolean = false;
     //排序名称
-    sortName:string = "综合排序";
+    sortName: string = "综合排序";
     //当前操作筛选项
-    selectFilter:string;
+    selectFilter: string;
     //品类筛选是否展开
-    category:boolean = false;
+    category: boolean = false;
     //品牌筛选是否展开
-    brand:boolean = false;
+    brand: boolean = false;
     //跟踪效果筛选是否展开
-    effect:boolean = false;
+    effect: boolean = false;
     //跟踪情况筛选是否展开
-    situation:boolean = false;
+    situation: boolean = false;
     //管理方式筛选是否展开
-    manage:boolean = false;
+    manage: boolean = false;
     //会员筛选是否展开
-    member:boolean = false;
+    member: boolean = false;
     //购买筛选是否展开
-    buy:boolean = false;
+    buy: boolean = false;
     //其它筛选是否展开
-    other:boolean = false;
+    other: boolean = false;
 
+    ionViewDidLoad() {
+        console.log('ionViewDidLoad TrackingListPage');
+    }
 
     //获取分配给导购的会员列表请求参数
     filterList = {
@@ -105,36 +110,36 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     //定时检测网络句柄
     //networkInt:number;
     //是否显示会员电话号码（导购可见）
-    showCustomerPhone:boolean;
+    showCustomerPhone: boolean;
 
     //初始化操作
     ngOnInit() {
 
-        this.customerService.getUnSaveState().then((val)=>{
+        this.customerService.getUnSaveState().then((val) => {
             // console.log('UnSaveState',val);
-            if(val){
-                let obj:any ={
-                    //title:'<div class="warm_tip text-center"><img src="img/warm.png" class="img"/></div>',
-                    subTitle:`你上次对于会员<span class="yellow">"${val.customer.customerName}"</span>跟踪日志还未填写完成......`,
+            if (val && val.userId == AppConfig.userInfo.userId) {
+                let obj: any = {
+                    //title:'<div class="warm_tip text-center"><img src="assets/img/warm.png" class="img"/></div>',
+                    subTitle: `你上次对于会员<span class="yellow">"${val.customer.customerName}"</span>跟踪日志还未填写完成......`,
                     cssClass: "Convex",
-                    okText:"继续填写"
+                    okText: "继续填写"
                 };
-                this.popSer.alertDIY(obj, ()=>{
-                    this.navCtrl.push(TrackingComponent, {
+                this.popSer.alertDIY(obj, () => {
+                    this.navCtrl.push('TrackingPage', {
                         customer: val.customer,
                         contactType: val.contactType,
-                        callerPhone:val.callerPhone
+                        callerPhone: val.callerPhone
                     });
                 });
             }
         });
         //获取公司组织Id
         this.filterList.orgId = AppConfig.userInfo.orgId;
-        this.filterList.userId=AppConfig.userInfo.userId;
-        this.showCustomerPhone=AppConfig.showCustomerPhone;
+        this.filterList.userId = AppConfig.userInfo.userId;
+        this.showCustomerPhone = AppConfig.showCustomerPhone;
         this.getCustomers();
 
-        this.initService.setBrands(this.filterList.orgId).then(()=> {
+        this.initService.setBrands(this.filterList.orgId).then(() => {
             let tBrands = this.initService.getBrands();
             //console.log('tBrands:', tBrands);
             if (tBrands) {
@@ -158,28 +163,28 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
 
 
     @ViewChild('mainContent')
-    mainContent:Content;
+    mainContent: Content;
     @ViewChild('brandContent')
-    brandContent:Content;
+    brandContent: Content;
 
     ngAfterViewInit() {
         // console.log('ngAfterViewInit');
-        this.brandContent.ionScrollEnd.subscribe((event)=> {
-            for (let i = 0; i <this.pyList.length - 1; i++) {
+        this.brandContent.ionScrollEnd.subscribe((event) => {
+            for (let i = 0; i < this.pyList.length - 1; i++) {
                 //console.log(event.scrollTop,this.pyList[i].top,this.pyList[i].letter);
                 if (event.scrollTop < this.pyList[i].top) {
-                    this.selectLetter = this.pyList[i-1].letter;
+                    this.selectLetter = this.pyList[i - 1].letter;
                     //console.log(this.selectLetter);
                     break;
                 }
             }
             //console.log(event.scrollTop,event.scrollElement.offsetHeight,event.scrollElement.scrollHeight,event);
             /*if (event.scrollTop + event.scrollElement.offsetHeight >= event.scrollElement.scrollHeight) {
-                this.isScrollBottom = true;
-            }
-            else {
-                this.isScrollBottom = false;
-            }*/
+             this.isScrollBottom = true;
+             }
+             else {
+             this.isScrollBottom = false;
+             }*/
             this.changeDetectorRef.detectChanges();
         });
     }
@@ -217,7 +222,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     //更新会员信息
-    getCustomers(type:string="") {
+    getCustomers(type: string = "") {
         if (!this.networkSer.isConnected) {
             this.customerService.isLoad = true;
             this.popSer.alert("网络不可用，请稍后再试~");
@@ -228,20 +233,20 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
             this.filterList.recordCount = 0;
             this.customerService.isLoad = false;
             this.popSer.loadOn(this.customerService.isLoad);
-            this.customerService.getCustomers(this.filterList, null,type);
+            this.customerService.getCustomers(this.filterList, null, type);
         }
     }
 
     //刷新列表
     refreshList(refresher) {
         if (!this.networkSer.isConnected) {
-            this.customerService.isLoad=true;
+            this.customerService.isLoad = true;
             this.popSer.loadOn(this.customerService.isLoad);
             // this.popSer.loadOn(true);
             refresher.complete();
             return;
         }
-        else{
+        else {
             this.filterList.pageIndex = 1;
             this.filterList.recordCount = 0;
             this.customerService.getCustomers(this.filterList, refresher);
@@ -250,11 +255,11 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
         // console.log(1);
     }
 
-    pull(){
+    pull() {
         //console.log("ionPull");
     };
 
-    start(){
+    start() {
         //console.log("start");
     };
 
@@ -272,14 +277,14 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
 
     //检查网络状态
     /*checkNetwork() {
-        this.networkInt = setInterval(() => {
-            console.log("checkNetwork");
-            this.network = false;
-        }, 3000);
-    }*/
+     this.networkInt = setInterval(() => {
+     console.log("checkNetwork");
+     this.network = false;
+     }, 3000);
+     }*/
 
     //排序操作
-    onSort(value:number) {
+    onSort(value: number) {
         if (this.filterList.orderBy != value) {
             this.filterList.orderBy = value;
             switch (value) {
@@ -332,10 +337,10 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
         }
     ];
     //当前选中的品类编码
-    selectClassNo:string = '';
+    selectClassNo: string = '';
 
     //品类筛选操作
-    setClassNo(classNo:string) {
+    setClassNo(classNo: string) {
         if (this.selectClassNo != classNo) {
             this.selectClassNo = classNo;
             this.filterList.classNo = classNo;
@@ -347,24 +352,24 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     //品牌列表
-    brands:any[];
+    brands: any[];
     //所有品牌列表（包括字母）
-    allBrandList:any[] = [];
+    allBrandList: any[] = [];
     //拼音字母列表
-    pyList:any[] = [];
+    pyList: any[] = [];
     //当前选中的字母，默认为热销品牌
-    selectLetter:string = '热销品牌';
+    selectLetter: string = '热销品牌';
     //是否获取过字母位置
-    isGetLetterTop:boolean = false;
+    isGetLetterTop: boolean = false;
     //是否已经滚动到底部
-    isScrollBottom:boolean = false;
+    isScrollBottom: boolean = false;
     //品牌过滤方式
-    selectBrandType:number = 1;
+    selectBrandType: number = 1;
 
 
     //品牌筛选操作
     setBrandList() {
-        this.brands.sort((param1, param2)=>param1.py.localeCompare(param2.py));
+        this.brands.sort((param1, param2) => param1.py.localeCompare(param2.py));
         this.pyList.push(({letter: '热销品牌', top: 0}));
         for (let i = 0; i < this.brands.length; i++) {
             if (this.brands[i].py !== '') {
@@ -392,20 +397,20 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     //选中字母操作
-    goLetter(letter:string, index:number) {
+    goLetter(letter: string, index: number) {
         //console.log(letter, index);
         let top = this.pyList[index + 1].top;
         /*let dimensions = this.brandContent.getContentDimensions();
-        //console.log(top, dimensions);
-        if (top >= dimensions.scrollHeight - dimensions.contentHeight && this.isScrollBottom) {
-            return;
-        }*/
+         //console.log(top, dimensions);
+         if (top >= dimensions.scrollHeight - dimensions.contentHeight && this.isScrollBottom) {
+         return;
+         }*/
         //console.log(top, this.brandContent.getContentDimensions());
         this.brandContent.scrollTo(0, top, 0);
         /*if (letter == '*') {
-            letter = '热销品牌';
-        }
-        this.selectLetter = letter;*/
+         letter = '热销品牌';
+         }
+         this.selectLetter = letter;*/
     }
 
     //清空品牌筛选
@@ -448,7 +453,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     //是否隐藏Tabs标签
-    hideTabsBar(value:boolean) {
+    hideTabsBar(value: boolean) {
         let tabs = document.querySelectorAll('.tabbar');
         console.log(tabs);
         if (tabs !== null) {
@@ -460,7 +465,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     //跟踪效果筛选操作
-    setEffect(value:number) {
+    setEffect(value: number) {
         if (this.filterList.lastBuyed != value) {
             this.filterList.lastBuyed = value;
             this.getCustomers();
@@ -470,7 +475,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     //跟踪情况筛选操作
-    setSituation(lastContact:number, trackStatus:number) {
+    setSituation(lastContact: number, trackStatus: number) {
         if (this.filterList.lastContact != lastContact || this.filterList.trackStatus != trackStatus) {
             this.filterList.lastContact = lastContact;
             this.filterList.trackStatus = trackStatus;
@@ -481,7 +486,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     //管理方式筛选操作
-    setManage(value:number) {
+    setManage(value: number) {
         if (this.filterList.dateCalcType != value) {
             this.filterList.dateCalcType = value;
             this.getCustomers();
@@ -491,23 +496,23 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     //是否新加入会员
-    isNew:number = 0;
+    isNew: number = 0;
     //是否新分配会员
-    isNewAssign:number = 0;
+    isNewAssign: number = 0;
     //会员等级
-    customerLevel:number = 0;
+    customerLevel: number = 0;
     //设置新加入会员
-    setNew(value:number) {
+    setNew(value: number) {
         this.isNew = value;
     }
 
     //设置新分配会员
-    setNewAssign(value:number) {
+    setNewAssign(value: number) {
         this.isNewAssign = value;
     }
 
     //设置会员等级
-    setCustomerLevel(value:number) {
+    setCustomerLevel(value: number) {
         this.customerLevel = value;
     }
 
@@ -537,7 +542,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
 
     //@ViewChild('myTime') myTime: ElementRef;
     //最后消费时间范围提示
-    setTimeTip(value:number) {
+    setTimeTip(value: number) {
         //this.renderer.setElementStyle(this.myTime,'color', 'primary');
         switch (value) {
             case 0:
@@ -565,16 +570,15 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
                 this.timeTip = "";
                 break;
         }
-        setTimeout((timeTip)=> {//一定要这么传参，才能有值
-            timeTip=this.timeTip;
-            document.getElementById("rangeTime").getElementsByClassName("range-pin")[0].innerHTML= timeTip;
+        setTimeout((timeTip) => {//一定要这么传参，才能有值
+            timeTip = this.timeTip;
+            document.getElementById("rangeTime").getElementsByClassName("range-pin")[0].innerHTML = timeTip;
         }, 5);
     }
 
 
-
     //获取最后消费时间
-    getLastBuyDate(value:number):number {
+    getLastBuyDate(value: number): number {
         switch (value) {
             case 0:
                 return 0;
@@ -597,31 +601,31 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
 
 
     //时间范围提示
-    timeTip:string = "不限";
+    timeTip: string = "不限";
     //时间范围值
-    time:number = 0;
+    time: number = 0;
     //filterList中的time值
-    lastBuyDate:number = 0;
+    lastBuyDate: number = 0;
     //购买次数
-    buyCount:any;
+    buyCount: any;
     //平均客单价
-    PCT:any;
+    PCT: any;
     //当前最小购买次数
-    minBuyCount:number = 0;
+    minBuyCount: number = 0;
     //当前最大购买次数
-    maxBuyCount:number = 20;
+    maxBuyCount: number = 20;
     //当前最小客单价
-    minPCT:number = 0;
+    minPCT: number = 0;
     //当前最大客单价
-    maxPCT:number = 2000;
+    maxPCT: number = 2000;
     //设置购买次数范围
-    setBuyCount(buyCount:any) {
+    setBuyCount(buyCount: any) {
         this.minBuyCount = buyCount.lower;
         this.maxBuyCount = buyCount.upper;
     }
 
     //设置平均客单价范围
-    setPCT(PCT:any) {
+    setPCT(PCT: any) {
         this.minPCT = PCT.lower;
         this.maxPCT = PCT.upper;
     }
@@ -658,50 +662,50 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
         this.hideTabsBar(this.buy);
     }
 
-    deskHead:any={//其他选项高度的变化
-        height:0,//由于other选项出来而导致的高度变化
-        fixedContent:0,
-        scrollContent:0,
-        deskSelect:0,
-        deskOtherSelect:0,
-        ForFunction:()=>{
-            setTimeout(()=> {//延迟几秒可以等html反应，这样获取的高度才准确
-                this.deskHead.height= document.getElementsByClassName("deskHead")[0].clientHeight;
-                this.deskHead.fixedContent=document.getElementsByTagName("page-tracking-list")[0].getElementsByClassName(" fixed-content");
-                this.deskHead.scrollContent=document.getElementsByTagName("page-tracking-list")[0].getElementsByClassName("scroll-content");
-                for(var i=1;i<this.deskHead.fixedContent.length;i++)//因为品牌选项里也有content,且是第一个数组，所以i从1开始
+    deskHead: any = {//其他选项高度的变化
+        height: 0,//由于other选项出来而导致的高度变化
+        fixedContent: 0,
+        scrollContent: 0,
+        deskSelect: 0,
+        deskOtherSelect: 0,
+        ForFunction: () => {
+            setTimeout(() => {//延迟几秒可以等html反应，这样获取的高度才准确
+                this.deskHead.height = document.getElementsByClassName("deskHead")[0].clientHeight;
+                this.deskHead.fixedContent = document.getElementsByTagName("page-tracking-list")[0].getElementsByClassName(" fixed-content");
+                this.deskHead.scrollContent = document.getElementsByTagName("page-tracking-list")[0].getElementsByClassName("scroll-content");
+                for (var i = 1; i < this.deskHead.fixedContent.length; i++)//因为品牌选项里也有content,且是第一个数组，所以i从1开始
                 {
-                    this.deskHead.fixedContent[i].style.marginTop=this.deskHead.height+'px';
-                    this.deskHead.scrollContent[i].style.marginTop=this.deskHead.height+'px';
+                    this.deskHead.fixedContent[i].style.marginTop = this.deskHead.height + 'px';
+                    this.deskHead.scrollContent[i].style.marginTop = this.deskHead.height + 'px';
                 }
             });
 
         }/*,
-        selectFunction:(name)=>{//综合排序，品类等弹窗位置
-            setTimeout(()=>{
-                this.deskHead.height= document.getElementsByClassName("deskHead")[0].clientHeight;
-                if( name){
-                    this.deskHead.deskOtherSelect=document.getElementsByClassName("other_p_select");
-                    for(var i=0;i<this.deskHead.deskOtherSelect.length;i++)
-                    {
-                        this.deskHead.deskOtherSelect[i].style.top=this.deskHead.height+'px';
-                    }
-                }
-                else{
-                    this.deskHead.deskSelect=document.getElementsByClassName(" desk_select");
-                    for(var i=0;i<this.deskHead.deskSelect.length;i++)
-                    {
-                        this.deskHead.deskSelect[i].style.top=this.deskHead.height+'px';
-                    }
-                }
+         selectFunction:(name)=>{//综合排序，品类等弹窗位置
+         setTimeout(()=>{
+         this.deskHead.height= document.getElementsByClassName("deskHead")[0].clientHeight;
+         if( name){
+         this.deskHead.deskOtherSelect=document.getElementsByClassName("other_p_select");
+         for(var i=0;i<this.deskHead.deskOtherSelect.length;i++)
+         {
+         this.deskHead.deskOtherSelect[i].style.top=this.deskHead.height+'px';
+         }
+         }
+         else{
+         this.deskHead.deskSelect=document.getElementsByClassName(" desk_select");
+         for(var i=0;i<this.deskHead.deskSelect.length;i++)
+         {
+         this.deskHead.deskSelect[i].style.top=this.deskHead.height+'px';
+         }
+         }
 
-            },3);
-        }*/
-     };
+         },3);
+         }*/
+    };
 
     //点击筛选项操作
-    onSelectFilter(name:string) {
-        if(this.selectFilter==='other' || name=='other'||this.selectFilter=='effect' ||this.selectFilter=='situation'||this.selectFilter=='manage'||this.selectFilter=='member'||this.selectFilter=='buy') {
+    onSelectFilter(name: string) {
+        if (this.selectFilter === 'other' || name == 'other' || this.selectFilter == 'effect' || this.selectFilter == 'situation' || this.selectFilter == 'manage' || this.selectFilter == 'member' || this.selectFilter == 'buy') {
             this.deskHead.ForFunction();
         }
         switch (name) {
@@ -869,7 +873,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
 
 
     //切换会员列表类型
-    switchTrackList(type:number) {
+    switchTrackList(type: number) {
         if (this.filterList.dataType != type) {
             //折叠筛选项
             this.sort = false;
@@ -882,7 +886,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
             this.member = false;
             this.buy = false;
             //this.deskHead.ForFunction();
-            if(this.selectFilter==='other' ||this.selectFilter=='effect' ||this.selectFilter=='situation'||this.selectFilter=='manage'||this.selectFilter=='member'||this.selectFilter=='buy') {
+            if (this.selectFilter === 'other' || this.selectFilter == 'effect' || this.selectFilter == 'situation' || this.selectFilter == 'manage' || this.selectFilter == 'member' || this.selectFilter == 'buy') {
                 this.deskHead.ForFunction();
             }
 
@@ -893,9 +897,9 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
                 //获取最新
                 this.mainContent.scrollToTop();
                 this.getCustomers();
-                if(!this.networkSer.isConnected){
+                if (!this.networkSer.isConnected) {
                     this.customerService.customers = type == 0 ? this.customerService.todayCustomers : this.customerService.allCustomers;
-                    this.customerService.total=this.customerService.filters[type].total;
+                    this.customerService.total = this.customerService.filters[type].total;
                     // console.log(this.customerService.customers);
                 }
                 //console.log('获取最新');
@@ -905,7 +909,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
                 this.customerService.customers = type == 0 ? this.customerService.todayCustomers : this.customerService.allCustomers;
                 this.mainContent.scrollTo(0, this.customerService.filters[type].top, 0);
                 this.customerService.isEnd = this.customerService.filters[type].isEnd;
-                this.customerService.total=this.customerService.filters[type].total;
+                this.customerService.total = this.customerService.filters[type].total;
             }
             this.hideTabsBar(false);
         }
@@ -942,8 +946,8 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
      */
 
     //返回跟踪结果文本提示
-    getLastTrackResultText(customer:Customer) {
-        let resultText:string;
+    getLastTrackResultText(customer: Customer) {
+        let resultText: string;
         if (customer.trackResult == TrackResult.UnTrack) {
             return "尚未跟踪过";
         }
@@ -967,7 +971,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     //返回下次跟踪提示
-    getNextTrackText(customer:Customer) {
+    getNextTrackText(customer: Customer) {
         if (customer.status == CustomerStatus.Track) {
             let date = DateService.getDateDiff(customer.nextTrackDate);
             return date > 0 ? "计划 " + DateService.getFormatDate(customer.nextTrackDate) + " 跟踪，已超期" + date + "天" : "";
@@ -976,8 +980,8 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
 
 
     //转到会员详情页
-    gotoCustomerDetails(customer:Customer) {
-        this.navCtrl.push(CustomerDetailsComponent, {customer: customer});
+    gotoCustomerDetails(customer: Customer) {
+        this.navCtrl.push('CustomerDetailsPage', {customer: customer});
         //this.navCtrl.push(AccountDetailsComponent);
     }
 
@@ -987,30 +991,32 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
             return;
         }
         //this.navCtrl.push(SearchComponent);
-        let modal = this.modalCtrl.create(SearchComponent);
+        let modal = this.modalCtrl.create('SearchPage');
         /*modal.onDidDismiss(data => {
-            console.log(data);
-        });*/
+         console.log(data);
+         });*/
         modal.present();
     }
 
     //拨打电话
-    call(customer:Customer) {
+    call(customer: Customer) {
         event.stopPropagation();
         if (!customer.contactMobile) {
-            this.popSer.alert(`<span class="yellow">"${customer.customerName}"</span>电话还未录入收银系统中......<wr/>请联系管理员，将他的电话录入到收银系统中，以便及时跟踪。` ,()=>{},true);
+            this.popSer.alert(`<span class="yellow">"${customer.customerName}"</span>电话还未录入收银系统中......<wr/>请联系管理员，将他的电话录入到收银系统中，以便及时跟踪。`, () => {
+            }, true);
             return;
         }
-        let callData:any ={
-            title:'<div class="warm_tip text-center"><img src="img/warm.png" class="img"/></div>',
-            subTitle:`即将拨打"${customer.customerName}"电话... `,
-            content:'<span class="yellow">请在与会员沟通时注意保持礼节</span>',
-            okText:"继续呼叫"
+        let callData: any = {
+            tel: customer.contactMobile,
+            title: '<div class="warm_tip text-center"><img src="assets/img/warm.png" class="img"/></div>',
+            subTitle: `即将拨打"${customer.customerName}"电话... `,
+            content: '<span class="yellow">请在与会员沟通时注意保持礼节</span>',
+            okText: "继续呼叫"
         };
         // 设置取消按钮的文字
-        setTimeout(()=> {//延迟几秒可以等html反应，这样获取的高度才准确
-            let trackText= document.getElementsByClassName("btn_track")[0].getElementsByClassName("button-inner")[0];
-            trackText.innerHTML="已跟踪<small>(使用其他方式跟踪过了，直接填写跟踪日志)</small>";
+        setTimeout(() => {//延迟几秒可以等html反应，这样获取的高度才准确
+            let trackText = document.getElementsByClassName("btn_track")[0].getElementsByClassName("button-inner")[0];
+            trackText.innerHTML = "已跟踪<small>(使用其他方式跟踪过了，直接填写跟踪日志)</small>";
         }, 3);
         let actionSheet = this.actionSheetCtrl.create({
             cssClass: 'call_pop',
@@ -1019,44 +1025,45 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
                     text: '普通电话',
                     cssClass: 'btn_normal',
                     handler: () => {
-
-                        this.popSer.confirmDIY(callData,()=>{},()=>{
-
-                            CallNumber.callNumber(customer.contactMobile, true).then(()=> {
-/*                            //获取随机测试账号
-                            let cc=AppConfig.getTestCount();
-                            CallNumber.callNumber(cc.number, true).then(()=> {*/
-                                // console.log('success');
-                                this.customerService.setUnSaveState(1,customer,AppConfig.userInfo.mobile);
-                                this.navCtrl.push(TrackingComponent, {
+                        if (AppConfig.callingType == 1) {
+                            this.popSer.alert(`<div class="text-center">普通通话服务不可用</br>请联系管理员开通普通通话服务</div>`);
+                            return;
+                        }
+                        if (AppConfig.platform == 'android') {
+                            /*******************普通通话临时补救方式******************/
+                            this.popSer.callPop(callData, () => {
+                            }, () => {
+                                this.customerService.setUnSaveState(1, customer, AppConfig.userInfo.mobile);
+                                this.navCtrl.push('TrackingPage', {
                                     customer: customer,
                                     contactType: 1,
-                                    callerPhone:AppConfig.userInfo.mobile
+                                    callerPhone: AppConfig.userInfo.mobile
                                 });
-                            }, (error)=> {
-                                console.log('a: ' + error || 'error');
-                            }).catch((error)=> {
-                                console.log('b:' + error || 'error');
                             });
-                        });
-
-                        /*                        CallNumber.callNumber(customer.contactMobile, true).then(()=> {
-                         console.log('success');
-                         alert('success');
-                         this.navCtrl.push(TrackingComponent, {
-                         customer: customer,
-                         contactType: 2
-                         });
-                         }, (error)=> {
-                         alert('a: ' + error || 'error');
-                         }).catch((error)=> {
-                         console.log(error || 'error');
-                         alert('b:' + error || 'error');
-                         });*/
-                        /*this.navCtrl.push(TrackingComponent, {
-                         customer: customer,
-                         contactType: 2
-                         });*/
+                            /*********************END****************/
+                        } else {
+                            /*******************原来的方案******************/
+                            this.popSer.confirmDIY(callData, () => {
+                            }, () => {
+                                this.callNumber.callNumber(customer.contactMobile, true).then(() => {
+                                    /*                            //获取随机测试账号
+                                     let cc=AppConfig.getTestCount();
+                                     CallNumber.callNumber(cc.number, true).then(()=> {*/
+                                    // console.log('success');
+                                    this.customerService.setUnSaveState(1, customer, AppConfig.userInfo.mobile);
+                                    this.navCtrl.push('TrackingPage', {
+                                        customer: customer,
+                                        contactType: 1,
+                                        callerPhone: AppConfig.userInfo.mobile
+                                    });
+                                }, (error) => {
+                                    console.log('a: ' + error || 'error');
+                                }).catch((error) => {
+                                    console.log('b:' + error || 'error');
+                                });
+                            });
+                            /*********************END****************/
+                        }
                     }
                 },
                 {
@@ -1064,35 +1071,32 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
                     cssClass: 'btn_free',
                     role: 'destructive',
                     handler: () => {
-                        if(AppConfig.callingType ==2){
+                        if (AppConfig.callingType == 2) {
                             this.popSer.alert(`<div class="text-center">免费通话服务不可用</br>请联系管理员开通免费通话服务</div>`);
                             return;
                         }
-                        this.callSer.uxinRemainMinute().then(()=> {
+                        this.callSer.uxinRemainMinute().then(() => {
                             // console.log('success');
-                            this.callSer.uxinBindCall(customer).then(()=>{
+                            this.callSer.uxinBindCall(customer).then(() => {
                                 // console.log('填日志');
                                 // this.callSer.UxinCallUnbind();//解绑
-                                this.customerService.setUnSaveState(2,customer,AppConfig.userInfo.mobile);
-                                this.navCtrl.push(TrackingComponent, {
+                                this.customerService.setUnSaveState(2, customer, AppConfig.userInfo.mobile);
+                                this.navCtrl.push('TrackingPage', {
                                     customer: customer,
                                     contactType: 2,
-                                    callerPhone:AppConfig.userInfo.mobile
+                                    callerPhone: AppConfig.userInfo.mobile
                                 });
-                            }, (error)=> {
+                            }, (error) => {
                                 console.log('a: ' + error || 'error');
-                            }).catch((error)=> {
+                            }).catch((error) => {
                                 console.log('b:' + error || 'error');
                             });
-                        }, (error)=> {
+                        }, (error) => {
                             console.log('a: ' + error || 'error');
-                        }).catch((error)=> {
+                            this.popSer.alert(error);
+                        }).catch((error) => {
                             console.log('b:' + error || 'error');
                         });
-                        /* this.navCtrl.push(TrackingComponent, {
-                         customer: customer,
-                         contactType: 1
-                         });*/
                     }
                 },
                 {
@@ -1100,7 +1104,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
                     // text:x,
                     cssClass: 'btn_track',
                     handler: () => {
-                        this.navCtrl.push(TrackingComponent, {
+                        this.navCtrl.push('TrackingPage', {
                             customer: customer,
                             contactType: 0
                         });
@@ -1121,7 +1125,7 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
     goToSearch() {
-        this.navCtrl.push(SearchComponent);
+        this.navCtrl.push('SearchPage');
     }
 
 
@@ -1136,11 +1140,6 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
     }
 
 
-    ionViewDidLoad() {
-        // console.log('Hello TrackingListPage Page');
-        // this.popSer.loadOn(true);
-    }
-
     ionViewDidEnter() {
         //this.checkNetwork();
         //console.log('ionViewDidEnter');
@@ -1151,7 +1150,9 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
         //console.log('ionViewWillLeave');
     }
 
-    ngOnChanges(changeRecord) { console.log(1) }
+    ngOnChanges(changeRecord) {
+        console.log(1)
+    }
 
     test() {
         this.customerService.testUxin();
@@ -1171,4 +1172,5 @@ export class TrackingListComponent implements OnInit,OnDestroy,AfterViewInit,Aft
          console.log((new Date(d1.toLocaleDateString()).getTime() - new Date(d2.toLocaleDateString()).getTime()) / 1000 / 60 / 60 / 24);
          */
     }
+
 }

@@ -1,24 +1,26 @@
-import 'rxjs';
 import {Component} from '@angular/core';
-import {NavController, Platform} from 'ionic-angular';
+import {IonicPage, NavController, NavParams, Platform} from 'ionic-angular';
 import {Storage} from '@ionic/storage';
 import {InterfaceLists}  from '../../../providers/interface_list';
 import {PopSer} from '../../../providers/pop-ser';
 import {NetworkSer} from '../../../providers/network-ser';
 import {FileSer} from '../../../providers/file-ser';
 import {AppConfig} from '../../../app/app.config';
-import {TodayScheduleComponent} from '../today-schedule/today-schedule';
-import {FindPasswordComponent} from '../find-password/find-password';
 // declare  var CryptoJS;  /*AES加密*/
 // declare  var RSAUtils;  /*RSA加密*/
 declare var uxin: any;
-// import{Directive, Input, Output, EventEmitter, HostListener, ViewChild, ElementRef} from 'angular2/core';
-
+/**
+ * Generated class for the LoginPage page.
+ *
+ * See http://ionicframework.com/docs/components/#navigation for more info
+ * on Ionic pages and navigation.
+ */
+@IonicPage()
 @Component({
     selector: 'page-login',
-    templateUrl: 'login.html'
+    templateUrl: 'login.html',
 })
-export class LoginComponent {
+export class LoginPage {
     alias: string = '';
     msgList: Array<any> = [];
     userName: string = '';
@@ -27,10 +29,10 @@ export class LoginComponent {
 
     constructor(public navCtrl: NavController,
                 public interface_lists: InterfaceLists,
-                public networkSer:NetworkSer,
+                public networkSer: NetworkSer,
                 public popser: PopSer,
                 public platform: Platform,
-                public storage: Storage/*,public fileSer:FileSer*/) {
+                public storage: Storage, /*,public fileSer:FileSer*/ public navParams: NavParams) {
         AppConfig.token = '';
         AppConfig.userName = '';
         AppConfig.userInfo = {};
@@ -46,40 +48,12 @@ export class LoginComponent {
     }
 
     ionViewDidLoad() {
-        this.storage.get('last_login_mobile').then((val)=>{
-            if(val && val!=''){
-                this.userName=val;
+        this.storage.get('last_login_mobile').then((val) => {
+            if (val && val != '') {
+                this.userName = val;
             }
         });
     }
-
-
-    /*    // 读
-     test6(){
-     // this.fileSer.readErrLogs().then((cc)=>{
-     //     console.log(cc);
-     // });
-     let aa='['+''+this.content.substring(0,this.content.length-1)+']';
-     console.log(aa);
-     // console.log(JSON.parse(this.content));
-     console.log(JSON.parse(aa));
-     }
-     content:string='';
-     // 追写
-     test7(){
-     // this.fileSer.writeErrLogs('内容');
-     // let tem:any=[{function:'login',userName:'18512345678',logLevel:1,message:'登录出错',module:'登录模块',source:'login'},{function:'login',userName:'18512345678',logLevel:1,message:'登录出错',module:'登录模块',source:'login'},];
-     // let tem1=JSON.stringify(tem);
-     // console.log(tem);
-     // console.log(tem1);
-     // console.log(JSON.parse(tem1));
-     // console.log('**************************');
-
-     let content:any={function:'login',userName:'18512345678',logLevel:1,message:'登录出错',module:'登录模块',source:'login'};
-     console.log(content);
-     this.content=this.content+''+ JSON.stringify(content)+',';
-     console.log(this.content);
-     }*/
 
     presentLoadingText() {
 
@@ -210,15 +184,15 @@ export class LoginComponent {
             this.popser.alert('手机号输入不正确');
             return;
         }
-        if(this.password == ''){
+        if (this.password == '') {
             this.popser.alert('密码不能为空');
             return;
         }
         if (this.password.length < 6) {
             this.popser.alert('密码不能小于6位');
-          return;
-               }
-        if(AppConfig.RegExpCn(this.password)){
+            return;
+        }
+        if (AppConfig.RegExpCn(this.password)) {
             this.popser.alert('不能输入中文或表情哦~');
             return;
         }
@@ -291,30 +265,30 @@ export class LoginComponent {
                 }).catch(err => console.log(err));
 
                 // 注册有信-------------------------
-/*                let account_id = AppConfig.getUserInfo().orgId + "_" + AppConfig.getUserInfo().userId + "_" + AppConfig.getUserInfo().mobile;
-                // let account_id = "3_1512_18073118015";
-                let promise3: any = new Promise((resolve, reject) => {
-                    // alert(123);
-                    try {
-                        console.log('注册有信');
-                        uxin.sdk.signIn(account_id, AppConfig.getUserInfo().mobile, function (msg) {
-                            alert(msg);
-                            console.log('注册有信ok');
-                        }, function (err) {
-                            alert(err);
-                            console.log('注册有信err');
-                        });
-                    } catch (e) {
-                        alert(e);
-                        console.log('注册有信err2');
-                        reject(JSON.stringify(e));
-                    }
-                });*/
+                /*                let account_id = AppConfig.getUserInfo().orgId + "_" + AppConfig.getUserInfo().userId + "_" + AppConfig.getUserInfo().mobile;
+                 // let account_id = "3_1512_18073118015";
+                 let promise3: any = new Promise((resolve, reject) => {
+                 // alert(123);
+                 try {
+                 console.log('注册有信');
+                 uxin.sdk.signIn(account_id, AppConfig.getUserInfo().mobile, function (msg) {
+                 alert(msg);
+                 console.log('注册有信ok');
+                 }, function (err) {
+                 alert(err);
+                 console.log('注册有信err');
+                 });
+                 } catch (e) {
+                 alert(e);
+                 console.log('注册有信err2');
+                 reject(JSON.stringify(e));
+                 }
+                 });*/
 
                 Promise.all([promise1, promise2/*,promise3*/]).then(
                     () => {
                         // this.navCtrl.push(TodayScheduleComponent);
-                        this.navCtrl.setRoot(TodayScheduleComponent);
+                        this.navCtrl.setRoot('TodaySchedulePage');
                     }, (err) => {
                         this.popser.alert(err);
                         return;
@@ -356,8 +330,7 @@ export class LoginComponent {
     }
 
     findPassword() {
-        this.navCtrl.push(FindPasswordComponent);
+        this.navCtrl.push('FindPasswdPage');
     }
 
 }
-

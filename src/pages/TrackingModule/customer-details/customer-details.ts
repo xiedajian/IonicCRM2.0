@@ -1,6 +1,6 @@
 import {Component, ViewChild, ElementRef} from '@angular/core';
-import {NavController, ModalController, NavParams, ActionSheetController} from 'ionic-angular';
-import {CallNumber} from 'ionic-native';
+import {IonicPage, NavController, ModalController, NavParams, ActionSheetController} from 'ionic-angular';
+import {CallNumber} from '@ionic-native/call-number';
 import {Content} from 'ionic-angular';
 import {AppConfig}from'../../../app/app.config';
 import {PopSer}from'../../../providers/pop-ser';
@@ -9,9 +9,6 @@ import {InterfaceLists}from'../../../providers/interface_list';
 
 import {CustomerStatus, TrackDateCalcType} from "../../SharedModule/enum";
 import {CustomerService} from '../../SharedModule/customer.service'
-import {TrackingComponent} from '../tracking/tracking';
-import {LoginComponent} from '../../LoginModule/login/login';
-import {ServiceMaintenancePage} from '../../SharedModule/service-maintenance/service-maintenance';
 import {Customer} from "../../SharedModule/customer.model";
 //import {Chart} from 'chart.js'; // 导入chart.js
 import * as Highcharts from 'highcharts';
@@ -22,19 +19,23 @@ import {CallNumberService} from '../../SharedModule/callnumber.service';
 import {CallSer} from '../../../providers/call-ser';
 import {notContactReasonPipe} from  '../../../pipes/notContactReasonPipe';
 //declare var echarts;
-
-
+/**
+ * Generated class for the CustomerDetailsPage page.
+ *
+ * See http://ionicframework.com/docs/components/#navigation for more info
+ * on Ionic pages and navigation.
+ */
+@IonicPage()
 @Component({
     selector: 'page-customer-details',
-    templateUrl: 'customer-details.html'
+    templateUrl: 'customer-details.html',
 })
-export class CustomerDetailsComponent {
+export class CustomerDetailsPage {
     @ViewChild("content") content: Content;
     @ViewChild('container') container: ElementRef;
     @ViewChild('lastStructContainer') lastStructContainer: ElementRef;
     @ViewChild('buyFrequencyContainer') buyFrequencyContainer: ElementRef;
     @ViewChild('trackEffect') trackEffectC: ElementRef;
-
     private chart: any;//总消费
     customer: Customer;
     orgid: number;//公司组织Id
@@ -72,17 +73,17 @@ export class CustomerDetailsComponent {
 
     minDate: string;//最小下次跟踪时间
     maxDate: string;//最大下次跟踪时间
-
     constructor(public navCtrl: NavController,
                 public modalCtrl: ModalController,
-                public navParams: NavParams,
                 public actionSheetCtrl: ActionSheetController,
                 public popSer: PopSer,
+                public callNumber: CallNumber,
                 public networkSer: NetworkSer,
                 public interfaceLists: InterfaceLists,
                 public customerService: CustomerService,
                 public callNumService: CallNumberService,
-                public callSer: CallSer) {
+                public callSer: CallSer,
+                public navParams: NavParams) {
         this.customer = navParams.get('customer');//从会员详情页获取到的信息
         //console.log(this.customer);
         if (this.customer.nextTrackDate) {
@@ -114,11 +115,11 @@ export class CustomerDetailsComponent {
     }
 
     goToTracking() {
-        this.navCtrl.push(TrackingComponent);
+        this.navCtrl.push('TrackingPage');
     }
 
     openModal(params) {
-        let modal = this.modalCtrl.create(TrackingComponent, params);
+        let modal = this.modalCtrl.create('TrackingPage', params);
         modal.present();
     }
 
@@ -142,7 +143,8 @@ export class CustomerDetailsComponent {
             return;
         }
         let callData: any = {
-            title: '<div class="warm_tip text-center"><img src="img/warm.png" class="img"/></div>',
+            tel: customer.contactMobile,
+            title: '<div class="warm_tip text-center"><img src="assets/img/warm.png" class="img"/></div>',
             subTitle: `即将拨打"${customer.customerName}"电话... `,
             content: '<span class="yellow">请在与会员沟通时注意保持礼节</span>',
             okText: "继续呼叫"
@@ -160,25 +162,45 @@ export class CustomerDetailsComponent {
                     text: '普通电话',
                     cssClass: 'btn_normal',
                     handler: () => {
-                        this.popSer.confirmDIY(callData, () => {
-                        }, () => {
-                            CallNumber.callNumber(customer.contactMobile, true).then(() => {
-/*                            //获取随机测试账号
-                            let cc=AppConfig.getTestCount();
-                            CallNumber.callNumber(cc.number, true).then(()=> {*/
-                                // console.log('success');
+                        if (AppConfig.callingType == 1) {
+                            this.popSer.alert(`<div class="text-center">普通通话服务不可用</br>请联系管理员开通普通通话服务</div>`);
+                            return;
+                        }
+                        if (AppConfig.platform == 'android') {
+                            /*******************普通通话临时补救方式******************/
+                            this.popSer.callPop(callData, () => {
+                            }, () => {
                                 this.customerService.setUnSaveState(1, customer, AppConfig.userInfo.mobile);
-                                this.navCtrl.push(TrackingComponent, {
+                                this.navCtrl.push('TrackingPage', {
                                     customer: customer,
                                     contactType: 1,
                                     callerPhone: AppConfig.userInfo.mobile
                                 });
-                            }, (error) => {
-                                console.log('a: ' + error || 'error');
-                            }).catch((error) => {
-                                console.log('b:' + error || 'error');
                             });
-                        });
+                            /*********************END****************/
+                        } else {
+                            /*******************原来的方案******************/
+                            this.popSer.confirmDIY(callData, () => {
+                            }, () => {
+                                this.callNumber.callNumber(customer.contactMobile, true).then(() => {
+                                    /*                            //获取随机测试账号
+                                     let cc=AppConfig.getTestCount();
+                                     CallNumber.callNumber(cc.number, true).then(()=> {*/
+                                    // console.log('success');
+                                    this.customerService.setUnSaveState(1, customer, AppConfig.userInfo.mobile);
+                                    this.navCtrl.push('TrackingPage', {
+                                        customer: customer,
+                                        contactType: 1,
+                                        callerPhone: AppConfig.userInfo.mobile
+                                    });
+                                }, (error) => {
+                                    console.log('a: ' + error || 'error');
+                                }).catch((error) => {
+                                    console.log('b:' + error || 'error');
+                                });
+                            });
+                            /*********************END****************/
+                        }
                     }
                 },
                 {
@@ -186,27 +208,28 @@ export class CustomerDetailsComponent {
                     cssClass: 'btn_free',
                     role: 'destructive',
                     handler: () => {
-                        if(AppConfig.callingType ==2){
+                        if (AppConfig.callingType == 2) {
                             this.popSer.alert(`<div class="text-center">免费通话服务不可用</br>请联系管理员开通免费通话服务</div>`);
                             return;
                         }
-                        this.callSer.uxinRemainMinute().then(()=> {
+                        this.callSer.uxinRemainMinute().then(() => {
                             // console.log('success');
-                            this.callSer.uxinBindCall(customer).then(()=>{
-                                this.customerService.setUnSaveState(2,customer,AppConfig.userInfo.mobile);
-                                this.navCtrl.push(TrackingComponent, {
+                            this.callSer.uxinBindCall(customer).then(() => {
+                                this.customerService.setUnSaveState(2, customer, AppConfig.userInfo.mobile);
+                                this.navCtrl.push('TrackingPage', {
                                     customer: customer,
                                     contactType: 2,
-                                    callerPhone:AppConfig.userInfo.mobile
+                                    callerPhone: AppConfig.userInfo.mobile
                                 });
-                            }, (error)=> {
+                            }, (error) => {
                                 console.log('a: ' + error || 'error');
-                            }).catch((error)=> {
+                            }).catch((error) => {
                                 console.log('b:' + error || 'error');
                             });
-                        }, (error)=> {
+                        }, (error) => {
                             console.log('a: ' + error || 'error');
-                        }).catch((error)=> {
+                            this.popSer.alert(error);
+                        }).catch((error) => {
                             console.log('b:' + error || 'error');
                         });
                     }
@@ -216,7 +239,7 @@ export class CustomerDetailsComponent {
                     text: '直接填写跟踪日志',
                     cssClass: 'btn_track',
                     handler: () => {
-                        this.navCtrl.push(TrackingComponent, {
+                        this.navCtrl.push('TrackingPage', {
                             customer: customer,
                             contactType: 0
                         });
@@ -258,7 +281,7 @@ export class CustomerDetailsComponent {
                                     if (result.data) {
                                         let nextTrackDate = DateService.getFormatDate(result.data);
                                         this.popSer.confirm("您确定将该会员修改为系统智能管理跟踪时间？<br/>系统自动计算出的下次跟踪时间为：" + nextTrackDate, () => {
-                                            this.setTrackDataCalcType(TrackDateCalcType.System,nextTrackDate);
+                                            this.setTrackDataCalcType(TrackDateCalcType.System, nextTrackDate);
                                         });
                                     }
                                 }
@@ -277,7 +300,7 @@ export class CustomerDetailsComponent {
                              });*/
                             this.manModifyPop = 2;//打开弹窗
                             this.manModifyPopText = "您确定将该会员修改为人工管理？";
-                            if (DateService.getDateDiff(this.customer.nextTrackDate) >=0) {
+                            if (DateService.getDateDiff(this.customer.nextTrackDate) >= 0) {
                                 this.manModifyTime = AppConfig.getLocalTime();//获取本地时间
                             }
                             else {
@@ -301,20 +324,20 @@ export class CustomerDetailsComponent {
     }
 
     //设置跟踪时间计算方式接口
-    setTrackDataCalcType(trackDateCalcType,nextTrackDate) {//设置跟踪时间计算方式接口
+    setTrackDataCalcType(trackDateCalcType, nextTrackDate) {//设置跟踪时间计算方式接口
         return this.interfaceLists.settrackdatecalctype({
             orgId: this.orgid,
             customerId: this.customer.customerId,
             trackDateCalcType: trackDateCalcType,
             nextTrackDate: nextTrackDate
-        }).then((data)=>{
-            if(data.isSucceed){
+        }).then((data) => {
+            if (data.isSucceed) {
                 this.customer.trackDateCalcType = trackDateCalcType;
                 this.customer.nextTrackDate = nextTrackDate;
-            }else {
+            } else {
                 this.popSer.alert("设置失败，请稍后再试");
             }
-        },(err)=>{
+        }, (err) => {
             console.log(err);
             this.popSer.alert("服务器连接失败，请稍后再试");
         });
@@ -341,17 +364,17 @@ export class CustomerDetailsComponent {
 
     manModifyOk() {//人工管理，不可跟踪变成可跟踪，下次跟踪时间
         if (this.manModifyPop == 1) {
-            this.settrackTime(this.manModifyTime,()=>{
+            this.settrackTime(this.manModifyTime, () => {
                 this.customer.nextTrackDate = this.manModifyTime;
                 this.customer.status = CustomerStatus.Track;
             });
         }
         if (this.manModifyPop == 2) {
-            this.setTrackDataCalcType(TrackDateCalcType.Manual,this.manModifyTime);
+            this.setTrackDataCalcType(TrackDateCalcType.Manual, this.manModifyTime);
         }
         if (this.manModifyPop == 3) {
 
-            this.settrackTime(this.manModifyTime,()=>{
+            this.settrackTime(this.manModifyTime, () => {
                 this.customer.trackDateCalcType = TrackDateCalcType.Manual;
                 // this.customer.nextTrackDate= DateService.getFormatDate(new Date());//选为人工管理时，下次跟踪时间自动更新为今日
                 this.customer.nextTrackDate = this.manModifyTime;
@@ -368,7 +391,7 @@ export class CustomerDetailsComponent {
             if (result.isSucceed) {
                 // console.log(result.data);
                 if (result.data) {
-                    this.settrackTime(result.data,()=>{
+                    this.settrackTime(result.data, () => {
                         this.customer.nextTrackDate = DateService.getFormatDate(result.data);
                         this.customer.status = CustomerStatus.Track;
                     });
@@ -431,20 +454,21 @@ export class CustomerDetailsComponent {
     //下次跟踪时间--------------------------
 
     //设置下次跟踪时间接口
-    settrackTime(nextTrackDate: any,callback:any = ()=> {}) {//设置下次跟踪时间接口
+    settrackTime(nextTrackDate: any, callback: any = () => {
+                 }) {//设置下次跟踪时间接口
         this.interfaceLists.settracking({
             orgId: this.orgid,
             customerId: this.customer.customerId,
             nextTrackDate: nextTrackDate
-        }).then((returnData)=>{
+        }).then((returnData) => {
             if (!returnData.isSucceed) {
                 this.popSer.alert('下次跟踪时间设置失败');
-            }else {
+            } else {
                 if (callback != undefined && callback != null && typeof callback == 'function') {
                     callback();
                 }
             }
-        },()=>{
+        }, () => {
             this.popSer.alert('设置下次跟踪时间时服务器连接失败，请稍后再试');
         });
     }
@@ -466,7 +490,7 @@ export class CustomerDetailsComponent {
                             else {//人工
                                 this.manModifyPop = 1;//打开弹窗
                                 this.manModifyPopText = "您正在将该会员修改为可跟踪，";
-                                if (DateService.getDateDiff(this.customer.nextTrackDate) >=0) {
+                                if (DateService.getDateDiff(this.customer.nextTrackDate) >= 0) {
                                     this.manModifyTime = AppConfig.getLocalTime();//获取本地时间
                                 }
                                 else {
@@ -547,7 +571,8 @@ export class CustomerDetailsComponent {
 
 
     //获取会员消费结构数据
-    load:any=0;
+    load: any = 0;
+
     getConsumeStructure(structType: number) {
         let param = {
             orgId: this.orgid,
@@ -623,7 +648,7 @@ export class CustomerDetailsComponent {
                             break;
                     }
                     this.StructHchart(struct);
-                    this.load=2;
+                    this.load = 2;
                 }
             }
             else {
@@ -639,7 +664,7 @@ export class CustomerDetailsComponent {
                 this.customerService.writeError(error);
                 switch (result.code) {
                     case 600:   //600跳转到系统维护
-                        this.navCtrl.push(ServiceMaintenancePage);
+                        this.navCtrl.push('ServiceMaintenancePage');
                         break;
                     case 400:
                         this.popSer.alert('请求不合法（请求安全校验没有通过）');
@@ -647,7 +672,7 @@ export class CustomerDetailsComponent {
                     case 401:
                         this.popSer.alert('请求要求身份验证（TOKEN无效）');
                         // this.navCtrl.push(LoginComponent);
-                        this.navCtrl.parent.parent.setRoot(LoginComponent);
+                        this.navCtrl.parent.parent.setRoot('LoginPage');
                         break;
                     case 500:
                         this.popSer.alert('系统内部异常');
@@ -656,7 +681,7 @@ export class CustomerDetailsComponent {
                         this.popSer.alert('数据获取失败，请重试');
                         break;
                 }
-                this.load=1;
+                this.load = 1;
             }
         }, err => {
             let error = {
@@ -669,7 +694,7 @@ export class CustomerDetailsComponent {
                 source: 'customer-details.ts'
             };
             this.customerService.writeError(error);
-            this.load=1;
+            this.load = 1;
         });
 
     }
@@ -726,7 +751,7 @@ export class CustomerDetailsComponent {
         let opts: any = {
             lang: {
                 // Custom language option
-                noData: "<div class='chart-no-data'><img src='img/non_record.png' class='img'/><p class='p1'>暂无数据</p></div>"
+                noData: "<div class='chart-no-data'><img src='assets/img/non_record.png' class='img'/><p class='p1'>暂无数据</p></div>"
             },
             noData: {
                 useHTML: true
@@ -830,7 +855,7 @@ export class CustomerDetailsComponent {
             if (result.isSucceed) {
                 //console.log(result.data);
                 if (result.data) {
-                    if(result.data.PCT && result.data.PCT!=''){
+                    if (result.data.PCT && result.data.PCT != '') {
                         result.data.PCT = (result.data.PCT).toFixed(2);
                     }
                     this.portraitData = result.data;
@@ -1100,7 +1125,7 @@ export class CustomerDetailsComponent {
         played_time: 0,		//已经播放的时长
         src: '',//现在播放的音频的src
         logId: '',//现在播放的音频的id
-        audiPlayIcon: 'img/grey_play.png',//图标
+        audiPlayIcon: 'assets/img/grey_play.png',//图标
         currObject: null    //上一个音频对象
     };
     //语音播放入口1
@@ -1131,7 +1156,7 @@ export class CustomerDetailsComponent {
             // this.show_audio.all_time_length = audio.duration;
             if (audio.paused) {
                 audio.play();
-                this.show_audio.audiPlayIcon = 'img/yellow_play.png';
+                this.show_audio.audiPlayIcon = 'assets/img/yellow_play.png';
                 this.show_audio.currObject.audio_is_play = true;
                 this.interval = setInterval(() => {
                     this.show_audio.played_time = audio.currentTime;
@@ -1139,14 +1164,14 @@ export class CustomerDetailsComponent {
                     // this.porocessWidth=Math.round(audio.currentTime)/Math.round(audio.duration)*100 +'%';
                     // console.log('aaa');
                     if (audio.ended) {
-                        this.show_audio.audiPlayIcon = 'img/grey_play.png';
+                        this.show_audio.audiPlayIcon = 'assets/img/grey_play.png';
                         this.show_audio.currObject.audio_is_play = false;
                         window.clearInterval(this.interval);
                     }
                 }, 1000);
             } else {
                 window.clearInterval(this.interval);
-                this.show_audio.audiPlayIcon = 'img/grey_play.png';
+                this.show_audio.audiPlayIcon = 'assets/img/grey_play.png';
                 this.show_audio.currObject.audio_is_play = false;
                 audio.pause();
             }
@@ -1163,7 +1188,7 @@ export class CustomerDetailsComponent {
             played_time: 0,		//已经播放的时长
             src: '',//现在播放的音频的src
             logId: '',//现在播放的音频的id
-            audiPlayIcon: 'img/grey_play.png',//图标
+            audiPlayIcon: 'assets/img/grey_play.png',//图标
             currObject: null    //上一个音频对象
         }
     }

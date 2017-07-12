@@ -57,11 +57,10 @@ export  class  CallSer{
             return this.interface_lists.getPersonalityConfig().then((returnData)=>{
                 if (returnData.isSucceed) {
                     AppConfig.balanceMinute = returnData.data.balanceMinute;
-
+                    AppConfig.callingType =returnData.data.callingType;
                     if(AppConfig.balanceMinute<1){
                         reject('免费通话服务不可用,通话分钟数余量不足,请联系管理员');
                     }else{
-                        AppConfig.callingType =1;
                         resolve();
                     }
                 }else{

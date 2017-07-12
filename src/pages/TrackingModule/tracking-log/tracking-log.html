@@ -1,62 +1,62 @@
 <ion-header class="white_head">
-    <!--hideBackButton="true" -->
-    <ion-navbar>
-        <ion-title>跟踪日志与效果</ion-title>
-    </ion-navbar>
-    <p class="net_erro bar-header" *ngIf="!networkSer.isConnected">网络不可用，请检查您的网络设置！</p>
-    <ion-toolbar>
-        <!--<ion-searchbar placeholder="搜索姓名"  [showCancelButton]="shouldShowCancel" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>-->
-        <ion-searchbar placeholder="搜索姓名" [(ngModel)]="customerName" (ionCancel)="onCancel($event)"  (ionInput)="filter($event)" (keyup)="goSearch($event)"></ion-searchbar>
-        <!--(ionInput)="upperCase($event)"  (keyup)="goSearch($event)"-->
-        <ion-buttons end>
-            <button ion-button class="track_choose " (click)="setFilter()" [ngClass]="select===true ? 'active' : ''">
-                <ion-icon></ion-icon>
-                筛选
-            </button>
-        </ion-buttons>
-    </ion-toolbar>
-    <!--悬浮5s-->
-    <div class="xf_text" *ngIf="logTotal_show" [ngClass]="logTotal_show  ? 'active' : '' ">共搜索到日志 {{logTotal}} 篇</div>
-    <!--筛选-->
-    <div class="FollowUp" *ngIf="select">
-        <div class="white_bg">
-            <article>
-                <ul class="firterOption">
-                    <li class="charge_cost" (click)="set_trackResult('0')"
-                            [ngClass]="trackResult=='0' ? 'active':''" tappable>全部</li>
-                </ul>
-            </article>
-            <!--跟踪效果-->
-            <article>
-                <p class="menber_head">跟踪效果</p>
-                <ul class="firterOption">
-                    <li class="charge_cost" (click)="set_trackResult(3)" [ngClass]="trackResult==3 ? 'active':''" tappable>已购买
-                    </li>
-                    <li class="charge_cost" (click)="set_trackResult(4)" [ngClass]="trackResult==4 ? 'active':''" tappable>未购买
-                    </li>
-                    <li class="charge_cost" (click)="set_trackResult(2)" [ngClass]="trackResult==2 ? 'active':''" tappable>待评估</li>
-                </ul>
-            </article>
-            <!--是否联系上-->
-            <article class="padding_b_010">
-                <p class="menber_head">是否联系上</p>
-                <ul class="firterOption">
-                    <li class="charge_cost" (click)="set_trackResult(1)" [ngClass]="trackResult==1 ? 'active':'' " tappable>
-                           未联系上</li>
-                    <li class="charge_cost" (click)="set_trackResult('2,3,4')"  [ngClass]="(trackResult>1 || trackResult=='2,3,4')? 'active':''" tappable>已联系上
-                     </li>
-                </ul>
-            </article>
+  <!--hideBackButton="true" -->
+  <ion-navbar>
+    <ion-title>跟踪日志与效果</ion-title>
+  </ion-navbar>
+  <p class="net_erro bar-header" *ngIf="!networkSer.isConnected">网络不可用，请检查您的网络设置！</p>
+  <ion-toolbar>
+    <!--<ion-searchbar placeholder="搜索姓名"  [showCancelButton]="shouldShowCancel" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>-->
+    <ion-searchbar placeholder="搜索姓名" [(ngModel)]="customerName" (ionCancel)="onCancel($event)"  (ionInput)="filter($event)" (keyup)="goSearch($event)"></ion-searchbar>
+    <!--(ionInput)="upperCase($event)"  (keyup)="goSearch($event)"-->
+    <ion-buttons end>
+      <button ion-button class="track_choose " (click)="setFilter()" [ngClass]="select===true ? 'active' : ''">
+        <ion-icon></ion-icon>
+        筛选
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  <!--悬浮5s-->
+  <div class="xf_text" *ngIf="logTotal_show" [ngClass]="logTotal_show  ? 'active' : '' ">共搜索到日志 {{logTotal}} 篇</div>
+  <!--筛选-->
+  <div class="FollowUp" *ngIf="select">
+    <div class="white_bg">
+      <article>
+        <ul class="firterOption">
+          <li class="charge_cost" (click)="set_trackResult('0')"
+              [ngClass]="trackResult=='0' ? 'active':''" tappable>全部</li>
+        </ul>
+      </article>
+      <!--跟踪效果-->
+      <article>
+        <p class="menber_head">跟踪效果</p>
+        <ul class="firterOption">
+          <li class="charge_cost" (click)="set_trackResult(3)" [ngClass]="trackResult==3 ? 'active':''" tappable>已购买
+          </li>
+          <li class="charge_cost" (click)="set_trackResult(4)" [ngClass]="trackResult==4 ? 'active':''" tappable>未购买
+          </li>
+          <li class="charge_cost" (click)="set_trackResult(2)" [ngClass]="trackResult==2 ? 'active':''" tappable>待评估</li>
+        </ul>
+      </article>
+      <!--是否联系上-->
+      <article class="padding_b_010">
+        <p class="menber_head">是否联系上</p>
+        <ul class="firterOption">
+          <li class="charge_cost" (click)="set_trackResult(1)" [ngClass]="trackResult==1 ? 'active':'' " tappable>
+            未联系上</li>
+          <li class="charge_cost" (click)="set_trackResult('2,3,4')"  [ngClass]="(trackResult>1 || trackResult=='2,3,4')? 'active':''" tappable>已联系上
+          </li>
+        </ul>
+      </article>
 
-            <!--筛选清空-->
-            <div class="firter_Btn">
-                <ul class="flex_ul">
-                    <li (click)="del_selected()" tappable>清空筛选</li>
-                    <li (click)="do_selected()" tappable>确定</li>
-                </ul>
-            </div>
-        </div>
+      <!--筛选清空-->
+      <div class="firter_Btn">
+        <ul class="flex_ul">
+          <li (click)="del_selected()" tappable>清空筛选</li>
+          <li (click)="do_selected()" tappable>确定</li>
+        </ul>
+      </div>
     </div>
+  </div>
 </ion-header>
 <!--遮罩层-->
 <div class="pop_panel" *ngIf="select"></div>
@@ -64,90 +64,90 @@
 
 
 <ion-content>
-    <ion-refresher (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content
-                pullingIcon="arrow-dropdown"
-                pullingText="下拉刷新"
-                refreshingSpinner="circles"
-                refreshingText="下拉刷新"></ion-refresher-content>
-    </ion-refresher>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+            pullingIcon="arrow-dropdown"
+            pullingText="下拉刷新"
+            refreshingSpinner="circles"
+            refreshingText="下拉刷新"></ion-refresher-content>
+  </ion-refresher>
 
-    <div class="white_bg log_detail" *ngFor="let log of logList">
-        <!--跟踪行为-->
-        <div>
-            <h2 class="h2">
-                <strong>{{log.customerName}}</strong>
-            </h2>
-            <ul class="track_log_content">
-                <li class="{{log.trackResult>1 ? 'li_4':'li_5'}}">
-                    {{log.trackDetail.contactType | contactTypePipe}}
-                    ，{{log.trackResult>1 ? '联系上':'未联系上'}}
-                </li>
-                <li class="li_1" *ngIf="log.trackDetail.content">{{log.trackDetail.content}}</li>
-                <li class="li_1" *ngIf="log.trackDetail.otherNotContactReason">{{log.trackDetail.otherNotContactReason}}</li>
-                <li class="li_1" *ngIf="log.trackDetail.notContactReason<6 && log.trackDetail.notContactReason>0">{{log.trackDetail.notContactReason|notContactReasonPipe }}</li>
-                <!--音频-->
-                <li class="li_6" *ngIf="log.trackDetail.voiceRecordUrl">
+  <div class="white_bg log_detail" *ngFor="let log of logList">
+    <!--跟踪行为-->
+    <div>
+      <h2 class="h2">
+        <strong>{{log.customerName}}</strong>
+      </h2>
+      <ul class="track_log_content">
+        <li class="{{log.trackResult>1 ? 'li_4':'li_5'}}">
+          {{log.trackDetail.contactType|contactTypePipe}}
+          ，{{log.trackResult>1 ? '联系上':'未联系上'}}
+        </li>
+        <li class="li_1" *ngIf="log.trackDetail.content">{{log.trackDetail.content}}</li>
+        <li class="li_1" *ngIf="log.trackDetail.otherNotContactReason">{{log.trackDetail.otherNotContactReason}}</li>
+        <li class="li_1" *ngIf="log.trackDetail.notContactReason<6 && log.trackDetail.notContactReason>0">{{log.trackDetail.notContactReason|notContactReasonPipe }}</li>
+        <!--音频-->
+        <li class="li_6" *ngIf="log.trackDetail.voiceRecordUrl">
                         <span class="audio_border" (click)="audioplay1(log)" tappable>
-                            <img class="img icon_play" src="{{log.audio_is_play ? 'img/play.gif':'img/play.png'}}">
+                            <img class="img icon_play" src="{{log.audio_is_play ? 'assets/img/play.gif':'assets/img/play.png'}}">
                         </span>
-                    <span class="audio_duration">{{log.trackDetail.voiceRecordSize | numtotimePipe }}</span>
-                </li>
-                <li class="li_2"  *ngIf="log.remark">{{log.remark}}</li>
-                <li class="li_3" *ngIf="log.trackResult>1">跟踪后{{log.trackResult | trackResultPipe}}
-                    <span class="fr people_buy"  [ngClass]="log.showDetail ? 'view_less' :'view_more'" (click)="toggleDetail(log)" *ngIf="log.orders" tappable>查看购买</span>
-                </li>
-            </ul>
-        </div>
-        <!--购买行为-->
-        <section class="log_detail_content" *ngIf="log.showDetail">
-            <div *ngFor="let order of log.orders" class="dashBorder">
-            <h2 class="head ng-binding">消费时间：{{order.consumeDate  | dataSubstringPipe}};总消费金额：￥{{order.saleAmount}}</h2>
-            <table class="logTrack_table">
-                <thead>
-                <tr>
-                    <th>商品</th>
-                    <th>数量</th>
-                    <th>金额</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let list of order.goods">
-                    <td class="ng-binding">{{list.goodsName}}</td>
-                    <td class="ng-binding">{{list.quantity}}</td>
-                    <td class="ng-binding">￥{{list.saleAmount}}</td>
-                </tr>
-                </tbody>
-            </table>
-            </div>
-        </section>
-        <p class="text-right padding-right color_99">
-            {{log.employeeName}}&nbsp;&nbsp;于{{log.trackDetail.trackDate  | dataSubstringPipe}}&nbsp;&nbsp;跟踪&nbsp;&nbsp;</p>
+          <span class="audio_duration">{{log.trackDetail.voiceRecordSize | numtotimePipe }}</span>
+        </li>
+        <li class="li_2"  *ngIf="log.remark">{{log.remark}}</li>
+        <li class="li_3" *ngIf="log.trackResult>1">跟踪后{{log.trackResult | trackResultPipe}}
+          <span class="fr people_buy"  [ngClass]="log.showDetail ? 'view_less' :'view_more'" (click)="toggleDetail(log)" *ngIf="log.orders" tappable>查看购买</span>
+        </li>
+      </ul>
     </div>
-    <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="has_more">
-        <ion-infinite-scroll-content
-                loadingSpinner="bubbles"
-                loadingText="加载更多"></ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-    <div class="bottomNoMore" *ngIf="!has_more">没有更多数据了</div>
+    <!--购买行为-->
+    <section class="log_detail_content" *ngIf="log.showDetail">
+      <div *ngFor="let order of log.orders" class="dashBorder">
+        <h2 class="head ng-binding">消费时间：{{order.consumeDate  | dataSubstringPipe}};总消费金额：￥{{order.saleAmount}}</h2>
+        <table class="logTrack_table">
+          <thead>
+          <tr>
+            <th>商品</th>
+            <th>数量</th>
+            <th>金额</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let list of order.goods">
+            <td class="ng-binding">{{list.goodsName}}</td>
+            <td class="ng-binding">{{list.quantity}}</td>
+            <td class="ng-binding">￥{{list.saleAmount}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <p class="text-right padding-right color_99">
+      {{log.employeeName}}&nbsp;&nbsp;于{{log.trackDetail.trackDate  | dataSubstringPipe}}&nbsp;&nbsp;跟踪&nbsp;&nbsp;</p>
+  </div>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="has_more">
+    <ion-infinite-scroll-content
+            loadingSpinner="bubbles"
+            loadingText="加载更多"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  <div class="bottomNoMore" *ngIf="!has_more">没有更多数据了</div>
 </ion-content>
 <!--音频-->
 <div class="bg_grey audio_pr_main"  [hidden]="!show_audio.is_show">
-    <audio id="audio" preload="auto" src="{{show_audio.src}}" autoplay></audio>
-    <p class="text-center padding ng-binding">
-        <span id="curr">{{show_audio.played_time | numtotimePipe}}</span>/ {{show_audio.all_time_length | numtotimePipe}}
-        <span class="audio_close" (click)="audio_close()" tappable>
-            <img src="img/audio_close.png" class="img1">
+  <audio id="audio" preload="auto" src="{{show_audio.src}}" autoplay></audio>
+  <p class="text-center padding ng-binding">
+    <span id="curr">{{show_audio.played_time | numtotimePipe}}</span>/ {{show_audio.all_time_length | numtotimePipe}}
+    <span class="audio_close" (click)="audio_close()" tappable>
+            <img src="assets/img/audio_close.png" class="img1">
         </span>
-    </p>
-    <div class="audio_process_panel" (swipe)="tapEvent($event)" (click)="itemTapped($event)" (drag)="Test($event)" tappable>
-        <div class="audio_process" id="audio_process">
-        <!--<div class="audio_process" id="audio_process" style="width:'{{porocessWidth}}';">-->
-            <span (click)="audioplay2()"  class="after" tappable>
+  </p>
+  <div class="audio_process_panel" (swipe)="tapEvent($event)" (click)="itemTapped($event)" (drag)="Test($event)" tappable>
+    <div class="audio_process" id="audio_process">
+      <!--<div class="audio_process" id="audio_process" style="width:'{{porocessWidth}}';">-->
+      <span (click)="audioplay2()"  class="after" tappable>
                 <img class="audiPlayIcon" src="{{show_audio.audiPlayIcon}}" >
             </span>
-        </div>
     </div>
+  </div>
 
 
 </div>

@@ -4,13 +4,27 @@
   <meta charset="UTF-8">
   <title>Ionic App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="telephone=yes">
   <meta name="msapplication-tap-highlight" content="no">
-  <!--<meta http-equiv="Content-Security-Policy" content="default-src https://codepush.azurewebsites.net  http://192.168.1.88  'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *" />-->
+
   <link rel="icon" type="image/x-icon" href="assets/icon/favicon.ico">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4e8ef7">
-  
+
+  <!--new引入第三方js-->
+  <!-- 这里引入百度echarts -->
+  <script src="./assets/js/echarts.common.min.js"></script>
+  <!--字符串散列处理-->
+  <script src="./assets/js/sha1_sanlie.js"></script>
+  <!--md5加密-->
+  <script src="./assets/js/md5.js"></script>
+  <!--aes加密  需要key和偏移量vi   -->
+  <script src="./assets/js/aes_1.js"></script>
+  <!--aes加密  只需要key  -->
+  <!--<script src="./assets/js/aes_2.js"></script>-->
+  <!-- rsa加密  -->
+  <!--<script src="./assets/js/security.js"></script>-->
+
   <!-- cordova.js required for cordova apps -->
   <script src="cordova.js"></script>
 
@@ -19,42 +33,33 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
         .then(() => console.log('service worker installed'))
-        .catch(err => console.log('Error', err));
+        .catch(err => console.error('Error', err));
     }
   </script>-->
 
-  <link href="css/main.css" rel="stylesheet">
-  <link href="css/common.css" rel="stylesheet">
-  <link href="css/modified.css" rel="stylesheet">
-  <link href="css/style.css" rel="stylesheet">
-
-  <!--<link href="css/ionic.min.css" rel="stylesheet">-->
+  <!--old-->
+  <!--<link href=".build/main.css" rel="stylesheet">-->
+  <!--自定义css-->
+  <link href="./assets/css/main.css" rel="stylesheet">
+  <link href="./assets/css/common.css" rel="stylesheet">
+  <link href="./assets/css/modified.css" rel="stylesheet">
+  <link href="./assets/css/style.css" rel="stylesheet">
 
 </head>
-<body ontouchstart>
+<body>
+
+  <!--首页白屏的处理-->
   <div class="appSplash">
-    <!--<div style="font-size: 30px;text-align: center">正在为您更新数据</div>-->
-    <!--<article class="login_logo"></article>-->
-      <img src="./img/setUp.gif"/>
-      <div class="load_text">正在为您更新数据<i class="dot"></i></div>
+    <img src="./assets/img/setUp.gif"/>
+    <div class="load_text">正在为您更新数据<i class="dot"></i></div>
   </div>
+
   <!-- Ionic's root component and where the app will load -->
   <ion-app></ion-app>
 
   <!-- The polyfills js is generated during the build process -->
   <script src="build/polyfills.js"></script>
-  <!-- 这里引入echarts -->
-  <script src="assets/echarts.common.min.js"></script>
-  <!--散列处理-->
-  <script src="assets/sha1_sanlie.js"></script>
-  <!--md5加密-->
-  <script src="assets/md5.js"></script>
-  <!--aes加密  需要key和偏移量vi   -->
-  <script src="assets/aes_1.js"></script>
-  <!--aes加密  只需要key  -->
-  <!--<script src="assets/aes_2.js"></script>-->
-  <!-- rsa加密  -->
-  <!--<script src="assets/security.js"></script>-->
+
   <!-- The bundle js is generated during the build process -->
   <script src="build/main.js"></script>
 

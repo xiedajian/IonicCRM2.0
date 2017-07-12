@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { HttpSer } from '../../providers/http-ser';
-import {TrackLog} from 'track-log.model';
+import {TrackLog} from './track-log.model';
 
 export const LOGS=[{
     logId: 1,

@@ -27,7 +27,7 @@ export class PopSer {
            css='';
        }
         let alert = this.alertCtrl.create({
-            title: '<div class="text-center"><div class="warm_tip text-center"><img src="img/warm.png" class="img"/></div></div>',
+            title: '<div class="text-center"><div class="warm_tip text-center"><img src="assets/img/warm.png" class="img"/></div></div>',
             message: '<div class="oT_content"><div class="p_tip">'+content+'</div></div>',
             enableBackdropDismiss:false,
             cssClass:css,
@@ -49,7 +49,7 @@ export class PopSer {
      */
     confirm(content, ok_callback = ()=> {}) {
         let alert = this.alertCtrl.create({
-            title: '<div class="text-center"><div class="warm_tip text-center"><img src="img/warm.png" class="img"/></div></div>',
+            title: '<div class="text-center"><div class="warm_tip text-center"><img src="assets/img/warm.png" class="img"/></div></div>',
             message: '<div class="oT_content"><div class="p_tip">'+content+'</div></div>',
             enableBackdropDismiss:false,
             buttons: [
@@ -76,7 +76,7 @@ export class PopSer {
      */
     alertDIY(obj,  ok_callback:any = ()=> {}) {
         let confirm_diy = this.alertCtrl.create({
-            title: obj.title ||  '<div class="content_img"><img  src="img/use_over.png" class="img"/></div>',
+            title: obj.title ||  '<div class="content_img"><img  src="assets/img/use_over.png" class="img"/></div>',
             subTitle:obj.subTitle,
             cssClass:obj.cssClass,  //如果有单行字，样式为Convex且message为空，否则为ConvexOut
             message: obj.content,
@@ -100,7 +100,44 @@ export class PopSer {
      */
     confirmDIY(obj, esc_callback:any = ()=> {}, ok_callback:any = ()=> {}) {
         let confirm_diy = this.alertCtrl.create({
-            title: obj.title ||'<div class="content_img"><img  src="img/use_over.png" class="img"/></div>',
+            title: obj.title ||'<div class="content_img"><img  src="assets/img/use_over.png" class="img"/></div>',
+            subTitle:obj.subTitle ,
+            cssClass:"call",
+            message: '<div>'+obj.content+'</div>' ,
+            enableBackdropDismiss:false,
+            buttons: [
+                {
+                    text: obj.escText || '取消',
+                    handler: () => {
+                        if (esc_callback != undefined && esc_callback != null && typeof esc_callback == 'function') {
+                            esc_callback();
+                        }
+                    }
+                },
+                {
+                    text: obj.okText || '确定',
+                    cssClass: 'pop_btn',
+                    handler: () => {
+                        if (ok_callback != undefined && ok_callback != null && typeof ok_callback == 'function') {
+                            ok_callback();
+                        }
+                    }
+                }
+            ]
+        });
+        confirm_diy.present();
+    }
+
+    /**
+     * 拨打号码弹窗
+     */
+    callPop(obj, esc_callback:any = ()=> {}, ok_callback:any = ()=> {}) {
+        setTimeout(()=> {//延迟几秒可以等html反应，这样获取的高度才准确
+            let test=document.getElementsByClassName("pop_btn")[0];
+            test.innerHTML="<a href='tel:"+obj.tel+"'> 继续呼叫 </a>";
+        }, 3);
+        let confirm_diy = this.alertCtrl.create({
+            title: obj.title ||'<div class="content_img"><img  src="assets/img/use_over.png" class="img"/></div>',
             subTitle:obj.subTitle ,
             cssClass:"call",
             message: '<div>'+obj.content+'</div>' ,
@@ -128,11 +165,11 @@ export class PopSer {
         confirm_diy.present();
     }
     /**
-     * 版本更新确认框
+     * 版本更新确认框  （两个按钮，非强制更新）
      */
     update(obj, esc_callback:any = ()=> {}, ok_callback:any = ()=> {}) {
         let confirm_diy = this.alertCtrl.create({
-            title:  '<div class="setup_img"><img  src="img/setup.png" class="img"/><p class="content">'+obj.appVersionNumber+'版本更新</p></div>',
+            title:  '<div class="setup_img"><img  src="assets/img/setup.png" class="img"/><p class="content">'+obj.appVersionNumber+'版本更新</p></div>',
             subTitle:obj.subTitle  || '更新内容',
             cssClass:"update",
             message: '<ul>'+obj.content+'</ul>' ,
@@ -159,6 +196,33 @@ export class PopSer {
         });
         confirm_diy.present();
     }
+
+
+    /**
+     * 版本更新确认框  (一个按钮，强制更新)
+     */
+    update_forceUpgrade(obj,ok_callback:any = ()=> {}) {
+        let confirm_diy = this.alertCtrl.create({
+            title:  '<div class="setup_img"><img  src="assets/img/setup.png" class="img"/><p class="content">'+obj.appVersionNumber+'版本更新</p></div>',
+            subTitle:obj.subTitle  || '更新内容',
+            cssClass:"update",
+            message: '<ul>'+obj.content+'</ul>' ,
+            enableBackdropDismiss:false,
+            buttons: [
+                {
+                    text: obj.okText || '立即更新',
+                    cssClass: 'pop_btn',
+                    handler: () => {
+                        if (ok_callback != undefined && ok_callback != null && typeof ok_callback == 'function') {
+                            ok_callback();
+                        }
+                    }
+                }
+            ]
+        });
+        confirm_diy.present();
+    }
+
     /**
      * 默认加载动画
      */
@@ -215,7 +279,7 @@ export class PopSer {
             this.loadDIY=this.loadingCtrl.create({
                 spinner: 'hide',
                 cssClass:"load_on",
-                content: `  <img src="./img/loading.gif" class="load-gif"/>
+                content: `  <img src="./assets/img/loading.gif" class="load-gif"/>
                             <div class="load_text">努力加载中<i class="dot"></i></div> `
             });
             this.loadDIY.present();

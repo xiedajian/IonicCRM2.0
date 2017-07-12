@@ -1,9 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
-import {Storage} from '@ionic/storage';
 import {AES_key, AppConfig}from'../app/app.config';
-import {PopSer}from'./pop-ser';
-import {LoginComponent}from'../pages/LoginModule/login/login';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -22,7 +19,7 @@ declare var RSAUtils;
 @Injectable()
 export class HttpSer {
 
-    constructor(public http:Http, public popser:PopSer) {
+    constructor(public http:Http) {
     }
 
     /**
@@ -277,15 +274,6 @@ export class HttpSer {
 
     private extractData(res:Response) {
         let body = res.json();
-        // return body.data || {};
-        // if(!body.IsSucceed){
-        //    this.popser.alert(body.code.toString()+body.msg);
-        //     if(body.code==401){
-        //         this.popser.alert('长时间没有登录或者在其他设备登录',()=>{
-        //             // this.navCtrl.push(LoginComponent);
-        //         });
-        //     }
-        // }
         return body || {};
     }
 

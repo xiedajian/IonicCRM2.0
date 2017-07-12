@@ -1,27 +1,27 @@
 <ion-content id='login_panel'>
-    <article class="login_logo"></article>
-    <article>
-        <ion-list class="login_form"  no-lines>
-            <!--<ion-item class="id">-->
-                <!--<ion-input placeholder="手机号" type="number"  id="username" [(ngModel)]="userName"  clearOnEdit clearInput></ion-input>-->
-            <!--</ion-item>-->
-            <!--<ion-item class="psw">-->
-                <!--<ion-input type="password" placeholder="密码" id="password" [(ngModel)]="password"  clearInput ></ion-input>-->
-            <!--</ion-item>-->
-            <ion-item class="id">
-                <clear-input placeholder="手机号" type="number"  id="username" [(value)]="userName"></clear-input>
-            </ion-item>
-            <ion-item class="psw">
-                <clear-input type="password" placeholder="密码" id="password" [(value)]="password"></clear-input>
-            </ion-item>
-            <div class="margin_top_23">
-                <button class="login_btn" (click)="goLogin()" >登录</button>
-                <!--<button class="login_btn" (click)="test6()" >读</button>-->
-                <!--<button class="login_btn" (click)="test7()" >一键写入</button>-->
-            </div>
-            <div class="text-center forgetPwd" (click)="findPassword()" tappable>忘记密码？</div>
-        </ion-list>
-    </article>
-    <!--click在不是button 或a 上时有300秒延迟  加tappable属性取消延迟-->
-    <div class="userAgreement" (click)="presentLoadingText()" tappable>查看用户协议</div>
+  <article class="login_logo"></article>
+  <article>
+    <ion-list class="login_form"  no-lines>
+      <ion-item class="id">
+      <ion-input placeholder="手机号" type="number"  id="username" [(ngModel)]="userName"  clearOnEdit clearInput></ion-input>
+      </ion-item>
+      <ion-item class="psw">
+      <ion-input type="password" placeholder="密码" id="password" [(ngModel)]="password"  clearInput ></ion-input>
+      </ion-item>
+      <!--<ion-item class="id">-->
+        <!--<clear-input placeholder="手机号" type="number"  id="username" [(value)]="userName"></clear-input>-->
+      <!--</ion-item>-->
+      <!--<ion-item class="psw">-->
+        <!--<clear-input type="password" placeholder="密码" id="password" [(value)]="password"></clear-input>-->
+      <!--</ion-item>-->
+      <div class="margin_top_23">
+        <button class="login_btn" (click)="goLogin()" >登录</button>
+        <!--<button class="login_btn" (click)="test6()" >读</button>-->
+        <!--<button class="login_btn" (click)="test7()" >一键写入</button>-->
+      </div>
+      <div class="text-center forgetPwd" (click)="findPassword()" tappable>忘记密码？</div>
+    </ion-list>
+  </article>
+  <!--click在不是button 或a 上时有300秒延迟  加tappable属性取消延迟-->
+  <div class="userAgreement" (click)="presentLoadingText()" tappable>查看用户协议</div>
 </ion-content>

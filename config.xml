@@ -1,40 +1,57 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicframework.myapp571074" version="2.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ionicframework.myapp571074" version="2.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>客满分2.0</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
     <content src="index.html" />
+    <allow-navigation href="*" />
+    <allow-navigation href="data:*" />
     <access origin="*" />
+    <allow-intent href="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <preference name="webviewbounce" value="false" />
+    <preference name="UIWebViewBounce" value="false" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="android-minSdkVersion" value="16" />
+    <preference name="BackupWebStorage" value="none" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="FadeSplashScreenDuration" value="300" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="Fullscreen" value="false" />
+    <preference name="SplashScreenDelay" value="60000" />
+    <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="FadeSplashScreen" value="false" />
+    <preference name="KeyboardDisplayRequiresUserAction" value="false" />
+    <preference name="loadUrlTimeoutValue" value="60000" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <!--热更新测试环境-->
-        <!--<preference name="CodePushDeploymentKey" value="Zrp_c_nKTlGvmNWLFbhY7azzZb6e41bycNLtM" />-->
-        <!--热更新生产环境-->
         <preference name="CodePushDeploymentKey" value="p-C3AsvCqrtPQLZRL8NztyY000eH41bycNLtM" />
-        <icon density="ldpi" src="resources\android\icon\drawable-ldpi-icon.png" />
-        <icon density="mdpi" src="resources\android\icon\drawable-mdpi-icon.png" />
-        <icon density="hdpi" src="resources\android\icon\drawable-hdpi-icon.png" />
-        <icon density="xhdpi" src="resources\android\icon\drawable-xhdpi-icon.png" />
-        <icon density="xxhdpi" src="resources\android\icon\drawable-xxhdpi-icon.png" />
-        <icon density="xxxhdpi" src="resources\android\icon\drawable-xxxhdpi-icon.png" />
-        <splash density="land-ldpi" src="resources\android\splash\drawable-land-ldpi-screen.png" />
-        <splash density="land-mdpi" src="resources\android\splash\drawable-land-mdpi-screen.png" />
-        <splash density="land-hdpi" src="resources\android\splash\drawable-land-hdpi-screen.png" />
-        <splash density="land-xhdpi" src="resources\android\splash\drawable-land-xhdpi-screen.png" />
-        <splash density="land-xxhdpi" src="resources\android\splash\drawable-land-xxhdpi-screen.png" />
-        <splash density="land-xxxhdpi" src="resources\android\splash\drawable-land-xxxhdpi-screen.png" />
-        <splash density="port-ldpi" src="resources\android\splash\drawable-port-ldpi-screen.png" />
-        <splash density="port-mdpi" src="resources\android\splash\drawable-port-mdpi-screen.png" />
-        <splash density="port-hdpi" src="resources\android\splash\drawable-port-hdpi-screen.png" />
-        <splash density="port-xhdpi" src="resources\android\splash\drawable-port-xhdpi-screen.png" />
-        <splash density="port-xxhdpi" src="resources\android\splash\drawable-port-xxhdpi-screen.png" />
-        <splash density="port-xxxhdpi" src="resources\android\splash\drawable-port-xxxhdpi-screen.png" />
+        <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
+        <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
+        <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
+        <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
+        <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
+        <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
+        <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi-screen.png" />
+        <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi-screen.png" />
+        <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png" />
+        <splash density="land-xhdpi" src="resources/android/splash/drawable-land-xhdpi-screen.png" />
+        <splash density="land-xxhdpi" src="resources/android/splash/drawable-land-xxhdpi-screen.png" />
+        <splash density="land-xxxhdpi" src="resources/android/splash/drawable-land-xxxhdpi-screen.png" />
+        <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png" />
+        <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png" />
+        <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png" />
+        <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
+        <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
+        <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -63,44 +80,37 @@
         <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
         <splash height="1242" src="resources/ios/splash/Default-Landscape-736h.png" width="2208" />
         <splash height="1536" src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" />
+        <splash height="2048" src="resources/ios/splash/Default-Landscape@~ipadpro.png" width="2732" />
         <splash height="768" src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" />
         <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
+        <splash height="2732" src="resources/ios/splash/Default-Portrait@~ipadpro.png" width="2048" />
         <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
     </platform>
-    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="UIWebViewBounce" value="false" />
-    <preference name="DisallowOverscroll" value="true" />
-    <preference name="Fullscreen" value="false" />
-    <preference name="android-minSdkVersion" value="16" />
-    <preference name="BackupWebStorage" value="none" />
-    <preference name="SplashScreen" value="screen" />
-    <preference name="SplashMaintainAspectRatio" value="true" />
-    <preference name="SplashShowOnlyFirstTime" value="false" />
-    <preference name="SplashScreenDelay" value="60000" />
-    <preference name="AutoHideSplashScreen" value="false" />
-    <preference name="ShowSplashScreenSpinner" value="false" />
-    <preference name="FadeSplashScreen" value="false" />
-    <preference name="FadeSplashScreenDuration" value="300" />
-    <preference name="KeyboardDisplayRequiresUserAction" value="false" />
-    <feature name="StatusBar">
-        <param name="ios-package" onload="true" value="CDVStatusBar" />
-    </feature>
-    <icon src="resources\android\icon\drawable-xhdpi-icon.png" />
-    <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
-    <plugin name="cordova-plugin-whitelist" spec="1.3.1" />
-    <plugin name="cordova-plugin-console" spec="1.0.5" />
-    <plugin name="cordova-plugin-statusbar" spec="2.2.1" />
-    <plugin name="cordova-plugin-device" spec="1.1.4" />
-    <plugin name="cordova-plugin-splashscreen" spec="~4.0.1" />
-    <plugin name="cordova-plugin-crosswalk-webview" spec="~2.3.0">
+    <engine name="android" spec="^6.2.3" />
+    <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
+    <plugin name="cordova-plugin-appminimize" spec="^1.0.0" />
+    <plugin name="cordova-plugin-code-push" spec="file:node_modules\cordova-plugin-code-push" />
+    <plugin name="cordova-plugin-console" spec="^1.0.5" />
+    <plugin name="cordova-plugin-crosswalk-webview" spec="^2.3.0">
         <variable name="XWALK_VERSION" value="23+" />
         <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
         <variable name="XWALK_COMMANDLINE" value="--disable-pull-to-refresh-effect" />
         <variable name="XWALK_MODE" value="embedded" />
         <variable name="XWALK_MULTIPLEAPK" value="true" />
     </plugin>
-    <engine name="android" spec="~6.1.2" />
+    <plugin name="cordova-plugin-device" spec="^1.1.4" />
+    <plugin name="cordova-plugin-file" spec="~4.3.2" />
+    <plugin name="cordova-plugin-file-opener2" spec="^2.0.19" />
+    <plugin name="cordova-plugin-file-transfer" spec="~1.6.2" />
+    <plugin name="cordova-plugin-network-information" spec="^1.3.3" />
+    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.2.2" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.1" />
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <plugin name="jpush-phonegap-plugin" spec="~3.1.8">
+        <variable name="APP_KEY" value="dae66a8a8b15ea260acc66e4" />
+    </plugin>
+    <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
 </widget>

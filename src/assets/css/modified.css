@@ -1,0 +1,123 @@
+/*修改ionic样式*/
+.toolbar-title{text-align: center;color:white;}
+.toolbar-title-ios{font-weight: normal;}
+/*工作台头部*/
+.toolbar-md{min-height:44px;}
+.header .toolbar-background{background:#F39800;}
+
+
+/*我的头部*/
+.white_head.header .toolbar-background{background:white;border-bottom:1px solid #F5F5F5;}
+.white_head .toolbar-title{color:#F39800;font-family:"Microsoft YaHei";}
+
+/*内容*/
+ion-content{background-color: #F5F5F5!important;}
+/*.content-md{bottom:76px;}*/
+/*page-tracking-list .content-md  .scroll-content{margin-bottom:208px!important;margin-top:0!important;}*/
+/*page-tracking-list .content-ios .scroll-content{margin-top:0!important;margin-bottom:185px!important;}*/
+/*page-tracking-list .desk_select .scroll-content{position:static;}*/
+page-tracking-list .desk_select ion-content{background: white!important;}
+.ion-page{background-color: #F5F5F5!important;}
+
+/*ion-infinite-scroll-content{min-height:10%;}*/
+/*range*/
+.range-md .range-bar-active{background: #F39B08;}
+.range-md .range-knob{ top: 27px;left: 14px;width: 13px;height:22px;background: url(../img/range.png) no-repeat;background-size: 100%; border:none; border-radius: 0;}
+.range-md .range-knob-min.range-knob-min .range-knob{ background: url(../img/range.png) no-repeat;background-size: 100%; border:none;}
+
+.range-knob:before{ content: ''; height: 19px; width: 2px; background: #F39800; display: block; position: absolute; margin-top:-23px;margin-left: 5px; }
+.range-md .range-pin{font-size: 12px;color: white; background: #F39800; border-radius: 4px; padding: 0 12px;-webkit-transform: scale(0.8); transform: scale(0.8); height: 20px; line-height: 20px; top:-16px; min-width: 39px; left: -3px;}
+.range-pin:before{content: '';position: absolute;margin-top: 20px; height: 0; width: 0; border-width: 6px; border-style: solid; border-color: #F39800 transparent transparent transparent; left:calc(100% - 63%);}
+
+.range-md .range-knob-handle{height:61px;width: 50px;}
+
+.range-md.range-has-pin{padding-top:26px;}
+
+#rangeTime .range-pin{background: transparent;color:#515151;white-space: nowrap;padding:0; }
+#rangeTime .range-pin:before{content:none}
+
+/*tab脚底*/
+.tabs-ios .tabbar{border-top: 1px solid #E6E6E6;background: #FFFFFF;}
+.kmf_tab .tab-item .icon{height: 30px;}
+.kmf_tab .tabs{background-size:0;border-top:1px solid #E6E6E6!important;z-index:4;}
+.ion-ios-home-outline:before,.ion-md-home:before{background: url(../img/desk_off.png);}
+.ion-ios-home:before,.tab-button[aria-selected=true] .ion-md-home:before{background: url(../img/desk_on.png);}
+.ion-ios-information-circle-outline::before,.ion-md-information-circle:before{background: url(../img/mine_off.png);}
+.ion-ios-information-circle:before,.tab-button[aria-selected=true] .ion-md-information-circle:before{background: url(../img/mine_on.png);}
+.ion-ios-home:before,.ion-ios-home-outline:before,.ion-ios-information-circle:before,.ion-ios-information-circle-outline::before,
+.ion-md-home:before,.tab-button[aria-selected=true] .ion-md-home:before,.ion-md-information-circle:before,.tab-button[aria-selected=true] .ion-md-information-circle:before
+{ content: "";  background-size:100%;  display: inline-block;  height: 27px;  width: 27px;}
+
+/*.ion-ios-home:before{content: "";  display: inline-block;  height: 27px;  width: 27px;background: url(../img/desk_off.png);background-size:100%;  }*/
+/*修改上拉弹窗---会员详情*/
+
+.MemberDetailsPop  .action-sheet-button{min-height: inherit;padding: 10px;}
+.MemberDetailsPop .action-sheet-group{border-radius: 6px;}
+.MemberDetailsPop  .button-inner{color: #F39800;font-size: 16px;}
+.MemberDetailsPop .action-sheet-group:last-child .button-inner{color: #878787;font-weight: normal;}
+.MemberDetailsPop .action-sheet-button{border-bottom: 1px solid #d6d6da;}
+/*.mbsc-sc-whl-gr-c{width: 100%;}*/
+/*.mbsc-ios .mbsc-sc-itm-sel .mbsc-dt-month{color:#F39800; }*/
+
+/*隐藏时间插件*/
+.hide-datetime{position:absolute;left:0;right:0;height:26px;padding:26px 0 0;overflow: hidden;}
+
+.alert-wrapper{/*max-width: 288px;*/border-radius:4px;}
+
+/*改变list列表*/
+page-tracking-list .list >.item-block:first-child{border-top:none;}
+
+/*ionic版本更新后样式问题*/
+/*.fixed-content{margin-top:0!important;margin-bottom: 0!important;}*/
+/*page-tracking-list ion-refresher{top:2px!important;}*/
+
+/*移动端问题*/
+.alert-button{border-top:1px solid #E6E6E6;border-right:1px solid #E6E6E6;}
+.alert-message{overflow-y:auto;}
+
+/*datatime*/
+.picker-opt-selected{color: #F39800;}
+.picker-toolbar{border-bottom:1px solid #E6E6E6;}
+
+
+/*箭头问题*/
+.back-button-text{display: none;}
+.back-button-icon:before{content: '';background: url("../img/yHIcon.png") no-repeat center/100%;width: 12px;height: 34px;display: inline-block;}
+.white_head  .back-button-icon:before{background-image: url("../img/wHIcon.png"); }
+
+/*工作台头部*/
+.deskHead .item-input-inset {padding:11px 0;}
+page-tracking-list .toolbar{padding: 0;}
+
+    /*拨打电话*/
+.call_pop .btn_free,.call_pop .btn_normal,.call_pop .btn_track{width: 90%;border-radius: 5px;min-height:inherit;font-size: 18px;padding: 9px;}
+.btn_free .button-inner,.call_pop .btn_normal .button-inner{color: white;}
+.call_pop .btn_free{background:#F39800;margin:auto;}
+.call_pop .btn_normal{background:#FFC000;margin:25px auto 15px;}
+.call_pop .btn_track{background:#E6E6E6;color:#6E6E6E;line-height: normal;padding: 10px 0;/*font-weight: bold;*/margin:15px auto 25px;white-space: nowrap;}
+.call_pop .btn_track small{color:#7A7A7A;font-size: 12px;font-weight: normal; }
+.call_pop .btn_cancel{padding: 10px;min-height: inherit;}
+.call_pop .btn_cancel .button-inner{color: #9F9F9F;font-weight:normal;font-size: 18px;}
+.call_pop .btn_free.activated{background:#F37101;}
+.call_pop .btn_normal.activated{background:#ff7500;}
+
+/*引导页下标*/
+.swiper-pagination-bullet{background:#F39801;opacity:1; }
+.swiper-pagination-bullet-active{border: 3px solid  #FBE0B2!important;height: 13px;width: 13px;}
+.swiper-container-horizontal > .swiper-pagination .swiper-pagination-bullet {margin: 0 13px;}
+.swiper-container-horizontal > .swiper-pagination{bottom:65px;}
+
+.chart-no-data .img{max-width:none;width: 64px;text-align: center;}
+.chart-no-data .p1{color:#B4B4B4;font-size: 15px;margin-top: 15px; }
+
+/*模拟清除按钮*/
+
+.clear-btn {
+    background-image:url("../img/clear.svg") ;
+    right: 8px;
+    width: 30px;
+    background-size: 18px;
+    /*display:block;*/
+    background-color: transparent;
+
+}

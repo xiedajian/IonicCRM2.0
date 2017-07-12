@@ -5,7 +5,6 @@
 // export const APP_SERVE_URL:string = 'http://192.168.1.88/v1';
 // export const APP_SERVE_URL:string = 'http://kmf.dev.ipvp.cn/v1';
 // 生产环境
-// export const APP_SERVE_URL:string = 'http://kmf.stage.ipvp.cn/v1';
 export const APP_SERVE_URL:string = 'http://kmfapi.ipvp.cn/v1';
 //AES加密key
 export const AES_key:string =")O[NB]6,YF}+efcaj{+oESb9d8>Z'e9M";
@@ -26,7 +25,7 @@ export class AppConfig {
     //APP信息
     static platform:string = '';          // android  ios
     static appName:string = 'CRM_KmfApp';           //CRM_KmfApp
-    static appVersion:string = '2.0.0';        //版本号 2.0.0
+    static appVersion:string = '2.0.2';        //版本号 2.0.2
     //常规配置
     static userProtocol:string = '';      //用户协议
     //导购用户信息
@@ -56,7 +55,7 @@ export class AppConfig {
         return window.screen.width;
     }
 
-    //获取通话方式 
+    //获取通话方式
     public static getCallingType():number {
         return this.callingType ;
     }
@@ -85,7 +84,7 @@ export class AppConfig {
         let dd:string = date.getFullYear() + "-" + month + "-" + strDate;
         return dd;
     }
-    
+
     //获取本地时间  格式：20170103
     public static getLocalTime2() {
         let date = new Date();

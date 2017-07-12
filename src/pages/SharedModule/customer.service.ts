@@ -276,7 +276,8 @@ export class CustomerService {
         this.storage.set('unSaveState', {
             contactType: contactType,
             customer: customer,
-            callerPhone: callerPhone
+            callerPhone: callerPhone,
+            userId :AppConfig.userInfo.userId
         }).then(()=> {
             //console.log('set');
         }, (err)=> {

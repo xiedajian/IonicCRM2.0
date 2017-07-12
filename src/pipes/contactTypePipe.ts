@@ -1,13 +1,11 @@
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-
+import { Pipe, PipeTransform} from '@angular/core';
 
 //跟踪方式数字转换
 @Pipe({
     name: 'contactTypePipe'
 })
-@Injectable()
 export class ContactTypePipe implements PipeTransform {
-    transform(contactType:any):any {
+    transform(contactType:any, ...args):any {
         let contactTypeText:string='';
       switch(contactType){
           case 1 : contactTypeText="普通通话";break;
