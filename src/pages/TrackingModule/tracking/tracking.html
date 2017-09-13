@@ -1,0 +1,23 @@
+<!--
+  Generated template for the Tracking page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton="{{hideBackBtn}}">
+    <ion-title>{{customer.customerName}}跟踪日志</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="has-header">
+  <p class="contact_head">您是否有联系上{{customer.customerName}}呢？</p>
+  <div class="setting_btn">
+    <div class="btn_block_yellow" (click)="gotoLogSaving(true)" tappable>联系上</div>
+    <div class="btn_block_grey m_t_15" (click)="gotoLogSaving(false)" tappable>未联系上</div>
+  </div>
+</ion-content>
+
